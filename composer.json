@@ -3,14 +3,13 @@
     "description": "a PHP SQL highlighting library",
     "homepage": "https://github.com/jdorn/sql-formatter/",
     "keywords": ["sql", "highlight"],
-    "minimum-stability": "dev",
     "license": "MIT",
     "type": "library",
     "require": {
         "php": ">=5.2.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "^8.0"
     },
     "authors": [
         {
@@ -20,7 +19,15 @@
         }
     ],
     "autoload": {
-        "classmap": ["lib"]
+        "psr-4": {
+            "Doctrine\\SqlFormatter\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "7.2.0"
+        }
     },
     "extra": {
         "branch-alias": {
