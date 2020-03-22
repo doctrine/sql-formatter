@@ -1,12 +1,13 @@
 <?php
 
+use Doctrine\SqlFormatter\SqlFormatter;
 use PHPUnit\Framework\TestCase;
 
 // Force SqlFormatter to run in non-CLI mode for tests
 SqlFormatter::$cli = false;
 
 /**
- * @covers \SqlFormatter
+ * @covers \Doctrine\SqlFormatter\SqlFormatter
  */
 class SqlFormatterTest extends TestCase
 {

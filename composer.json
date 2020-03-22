@@ -19,7 +19,9 @@
         }
     ],
     "autoload": {
-        "classmap": ["lib"]
+        "psr-4": {
+            "Doctrine\\SqlFormatter\\": "lib"
+        }
     },
     "config": {
         "sort-packages": true,
