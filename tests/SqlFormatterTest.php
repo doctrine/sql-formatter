@@ -1,5 +1,7 @@
 <?php
 
+namespace Doctrine\SqlFormatter\Tests;
+
 use Doctrine\SqlFormatter\SqlFormatter;
 use PHPUnit\Framework\TestCase;
 
