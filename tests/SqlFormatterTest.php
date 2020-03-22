@@ -11,9 +11,9 @@ SqlFormatter::$cli = false;
 /**
  * @covers \Doctrine\SqlFormatter\SqlFormatter
  */
-class SqlFormatterTest extends TestCase
+final class SqlFormatterTest extends TestCase
 {
-    protected $sqlData;
+    private $sqlData;
 
     /**
      * @dataProvider formatHighlightData
