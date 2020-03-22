@@ -5,6 +5,9 @@ use PHPUnit\Framework\TestCase;
 // Force SqlFormatter to run in non-CLI mode for tests
 SqlFormatter::$cli = false;
 
+/**
+ * @covers \SqlFormatter
+ */
 class SqlFormatterTest extends TestCase
 {
 	protected $sqlData;
