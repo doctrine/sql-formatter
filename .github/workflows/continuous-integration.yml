@@ -44,3 +44,36 @@ jobs:
 
       - name: "Test fixes"
         run: "vendor/bin/phpunit --coverage-text"
+
+  coding-standards:
+    name: "Coding Standards"
+
+    runs-on: "ubuntu-18.04"
+
+    strategy:
+      matrix:
+        php-version:
+          - "7.2"
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v2.0.0"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@1.8.1"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Cache dependencies installed with composer"
+        uses: "actions/cache@v1.0.3"
+        with:
+          path: "~/.composer/cache"
+          key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-"
+
+      - name: "Install dependencies with composer"
+        run: "composer update --no-interaction --no-progress --no-suggest"
+
+      - name: "Run squizlabs/php_codesniffer"
+        run: "vendor/bin/phpcs"

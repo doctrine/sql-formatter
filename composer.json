@@ -9,6 +9,7 @@
         "php": ">=5.2.4"
     },
     "require-dev": {
+        "doctrine/coding-standard": "^7.0",
         "phpunit/phpunit": "^8.0"
     },
     "authors": [
