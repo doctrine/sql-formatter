@@ -3,7 +3,6 @@
     "description": "a PHP SQL highlighting library",
     "homepage": "https://github.com/jdorn/sql-formatter/",
     "keywords": ["sql", "highlight"],
-    "minimum-stability": "dev",
     "license": "MIT",
     "type": "library",
     "require": {
