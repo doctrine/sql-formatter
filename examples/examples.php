@@ -31,7 +31,9 @@
 <body>
 <?php
 
-require_once(__DIR__.'/../lib/SqlFormatter.php');
+require_once '../vendor/autoload.php';
+
+use Doctrine\SqlFormatter\SqlFormatter;
 
 // Example statements for formatting and highlighting
 $statements = array(
