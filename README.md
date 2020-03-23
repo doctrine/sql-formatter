@@ -28,7 +28,9 @@ Sample usage:
 
 ```php
 <?php
-require_once('SqlFormatter.php');
+require_once 'vendor/autoload.php';
+
+use Doctrine\SqlFormatter\SqlFormatter;
 
 $query = "SELECT count(*),`Column1`,`Testing`, `Testing Three` FROM `Table1`
     WHERE Column1 = 'testing' AND ( (`Column2` = `Column3` OR Column4 >= NOW()) )
