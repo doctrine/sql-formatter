@@ -23,6 +23,11 @@
             "Doctrine\\SqlFormatter\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Doctrine\\SqlFormatter\\Tests\\": "tests"
+        }
+    },
     "config": {
         "sort-packages": true,
         "platform": {
