@@ -18,6 +18,7 @@ use function array_search;
 use function array_shift;
 use function array_unshift;
 use function arsort;
+use function assert;
 use function count;
 use function current;
 use function defined;
@@ -860,6 +861,7 @@ final class SqlFormatter
 
         // Sort reserved word list from longest word to shortest, 3x faster than usort
         $reservedMap = array_combine(self::$reserved, array_map('strlen', self::$reserved));
+        assert($reservedMap !== false);
         arsort($reservedMap);
         self::$reserved = array_keys($reservedMap);
 

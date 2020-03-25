@@ -6,6 +6,7 @@ namespace Doctrine\SqlFormatter\Tests;
 
 use Doctrine\SqlFormatter\SqlFormatter;
 use PHPUnit\Framework\TestCase;
+use function assert;
 use function defined;
 use function explode;
 use function file_get_contents;
@@ -143,7 +144,9 @@ final class SqlFormatterTest extends TestCase
      */
     public function formatHighlightData() : array
     {
-        $formatHighlightData = explode("\n\n", file_get_contents(__DIR__ . '/format-highlight.html'));
+        $contents = file_get_contents(__DIR__ . '/format-highlight.html');
+        assert($contents !== false);
+        $formatHighlightData = explode("\n\n", $contents);
         $sqlData             = $this->sqlData();
 
         $return = [];
@@ -162,7 +165,9 @@ final class SqlFormatterTest extends TestCase
      */
     public function highlightCliData() : array
     {
-        $clidata = explode("\n\n", file_get_contents(__DIR__ . '/clihighlight.html'));
+        $contents = file_get_contents(__DIR__ . '/clihighlight.html');
+        assert($contents !== false);
+        $clidata = explode("\n\n", $contents);
         $sqlData = $this->sqlData();
 
         $return = [];
@@ -181,7 +186,9 @@ final class SqlFormatterTest extends TestCase
      */
     public function formatData() : array
     {
-        $formatData = explode("\n\n", file_get_contents(__DIR__ . '/format.html'));
+        $contents = file_get_contents(__DIR__ . '/format.html');
+        assert($contents !== false);
+        $formatData = explode("\n\n", $contents);
         $sqlData    = $this->sqlData();
 
         $return = [];
@@ -200,7 +207,9 @@ final class SqlFormatterTest extends TestCase
      */
     public function compressData() : array
     {
-        $compressData = explode("\n\n", file_get_contents(__DIR__ . '/compress.html'));
+        $contents = file_get_contents(__DIR__ . '/compress.html');
+        assert($contents !== false);
+        $compressData = explode("\n\n", $contents);
         $sqlData      = $this->sqlData();
 
         $return = [];
@@ -219,7 +228,9 @@ final class SqlFormatterTest extends TestCase
      */
     public function highlightData() : array
     {
-        $highlightData = explode("\n\n", file_get_contents(__DIR__ . '/highlight.html'));
+        $contents = file_get_contents(__DIR__ . '/highlight.html');
+        assert($contents !== false);
+        $highlightData = explode("\n\n", $contents);
         $sqlData       = $this->sqlData();
 
         $return = [];
@@ -239,7 +250,9 @@ final class SqlFormatterTest extends TestCase
     public function sqlData() : array
     {
         if (! $this->sqlData) {
-            $this->sqlData = explode("\n\n", file_get_contents(__DIR__ . '/sql.sql'));
+            $contents = file_get_contents(__DIR__ . '/sql.sql');
+            assert($contents !== false);
+            $this->sqlData = explode("\n\n", $contents);
         }
 
         /**
