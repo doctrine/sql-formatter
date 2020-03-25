@@ -1,7 +1,7 @@
 {
     "name": "doctrine/sql-formatter",
     "description": "a PHP SQL highlighting library",
-    "homepage": "https://github.com/jdorn/sql-formatter/",
+    "homepage": "https://github.com/doctrine/sql-formatter/",
     "keywords": ["sql", "highlight"],
     "license": "MIT",
     "type": "library",
