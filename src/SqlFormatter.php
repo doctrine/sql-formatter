@@ -67,7 +67,7 @@ final class SqlFormatter
      *
      * @var string[]
      */
-    private static $reserved = [
+    private $reserved = [
         'ACCESSIBLE',
         'ACTION',
         'AGAINST',
@@ -345,7 +345,7 @@ final class SqlFormatter
      *
      * @var string[]
      */
-    private static $reservedToplevel = [
+    private $reservedToplevel = [
         'SELECT',
         'FROM',
         'WHERE',
@@ -368,7 +368,7 @@ final class SqlFormatter
     ];
 
     /** @var string[] */
-    private static $reservedNewline = [
+    private $reservedNewline = [
         'LEFT OUTER JOIN',
         'RIGHT OUTER JOIN',
         'LEFT JOIN',
@@ -382,7 +382,7 @@ final class SqlFormatter
     ];
 
     /** @var string[] */
-    private static $functions = [
+    private $functions = [
         'ABS',
         'ACOS',
         'ADDDATE',
@@ -687,7 +687,7 @@ final class SqlFormatter
      *
      * @var string[]
      */
-    private static $boundaries = [
+    private $boundaries = [
         ',',
         ';',
         ':',
@@ -712,34 +712,34 @@ final class SqlFormatter
     // For HTML syntax highlighting
     // Styles applied to different token types
     /** @var string */
-    public static $quoteAttributes = 'style="color: blue;"';
+    public $quoteAttributes = 'style="color: blue;"';
 
     /** @var string */
-    public static $backtickQuoteAttributes = 'style="color: purple;"';
+    public $backtickQuoteAttributes = 'style="color: purple;"';
 
     /** @var string */
-    public static $reservedAttributes = 'style="font-weight:bold;"';
+    public $reservedAttributes = 'style="font-weight:bold;"';
 
     /** @var string */
-    public static $boundaryAttributes = '';
+    public $boundaryAttributes = '';
 
     /** @var string */
-    public static $numberAttributes = 'style="color: green;"';
+    public $numberAttributes = 'style="color: green;"';
 
     /** @var string */
-    public static $wordAttributes = 'style="color: #333;"';
+    public $wordAttributes = 'style="color: #333;"';
 
     /** @var string */
-    public static $errorAttributes = 'style="background-color: red;"';
+    public $errorAttributes = 'style="background-color: red;"';
 
     /** @var string */
-    public static $commentAttributes = 'style="color: #aaa;"';
+    public $commentAttributes = 'style="color: #aaa;"';
 
     /** @var string */
-    public static $variableAttributes = 'style="color: orange;"';
+    public $variableAttributes = 'style="color: orange;"';
 
     /** @var string */
-    public static $preAttributes = 'style="color: black; background-color: white;"';
+    public $preAttributes = 'style="color: black; background-color: white;"';
 
     /**
      * Whether or not the current environment is the CLI
@@ -748,144 +748,144 @@ final class SqlFormatter
      *
      * @var bool
      */
-    public static $cli;
+    public $cli;
 
     // For CLI syntax highlighting
 
     /** @var string */
-    public static $cliQuote = "\x1b[34;1m";
+    public $cliQuote = "\x1b[34;1m";
 
     /** @var string */
-    public static $cliBacktickQuote = "\x1b[35;1m";
+    public $cliBacktickQuote = "\x1b[35;1m";
 
     /** @var string */
-    public static $cliReserved = "\x1b[37m";
+    public $cliReserved = "\x1b[37m";
 
     /** @var string */
-    public static $cliBoundary = '';
+    public $cliBoundary = '';
 
     /** @var string */
-    public static $cliNumber = "\x1b[32;1m";
+    public $cliNumber = "\x1b[32;1m";
 
     /** @var string */
-    public static $cliWord = '';
+    public $cliWord = '';
 
     /** @var string */
-    public static $cliError = "\x1b[31;1;7m";
+    public $cliError = "\x1b[31;1;7m";
 
     /** @var string */
-    public static $cliComment = "\x1b[30;1m";
+    public $cliComment = "\x1b[30;1m";
 
     /** @var string */
-    public static $cliFunctions = "\x1b[37m";
+    public $cliFunctions = "\x1b[37m";
 
     /** @var string */
-    public static $cliVariable = "\x1b[36;1m";
+    public $cliVariable = "\x1b[36;1m";
 
     /**
      * The tab character to use when formatting SQL
      *
      * @var string
      */
-    public static $tab = '  ';
+    public $tab = '  ';
 
     /**
      * This flag tells us if queries need to be enclosed in <pre> tags
      *
      * @var bool
      */
-    public static $usePre = true;
+    public $usePre = true;
 
     /**
      * This flag tells us if SqlFormatted has been initialized
      *
      * @var bool
      */
-    private static $init;
+    private $init;
 
     // Regular expressions for tokenizing
 
     /** @var string */
-    private static $regexBoundaries;
+    private $regexBoundaries;
 
     /** @var string */
-    private static $regexReserved;
+    private $regexReserved;
 
     /** @var string */
-    private static $regexReservedNewline;
+    private $regexReservedNewline;
 
     /** @var string */
-    private static $regexReservedToplevel;
+    private $regexReservedToplevel;
 
     /** @var string */
-    private static $regexFunction;
+    private $regexFunction;
 
     // Cache variables
     // Only tokens shorter than this size will be cached.  Somewhere between 10
     // and 20 seems to work well for most cases.
     /** @var int */
-    public static $maxCachekeySize = 15;
+    public $maxCachekeySize = 15;
 
     /** @var mixed[][] */
-    private static $tokenCache = [];
+    private $tokenCache = [];
 
     /** @var int */
-    private static $cacheHits = 0;
+    private $cacheHits = 0;
 
     /** @var int */
-    private static $cacheMisses = 0;
+    private $cacheMisses = 0;
 
     /**
      * Get stats about the token cache
      *
      * @return mixed[] An array containing the keys 'hits', 'misses', 'entries', and 'size' in bytes
      */
-    public static function getCacheStats() : array
+    public function getCacheStats() : array
     {
         return [
-            'hits'=>self::$cacheHits,
-            'misses'=>self::$cacheMisses,
-            'entries'=>count(self::$tokenCache),
-            'size'=>strlen(serialize(self::$tokenCache)),
+            'hits'=>$this->cacheHits,
+            'misses'=>$this->cacheMisses,
+            'entries'=>count($this->tokenCache),
+            'size'=>strlen(serialize($this->tokenCache)),
         ];
     }
 
     /**
      * Stuff that only needs to be done once.  Builds regular expressions and sorts the reserved words.
      */
-    private static function init() : void
+    private function init() : void
     {
-        if (self::$init) {
+        if ($this->init) {
             return;
         }
 
         // Sort reserved word list from longest word to shortest, 3x faster than usort
-        $reservedMap = array_combine(self::$reserved, array_map('strlen', self::$reserved));
+        $reservedMap = array_combine($this->reserved, array_map('strlen', $this->reserved));
         assert($reservedMap !== false);
         arsort($reservedMap);
-        self::$reserved = array_keys($reservedMap);
+        $this->reserved = array_keys($reservedMap);
 
         // Set up regular expressions
-        self::$regexBoundaries       = '(' . implode(
+        $this->regexBoundaries       = '(' . implode(
             '|',
-            self::quoteRegex(self::$boundaries)
+            $this->quoteRegex($this->boundaries)
         ) . ')';
-        self::$regexReserved         = '(' . implode(
+        $this->regexReserved         = '(' . implode(
             '|',
-            self::quoteRegex(self::$reserved)
+            $this->quoteRegex($this->reserved)
         ) . ')';
-        self::$regexReservedToplevel = str_replace(' ', '\\s+', '(' . implode(
+        $this->regexReservedToplevel = str_replace(' ', '\\s+', '(' . implode(
             '|',
-            self::quoteRegex(self::$reservedToplevel)
+            $this->quoteRegex($this->reservedToplevel)
         ) . ')');
-        self::$regexReservedNewline  = str_replace(' ', '\\s+', '(' . implode(
+        $this->regexReservedNewline  = str_replace(' ', '\\s+', '(' . implode(
             '|',
-            self::quoteRegex(self::$reservedNewline)
+            $this->quoteRegex($this->reservedNewline)
         ) . ')');
 
-        self::$regexFunction = '(' . implode('|', self::quoteRegex(self::$functions)) . ')';
+        $this->regexFunction = '(' . implode('|', $this->quoteRegex($this->functions)) . ')';
 
-        self::$init = true;
+        $this->init = true;
     }
 
     /**
@@ -897,7 +897,7 @@ final class SqlFormatter
      *
      * @return mixed[] An associative array containing the type and value of the token.
      */
-    private static function getNextToken(string $string, ?array $previous = null) : array
+    private function getNextToken(string $string, ?array $previous = null) : array
     {
         // Whitespace
         if (preg_match('/^\s+/', $string, $matches)) {
@@ -937,7 +937,7 @@ final class SqlFormatter
                     $string[0]==='`' || $string[0]==='['
                     ? self::TOKEN_TYPE_BACKTICK_QUOTE
                     : self::TOKEN_TYPE_QUOTE),
-                self::TOKEN_VALUE => self::getQuotedString($string),
+                self::TOKEN_VALUE => $this->getQuotedString($string),
             ];
         }
 
@@ -950,7 +950,7 @@ final class SqlFormatter
 
             // If the variable name is quoted
             if ($string[1]==='"' || $string[1]==='\'' || $string[1]==='`') {
-                $ret[self::TOKEN_VALUE] = $string[0] . self::getQuotedString(substr($string, 1));
+                $ret[self::TOKEN_VALUE] = $string[0] . $this->getQuotedString(substr($string, 1));
             } else {
                 // Non-quoted variable name
                 preg_match('/^(' . $string[0] . '[a-zA-Z0-9\._\$]+)/', $string, $matches);
@@ -966,7 +966,7 @@ final class SqlFormatter
 
         // Number (decimal, binary, or hex)
         if (preg_match(
-            '/^([0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)($|\s|"\'`|' . self::$regexBoundaries . ')/',
+            '/^([0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)($|\s|"\'`|' . $this->regexBoundaries . ')/',
             $string,
             $matches
         )) {
@@ -977,7 +977,7 @@ final class SqlFormatter
         }
 
         // Boundary Character (punctuation and symbols)
-        if (preg_match('/^(' . self::$regexBoundaries . ')/', $string, $matches)) {
+        if (preg_match('/^(' . $this->regexBoundaries . ')/', $string, $matches)) {
             return [
                 self::TOKEN_VALUE => $matches[1],
                 self::TOKEN_TYPE  => self::TOKEN_TYPE_BOUNDARY,
@@ -990,7 +990,7 @@ final class SqlFormatter
             $upper = strtoupper($string);
             // Top Level Reserved Word
             if (preg_match(
-                '/^(' . self::$regexReservedToplevel . ')($|\s|' . self::$regexBoundaries . ')/',
+                '/^(' . $this->regexReservedToplevel . ')($|\s|' . $this->regexBoundaries . ')/',
                 $upper,
                 $matches
             )) {
@@ -1002,7 +1002,7 @@ final class SqlFormatter
 
             // Newline Reserved Word
             if (preg_match(
-                '/^(' . self::$regexReservedNewline . ')($|\s|' . self::$regexBoundaries . ')/',
+                '/^(' . $this->regexReservedNewline . ')($|\s|' . $this->regexBoundaries . ')/',
                 $upper,
                 $matches
             )) {
@@ -1014,7 +1014,7 @@ final class SqlFormatter
 
             // Other Reserved Word
             if (preg_match(
-                '/^(' . self::$regexReserved . ')($|\s|' . self::$regexBoundaries . ')/',
+                '/^(' . $this->regexReserved . ')($|\s|' . $this->regexBoundaries . ')/',
                 $upper,
                 $matches
             )) {
@@ -1029,7 +1029,7 @@ final class SqlFormatter
         // this makes it so "count(" is considered a function, but "count" alone is not
         $upper = strtoupper($string);
         // function
-        if (preg_match('/^(' . self::$regexFunction . '[(]|\s|[)])/', $upper, $matches)) {
+        if (preg_match('/^(' . $this->regexFunction . '[(]|\s|[)])/', $upper, $matches)) {
             return [
                 self::TOKEN_TYPE=>self::TOKEN_TYPE_RESERVED,
                 self::TOKEN_VALUE=>substr($string, 0, strlen($matches[1])-1),
@@ -1037,7 +1037,7 @@ final class SqlFormatter
         }
 
         // Non reserved word
-        preg_match('/^(.*?)($|\s|["\'`]|' . self::$regexBoundaries . ')/', $string, $matches);
+        preg_match('/^(.*?)($|\s|["\'`]|' . $this->regexBoundaries . ')/', $string, $matches);
 
         return [
             self::TOKEN_VALUE => $matches[1],
@@ -1045,7 +1045,7 @@ final class SqlFormatter
         ];
     }
 
-    private static function getQuotedString(string $string) : string
+    private function getQuotedString(string $string) : string
     {
         $ret = null;
 
@@ -1076,9 +1076,9 @@ final class SqlFormatter
      *
      * @return mixed[][] An array of tokens.
      */
-    private static function tokenize(string $string) : array
+    private function tokenize(string $string) : array
     {
-        self::init();
+        $this->init();
 
         $tokens = [];
 
@@ -1107,27 +1107,27 @@ final class SqlFormatter
             $oldStringLen =  $currentLength;
 
             // Determine if we can use caching
-            if ($currentLength >= self::$maxCachekeySize) {
-                $cacheKey = substr($string, 0, self::$maxCachekeySize);
+            if ($currentLength >= $this->maxCachekeySize) {
+                $cacheKey = substr($string, 0, $this->maxCachekeySize);
             } else {
                 $cacheKey = false;
             }
 
             // See if the token is already cached
-            if ($cacheKey && isset(self::$tokenCache[$cacheKey])) {
+            if ($cacheKey && isset($this->tokenCache[$cacheKey])) {
                 // Retrieve from cache
-                $token       = self::$tokenCache[$cacheKey];
+                $token       = $this->tokenCache[$cacheKey];
                 $tokenLength = strlen($token[self::TOKEN_VALUE]);
-                self::$cacheHits++;
+                $this->cacheHits++;
             } else {
                 // Get the next token and the token type
-                $token       = self::getNextToken($string, $token);
+                $token       = $this->getNextToken($string, $token);
                 $tokenLength = strlen($token[self::TOKEN_VALUE]);
-                self::$cacheMisses++;
+                $this->cacheMisses++;
 
                 // If the token is shorter than the max length, store it in cache
-                if ($cacheKey && $tokenLength < self::$maxCachekeySize) {
-                    self::$tokenCache[$cacheKey] = $token;
+                if ($cacheKey && $tokenLength < $this->maxCachekeySize) {
+                    $this->tokenCache[$cacheKey] = $token;
                 }
             }
 
@@ -1150,12 +1150,12 @@ final class SqlFormatter
      *
      * @return string The SQL string with HTML styles and formatting wrapped in a <pre> tag
      */
-    public static function format(string $string, bool $highlight = true) : string
+    public function format(string $string, bool $highlight = true) : string
     {
         // This variable will be populated with formatted html
         $return = '';
 
-        // Use an actual tab while formatting and then switch out with self::$tab at the end
+        // Use an actual tab while formatting and then switch out with $this->tab at the end
         $tab = "\t";
 
         $indentLevel           = 0;
@@ -1170,7 +1170,7 @@ final class SqlFormatter
         $clauseLimit           = false;
 
         // Tokenize String
-        $originalTokens = self::tokenize($string);
+        $originalTokens = $this->tokenize($string);
 
         // Remove existing whitespace
         $tokens = [];
@@ -1187,7 +1187,7 @@ final class SqlFormatter
         foreach ($tokens as $i => $token) {
             // Get highlighted token if doing syntax highlighting
             if ($highlight) {
-                $highlighted = self::highlightToken($token);
+                $highlighted = $this->highlightToken($token);
             } else { // If returning raw text
                 $highlighted = $token[self::TOKEN_VALUE];
             }
@@ -1332,7 +1332,7 @@ final class SqlFormatter
                     $indentLevel = 0;
 
                     if ($highlight) {
-                        $return .= "\n" . self::highlightError($token[self::TOKEN_VALUE]);
+                        $return .= "\n" . $this->highlightError($token[self::TOKEN_VALUE]);
                         continue;
                     }
                 }
@@ -1447,14 +1447,14 @@ final class SqlFormatter
 
         // If there are unmatched parentheses
         if ($highlight && array_search('block', $indentTypes) !== false) {
-            $return .= "\n" . self::highlightError('WARNING: unclosed parentheses or section');
+            $return .= "\n" . $this->highlightError('WARNING: unclosed parentheses or section');
         }
 
         // Replace tab characters with the configuration tab character
-        $return = trim(str_replace("\t", self::$tab, $return));
+        $return = trim(str_replace("\t", $this->tab, $return));
 
         if ($highlight) {
-            $return = self::output($return);
+            $return = $this->output($return);
         }
 
         return $return;
@@ -1467,17 +1467,17 @@ final class SqlFormatter
      *
      * @return string The SQL string with HTML styles applied
      */
-    public static function highlight(string $string) : string
+    public function highlight(string $string) : string
     {
-        $tokens = self::tokenize($string);
+        $tokens = $this->tokenize($string);
 
         $return = '';
 
         foreach ($tokens as $token) {
-            $return .= self::highlightToken($token);
+            $return .= $this->highlightToken($token);
         }
 
-        return self::output($return);
+        return $this->output($return);
     }
 
     /**
@@ -1488,13 +1488,13 @@ final class SqlFormatter
      *
      * @return string[] An array of individual query strings without trailing semicolons
      */
-    public static function splitQuery(string $string) : array
+    public function splitQuery(string $string) : array
     {
         $queries      = [];
         $currentQuery = '';
         $empty        = true;
 
-        $tokens = self::tokenize($string);
+        $tokens = $this->tokenize($string);
 
         foreach ($tokens as $token) {
             // If this is a query separator
@@ -1532,11 +1532,11 @@ final class SqlFormatter
      *
      * @return string The SQL string without comments
      */
-    public static function removeComments(string $string) : string
+    public function removeComments(string $string) : string
     {
         $result = '';
 
-        $tokens = self::tokenize($string);
+        $tokens = $this->tokenize($string);
 
         foreach ($tokens as $token) {
             // Skip comment tokens
@@ -1548,7 +1548,7 @@ final class SqlFormatter
             $result .= $token[self::TOKEN_VALUE];
         }
 
-        $result = self::format($result, false);
+        $result = $this->format($result, false);
 
         return $result;
     }
@@ -1560,11 +1560,11 @@ final class SqlFormatter
      *
      * @return string The SQL string without comments
      */
-    public static function compress(string $string) : string
+    public function compress(string $string) : string
     {
         $result = '';
 
-        $tokens = self::tokenize($string);
+        $tokens = $this->tokenize($string);
 
         $whitespace = true;
         foreach ($tokens as $token) {
@@ -1608,11 +1608,11 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightToken(array $token) : string
+    private function highlightToken(array $token) : string
     {
         $type = $token[self::TOKEN_TYPE];
 
-        if (self::isCli()) {
+        if ($this->isCli()) {
             $token = $token[self::TOKEN_VALUE];
         } else {
             if (defined('ENT_IGNORE')) {
@@ -1623,43 +1623,43 @@ final class SqlFormatter
         }
 
         if ($type===self::TOKEN_TYPE_BOUNDARY) {
-            return self::highlightBoundary($token);
+            return $this->highlightBoundary($token);
         }
 
         if ($type===self::TOKEN_TYPE_WORD) {
-            return self::highlightWord($token);
+            return $this->highlightWord($token);
         }
 
         if ($type===self::TOKEN_TYPE_BACKTICK_QUOTE) {
-            return self::highlightBacktickQuote($token);
+            return $this->highlightBacktickQuote($token);
         }
 
         if ($type===self::TOKEN_TYPE_QUOTE) {
-            return self::highlightQuote($token);
+            return $this->highlightQuote($token);
         }
 
         if ($type===self::TOKEN_TYPE_RESERVED) {
-            return self::highlightReservedWord($token);
+            return $this->highlightReservedWord($token);
         }
 
         if ($type===self::TOKEN_TYPE_RESERVED_TOPLEVEL) {
-            return self::highlightReservedWord($token);
+            return $this->highlightReservedWord($token);
         }
 
         if ($type===self::TOKEN_TYPE_RESERVED_NEWLINE) {
-            return self::highlightReservedWord($token);
+            return $this->highlightReservedWord($token);
         }
 
         if ($type===self::TOKEN_TYPE_NUMBER) {
-            return self::highlightNumber($token);
+            return $this->highlightNumber($token);
         }
 
         if ($type===self::TOKEN_TYPE_VARIABLE) {
-            return self::highlightVariable($token);
+            return $this->highlightVariable($token);
         }
 
         if ($type===self::TOKEN_TYPE_COMMENT || $type===self::TOKEN_TYPE_BLOCK_COMMENT) {
-            return self::highlightComment($token);
+            return $this->highlightComment($token);
         }
 
         return $token;
@@ -1672,13 +1672,13 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightQuote(string $value) : string
+    private function highlightQuote(string $value) : string
     {
-        if (self::isCli()) {
-            return self::$cliQuote . $value . "\x1b[0m";
+        if ($this->isCli()) {
+            return $this->cliQuote . $value . "\x1b[0m";
         }
 
-        return '<span ' . self::$quoteAttributes . '>' . $value . '</span>';
+        return '<span ' . $this->quoteAttributes . '>' . $value . '</span>';
     }
 
     /**
@@ -1688,13 +1688,13 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightBacktickQuote(string $value) : string
+    private function highlightBacktickQuote(string $value) : string
     {
-        if (self::isCli()) {
-            return self::$cliBacktickQuote . $value . "\x1b[0m";
+        if ($this->isCli()) {
+            return $this->cliBacktickQuote . $value . "\x1b[0m";
         }
 
-        return '<span ' . self::$backtickQuoteAttributes . '>' . $value . '</span>';
+        return '<span ' . $this->backtickQuoteAttributes . '>' . $value . '</span>';
     }
 
     /**
@@ -1704,13 +1704,13 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightReservedWord(string $value) : string
+    private function highlightReservedWord(string $value) : string
     {
-        if (self::isCli()) {
-            return self::$cliReserved . $value . "\x1b[0m";
+        if ($this->isCli()) {
+            return $this->cliReserved . $value . "\x1b[0m";
         }
 
-        return '<span ' . self::$reservedAttributes . '>' . $value . '</span>';
+        return '<span ' . $this->reservedAttributes . '>' . $value . '</span>';
     }
 
     /**
@@ -1720,17 +1720,17 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightBoundary(string $value) : string
+    private function highlightBoundary(string $value) : string
     {
         if ($value==='(' || $value===')') {
             return $value;
         }
 
-        if (self::isCli()) {
-            return self::$cliBoundary . $value . "\x1b[0m";
+        if ($this->isCli()) {
+            return $this->cliBoundary . $value . "\x1b[0m";
         }
 
-        return '<span ' . self::$boundaryAttributes . '>' . $value . '</span>';
+        return '<span ' . $this->boundaryAttributes . '>' . $value . '</span>';
     }
 
     /**
@@ -1740,13 +1740,13 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightNumber(string $value) : string
+    private function highlightNumber(string $value) : string
     {
-        if (self::isCli()) {
-            return self::$cliNumber . $value . "\x1b[0m";
+        if ($this->isCli()) {
+            return $this->cliNumber . $value . "\x1b[0m";
         }
 
-        return '<span ' . self::$numberAttributes . '>' . $value . '</span>';
+        return '<span ' . $this->numberAttributes . '>' . $value . '</span>';
     }
 
     /**
@@ -1756,13 +1756,13 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightError(string $value) : string
+    private function highlightError(string $value) : string
     {
-        if (self::isCli()) {
-            return self::$cliError . $value . "\x1b[0m";
+        if ($this->isCli()) {
+            return $this->cliError . $value . "\x1b[0m";
         }
 
-        return '<span ' . self::$errorAttributes . '>' . $value . '</span>';
+        return '<span ' . $this->errorAttributes . '>' . $value . '</span>';
     }
 
     /**
@@ -1772,13 +1772,13 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightComment(string $value) : string
+    private function highlightComment(string $value) : string
     {
-        if (self::isCli()) {
-            return self::$cliComment . $value . "\x1b[0m";
+        if ($this->isCli()) {
+            return $this->cliComment . $value . "\x1b[0m";
         }
 
-        return '<span ' . self::$commentAttributes . '>' . $value . '</span>';
+        return '<span ' . $this->commentAttributes . '>' . $value . '</span>';
     }
 
     /**
@@ -1788,13 +1788,13 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightWord(string $value) : string
+    private function highlightWord(string $value) : string
     {
-        if (self::isCli()) {
-            return self::$cliWord . $value . "\x1b[0m";
+        if ($this->isCli()) {
+            return $this->cliWord . $value . "\x1b[0m";
         }
 
-        return '<span ' . self::$wordAttributes . '>' . $value . '</span>';
+        return '<span ' . $this->wordAttributes . '>' . $value . '</span>';
     }
 
     /**
@@ -1804,13 +1804,13 @@ final class SqlFormatter
      *
      * @return string HTML code of the highlighted token.
      */
-    private static function highlightVariable(string $value) : string
+    private function highlightVariable(string $value) : string
     {
-        if (self::isCli()) {
-            return self::$cliVariable . $value . "\x1b[0m";
+        if ($this->isCli()) {
+            return $this->cliVariable . $value . "\x1b[0m";
         }
 
-        return '<span ' . self::$variableAttributes . '>' . $value . '</span>';
+        return '<span ' . $this->variableAttributes . '>' . $value . '</span>';
     }
 
     /**
@@ -1820,7 +1820,7 @@ final class SqlFormatter
      *
      * @return string[] The quoted strings
      */
-    private static function quoteRegex(array $strings) : array
+    private function quoteRegex(array $strings) : array
     {
         return array_map(static function (string $string) : string {
             return preg_quote($string, '/');
@@ -1834,24 +1834,24 @@ final class SqlFormatter
      *
      * @return string The quoted string
      */
-    private static function output(string $string) : string
+    private function output(string $string) : string
     {
-        if (self::isCli()) {
+        if ($this->isCli()) {
             return $string . "\n";
         }
 
         $string =trim($string);
-        if (! self::$usePre) {
+        if (! $this->usePre) {
             return $string;
         }
 
-        return '<pre ' . self::$preAttributes . '>' . $string . '</pre>';
+        return '<pre ' . $this->preAttributes . '>' . $string . '</pre>';
     }
 
-    private static function isCli() : bool
+    private function isCli() : bool
     {
-        if (isset(self::$cli)) {
-            return self::$cli;
+        if (isset($this->cli)) {
+            return $this->cli;
         }
 
         return PHP_SAPI === 'cli';
