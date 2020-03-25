@@ -4,5 +4,6 @@
 /.gitignore export-ignore
 /composer.lock export-ignore
 /examples export-ignore
+/phpcs.xml.dist export-ignore
 /phpunit.xml.dist export-ignore
 /tests export-ignore
