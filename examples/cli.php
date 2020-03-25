@@ -18,7 +18,9 @@ endif;
 if (isset($argv[1])) {
     $sql = $argv[1];
 } else {
-    $sql = stream_get_contents(fopen('php://stdin', 'r'));
+    $fp = fopen('php://stdin', 'r');
+    assert($fp !== false);
+    $sql = stream_get_contents($fp);
 }
 
 require_once __DIR__ . '/../vendor/autoload.php';

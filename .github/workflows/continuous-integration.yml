@@ -77,3 +77,15 @@ jobs:
 
       - name: "Run squizlabs/php_codesniffer"
         run: "vendor/bin/phpcs"
+
+  static-analysis-phpstan:
+    name: Static Analysis with PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: PHPStan
+        uses: "docker://oskarstark/phpstan-ga"
+        env:
+          REQUIRE_DEV: 'true'
+        with:
+          args: analyse
