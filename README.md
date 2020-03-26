@@ -7,7 +7,7 @@ It can automatically indent and add line breaks in addition to syntax highlighti
 ## History
 
 I found myself having to debug auto-generated SQL statements all the time and
-wanted some way to easily output formatted HTML without having to include a 
+wanted some way to easily output formatted HTML without having to include a
 huge library or copy and paste into online formatters.
 
 I was originally planning to extract the formatting code from PhpMyAdmin,
@@ -18,8 +18,8 @@ losif's answer as a starting point.  http://stackoverflow.com/a/3924147
 
 ## Usage
 
-The SqlFormatter class has a static method 'format' which takes a SQL string  
-as input and returns a formatted HTML block inside a pre tag. 
+The SqlFormatter class has a static method 'format' which takes a SQL string
+as input and returns a formatted HTML block inside a pre tag.
 
 Sample usage:
 
@@ -42,7 +42,7 @@ Output:
 
 ### Formatting Only
 
-If you don't want syntax highlighting and only want the indentations and 
+If you don't want syntax highlighting and only want the indentations and
 line breaks, pass in false as the second parameter.
 
 This is useful for outputting to error logs or other non-html formats.
@@ -128,7 +128,7 @@ Output:
 
 ### Split SQL String into Queries
 
-Another feature, which is unrelated to formatting, is the ability to break up a SQL string into multiple queries.  
+Another feature, which is unrelated to formatting, is the ability to break up a SQL string into multiple queries.
 
 For Example:
 
@@ -157,7 +157,7 @@ Result:
 
 Why not just use `explode(';', $sql)` or a regular expression?
 
-The following example sql and others like it are _impossible_ to split correctly using regular expressions, no matter how complex.  
+The following example sql and others like it are _impossible_ to split correctly using regular expressions, no matter how complex.
 
 ```
 SELECT ";"; SELECT ";\"; a;";
@@ -176,6 +176,6 @@ SqlFormatter breaks the string into tokens instead of using regular expressions 
 FROM test`;
 
 Please note, the splitQuery method will still fail in the following cases:
-*    The DELIMITER command can be used to change the delimiter from the default ';' to something else.  
+*    The DELIMITER command can be used to change the delimiter from the default ';' to something else.
 *    The CREATE PROCEDURE command has a ';' in the middle of it
 *    The USE command is not terminated with a ';'
