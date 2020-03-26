@@ -1,12 +1,10 @@
-SqlFormatter
-=============
+# SqlFormatter
 
 A lightweight php class for formatting sql statements.
 
 It can automatically indent and add line breaks in addition to syntax highlighting.
 
-History
-============
+## History
 
 I found myself having to debug auto-generated SQL statements all the time and
 wanted some way to easily output formatted HTML without having to include a 
@@ -18,8 +16,7 @@ but that was 10,000+ lines of code and used global variables.
 I saw that other people had the same problem and used Stack Overflow user 
 losif's answer as a starting point.  http://stackoverflow.com/a/3924147
 
-Usage
-============
+## Usage
 
 The SqlFormatter class has a static method 'format' which takes a SQL string  
 as input and returns a formatted HTML block inside a pre tag. 
@@ -43,8 +40,8 @@ Output:
 
 ![](http://jdorn.github.com/sql-formatter/format-highlight.png)
 
-Formatting Only
--------------------------
+### Formatting Only
+
 If you don't want syntax highlighting and only want the indentations and 
 line breaks, pass in false as the second parameter.
 
@@ -59,8 +56,7 @@ Output:
 
 ![](http://jdorn.github.com/sql-formatter/format.png)
 
-Syntax Highlighting Only
--------------------------
+### Syntax Highlighting Only
 
 There is a separate method 'highlight' that preserves all original whitespace
 and just adds syntax highlighting.
@@ -77,8 +73,7 @@ Output:
 
 ![](http://jdorn.github.com/sql-formatter/highlight.png)
 
-Compress Query
---------------------------
+### Compress Query
 
 The compress method removes all comments and compresses whitespace.
 
@@ -103,8 +98,8 @@ Output:
 SELECT Id as temp, DateCreated as Created FROM MyTable;
 ```
 
-Remove Comments
-------------------------
+### Remove Comments
+
 If you want to keep all original whitespace formatting and just remove comments, 
 you can use the removeComments method instead of compress.
 
@@ -131,8 +126,7 @@ Output:
     as temp, DateCreated as Created FROM MyTable;
 ```
 
-Split SQL String into Queries
---------------------------
+### Split SQL String into Queries
 
 Another feature, which is unrelated to formatting, is the ability to break up a SQL string into multiple queries.  
 
@@ -159,7 +153,7 @@ Result:
 3.    `INSERT INTO MyTable (id) VALUES (1),(2),(3),(4)`;
 4.    `SELECT * FROM MyTable`;
 
-### Why Not Regular Expressions?
+#### Why Not Regular Expressions?
 
 Why not just use `explode(';', $sql)` or a regular expression?
 
