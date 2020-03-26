@@ -23,7 +23,7 @@ Here is what the original History section says:
 
 ## Usage
 
-The `SqlFormatter` class has a static method `format` which takes a SQL string
+The `SqlFormatter` class has a static method `format` which takes an SQL string
 as input and returns a formatted HTML block inside a `pre` tag.
 
 Sample usage:
