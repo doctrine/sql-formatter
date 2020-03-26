@@ -6,15 +6,20 @@ It can automatically indent and add line breaks in addition to syntax highlighti
 
 ## History
 
-I found myself having to debug auto-generated SQL statements all the time and
-wanted some way to easily output formatted HTML without having to include a
-huge library or copy and paste into online formatters.
+This package is a fork from https://github.com/jdorn/sql-formatter
+Here is what the original History section says:
 
-I was originally planning to extract the formatting code from PhpMyAdmin,
-but that was 10,000+ lines of code and used global variables.
+> I found myself having to debug auto-generated SQL statements all the time and
+> wanted some way to easily output formatted HTML without having to include a
+> huge library or copy and paste into online formatters.
 
-I saw that other people had the same problem and used Stack Overflow user 
-losif's answer as a starting point.  http://stackoverflow.com/a/3924147
+> I was originally planning to extract the formatting code from PhpMyAdmin,
+> but that was 10,000+ lines of code and used global variables.
+
+> I saw that other people had the same problem and used Stack Overflow user
+> losif's answer as a starting point.  http://stackoverflow.com/a/3924147
+
+― @jdorn
 
 ## Usage
 
