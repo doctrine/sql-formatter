@@ -6,6 +6,8 @@ require_once '../vendor/autoload.php';
 
 use Doctrine\SqlFormatter\SqlFormatter;
 
+$formatter = new SqlFormatter();
+
 // Example statements for formatting and highlighting
 $statements = [
     <<<'SQL'
@@ -149,7 +151,9 @@ SQL,
         <div>
             Usage:
             <pre>
-            <?php highlight_string('<?php' . "\n" . '$formatted = SqlFormatter::format($sql);' . "\n" . '?>'); ?>
+            <?php highlight_string(
+                '<?php' . "\n" . '$formatted = (new SqlFormatter())->format($sql);' . "\n" . '?>'
+            ); ?>
             </pre>
         </div>
         <table>
@@ -162,7 +166,7 @@ SQL,
                 <td>
                     <pre><?= $sql; ?></pre>
                 </td>
-                <td><?= SqlFormatter::format($sql); ?></td>
+                <td><?= $formatter->format($sql); ?></td>
             </tr>
             <?php endforeach ?>
         </table>
@@ -173,7 +177,9 @@ SQL,
         <div>
             Usage:
             <pre>
-            <?php highlight_string('<?php' . "\n" . '$formatted = SqlFormatter::format($sql, false);' . "\n" . '?>'); ?>
+            <?php highlight_string(
+                '<?php' . "\n" . '$formatted = (new SqlFormatter())->format($sql, false);' . "\n" . '?>'
+            ); ?>
             </pre>
         </div>
         <table>
@@ -186,7 +192,7 @@ SQL,
                 <td>
                     <pre><?= $sql; ?></pre>
                 </td>
-                <td><pre><?= htmlentities(SqlFormatter::format($sql, false)); ?></pre></td>
+                <td><pre><?= htmlentities($formatter->format($sql, false)); ?></pre></td>
             </tr>
             <?php endforeach ?>
         </table>
@@ -197,7 +203,9 @@ SQL,
         <div>
             Usage:
             <pre>
-            <?php highlight_string('<?php' . "\n" . '$highlighted = SqlFormatter::highlight($sql);' . "\n" . '?>'); ?>
+            <?php highlight_string(
+                '<?php' . "\n" . '$highlighted = (new SqlFormatter())->highlight($sql);' . "\n" . '?>'
+            ); ?>
             </pre>
         </div>
         <table>
@@ -210,7 +218,7 @@ SQL,
                 <td>
                     <pre><?= $sql; ?></pre>
                 </td>
-                <td><?= SqlFormatter::highlight($sql); ?></td>
+                <td><?= $formatter->highlight($sql); ?></td>
             </tr>
             <?php endforeach ?>
         </table>
@@ -221,7 +229,9 @@ SQL,
         <div>
             Usage:
             <pre>
-            <?php highlight_string('<?php' . "\n" . '$compressed = SqlFormatter::compress($sql);' . "\n" . '?>'); ?>
+            <?php highlight_string(
+                '<?php' . "\n" . '$compressed = (new SqlFormatter())->compress($sql);' . "\n" . '?>'
+            ); ?>
             </pre>
         </div>
         <table>
@@ -234,7 +244,7 @@ SQL,
                 <td>
                     <pre><?= $sql; ?></pre>
                 </td>
-                <td><pre><?= SqlFormatter::compress($sql); ?></pre></td>
+                <td><pre><?= $formatter->compress($sql); ?></pre></td>
             </tr>
             <?php endforeach ?>
         </table>
@@ -245,7 +255,9 @@ SQL,
         <div>
             Usage:
             <pre>
-            <?php highlight_string('<?php' . "\n" . '$queries = SqlFormatter::splitQuery($sql);' . "\n" . '?>'); ?>
+            <?php highlight_string(
+                '<?php' . "\n" . '$queries = (new SqlFormatter())->splitQuery($sql);' . "\n" . '?>'
+            ); ?>
             </pre>
         </div>
         <table>
@@ -256,12 +268,12 @@ SQL,
             <?php foreach ($splitStatements as $sql) : ?>
             <tr>
                 <td>
-                    <pre><?= SqlFormatter::highlight($sql); ?></pre>
+                    <pre><?= $formatter->highlight($sql); ?></pre>
                 </td>
                 <td>
                     <ol>
-                        <?php foreach (SqlFormatter::splitQuery($sql) as $query) :?>
-                        <li><pre><?=  SqlFormatter::highlight($query) ?></pre></li>
+                        <?php foreach ($formatter->splitQuery($sql) as $query) :?>
+                        <li><pre><?=  $formatter->highlight($query) ?></pre></li>
                         <?php endforeach ?>
                     </ol>
                 </td>
@@ -276,7 +288,7 @@ SQL,
             Usage:
             <pre>
             <?php highlight_string(
-                '<?php' . "\n" . '$nocomments = SqlFormatter::removeComments($sql);' . "\n" . '?>'
+                '<?php' . "\n" . '$nocomments = (new SqlFormatter())->removeComments($sql);' . "\n" . '?>'
             ); ?>
             </pre>
         </div>
@@ -288,10 +300,10 @@ SQL,
             <?php foreach ($commentStatements as $sql) : ?>
             <tr>
                 <td>
-                    <pre><?= SqlFormatter::highlight($sql); ?></pre>
+                    <pre><?= $formatter->highlight($sql); ?></pre>
                 </td>
                 <td>
-                    <pre><?= SqlFormatter::highlight(SqlFormatter::removeComments($sql)) ?></pre>
+                    <pre><?= $formatter->highlight($formatter->removeComments($sql)) ?></pre>
                 </td>
             </tr>
             <?php endforeach ?>

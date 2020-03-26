@@ -24,8 +24,8 @@ Here is what the original History section says:
 
 ## Usage
 
-The `SqlFormatter` class has a static method `format` which takes an SQL string
-as input and returns a formatted HTML block inside a `pre` tag.
+The `SqlFormatter` class has a method `format` which takes an SQL string as
+input and returns a formatted HTML block inside a `pre` tag.
 
 Sample usage:
 
@@ -39,7 +39,7 @@ $query = "SELECT count(*),`Column1`,`Testing`, `Testing Three` FROM `Table1`
     WHERE Column1 = 'testing' AND ( (`Column2` = `Column3` OR Column4 >= NOW()) )
     GROUP BY Column1 ORDER BY Column3 DESC LIMIT 5,10";
 
-echo SqlFormatter::format($query);
+echo (new SqlFormatter())->format($query);
 ```
 
 Output:
@@ -55,7 +55,7 @@ This is useful for outputting to error logs or other non-html formats.
 
 ```php
 <?php
-echo SqlFormatter::format($query, false);
+echo (new SqlFormatter())->format($query, false);
 ```
 
 Output:
@@ -72,7 +72,7 @@ little easier to read.
 
 ```php
 <?php
-echo SqlFormatter::highlight($query);
+echo (new SqlFormatter())->highlight($query);
 ```
 
 Output:
@@ -96,7 +96,7 @@ line easily.
 ```
 
 ```php
-echo SqlFormatter::compress($query)
+echo (new SqlFormatter())->compress($query)
 ```
 
 Output:
@@ -121,7 +121,7 @@ you can use the removeComments method instead of compress.
 
 ```php
 <?php
-echo SqlFormatter::removeComments($query);
+echo (new SqlFormatter())->removeComments($query);
 ```
 
 Output:
@@ -151,7 +151,7 @@ SELECT * FROM MyTable;
 
 ```php
 <?php
-$queries = SqlFormatter::splitQuery($sql);
+$queries = (new SqlFormatter())->splitQuery($sql);
 ```
 
 Result:

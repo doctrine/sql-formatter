@@ -27,4 +27,4 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\SqlFormatter\SqlFormatter;
 
-echo SqlFormatter::format($sql);
+echo (new SqlFormatter())->format($sql);

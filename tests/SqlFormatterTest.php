@@ -22,10 +22,14 @@ final class SqlFormatterTest extends TestCase
     /** @var string[] */
     private $sqlData;
 
+    /** @var SqlFormatter */
+    private static $formatter;
+
     public static function setUpBeforeClass() : void
     {
+        self::$formatter = new SqlFormatter();
         // Force SqlFormatter to run in non-CLI mode for tests
-        SqlFormatter::$cli = false;
+        self::$formatter->cli = false;
     }
 
     /**
@@ -33,7 +37,7 @@ final class SqlFormatterTest extends TestCase
      */
     public function testFormatHighlight(string $sql, string $html) : void
     {
-        $this->assertEquals(trim($html), trim(SqlFormatter::format($sql)));
+        $this->assertEquals(trim($html), trim(self::$formatter->format($sql)));
     }
 
     /**
@@ -41,7 +45,7 @@ final class SqlFormatterTest extends TestCase
      */
     public function testFormat(string $sql, string $html) : void
     {
-        $this->assertEquals(trim($html), trim(SqlFormatter::format($sql, false)));
+        $this->assertEquals(trim($html), trim(self::$formatter->format($sql, false)));
     }
 
     /**
@@ -49,7 +53,7 @@ final class SqlFormatterTest extends TestCase
      */
     public function testHighlight(string $sql, string $html) : void
     {
-        $this->assertEquals(trim($html), trim(SqlFormatter::highlight($sql)));
+        $this->assertEquals(trim($html), trim(self::$formatter->highlight($sql)));
     }
 
     public function testHighlightBinary() : void
@@ -68,7 +72,7 @@ final class SqlFormatterTest extends TestCase
             $binaryData .
             '</span> <span style="font-weight:bold;">AS</span> <span style="color: #333;">BINARY</span></pre>';
 
-        $this->assertEquals(trim($html), trim(SqlFormatter::highlight($sql)));
+        $this->assertEquals(trim($html), trim(self::$formatter->highlight($sql)));
     }
 
     /**
@@ -76,9 +80,9 @@ final class SqlFormatterTest extends TestCase
      */
     public function testCliHighlight(string $sql, string $html) : void
     {
-        SqlFormatter::$cli = true;
-        $this->assertEquals(trim($html), trim(SqlFormatter::format($sql)));
-        SqlFormatter::$cli = false;
+        self::$formatter->cli = true;
+        $this->assertEquals(trim($html), trim(self::$formatter->format($sql)));
+        self::$formatter->cli = false;
     }
 
     /**
@@ -86,19 +90,19 @@ final class SqlFormatterTest extends TestCase
      */
     public function testCompress(string $sql, string $html) : void
     {
-        $this->assertEquals(trim($html), trim(SqlFormatter::compress($sql)));
+        $this->assertEquals(trim($html), trim(self::$formatter->compress($sql)));
     }
 
     public function testUsePre() : void
     {
-        SqlFormatter::$usePre = false;
-        $actual               = SqlFormatter::highlight('test');
-        $expected             = '<span style="color: #333;">test</span>';
+        self::$formatter->usePre = false;
+        $actual                  = self::$formatter->highlight('test');
+        $expected                = '<span style="color: #333;">test</span>';
         $this->assertEquals($actual, $expected);
 
-        SqlFormatter::$usePre = true;
-        $actual               = SqlFormatter::highlight('test');
-        $expected             = '<pre style="color: black; background-color: white;">' .
+        self::$formatter->usePre = true;
+        $actual                  = self::$formatter->highlight('test');
+        $expected                = '<pre style="color: black; background-color: white;">' .
             '<span style="color: #333;">test</span></pre>';
         $this->assertEquals($actual, $expected);
     }
@@ -110,7 +114,7 @@ final class SqlFormatterTest extends TestCase
             'SELECT Column2 FROM SomeOther Table WHERE (test = true);',
         ];
 
-        $actual = SqlFormatter::splitQuery(implode(';', $expected));
+        $actual = self::$formatter->splitQuery(implode(';', $expected));
 
         $this->assertEquals($expected, $actual);
     }
@@ -119,23 +123,23 @@ final class SqlFormatterTest extends TestCase
     {
         $sql      = "SELECT 1;SELECT 2;\n-- This is a comment\n;SELECT 3";
         $expected = ['SELECT 1;','SELECT 2;','SELECT 3'];
-        $actual   = SqlFormatter::splitQuery($sql);
+        $actual   = self::$formatter->splitQuery($sql);
 
         $this->assertEquals($expected, $actual);
     }
 
     public function testRemoveComments() : void
     {
-        $expected = SqlFormatter::format("SELECT\n * FROM\n MyTable", false);
+        $expected = self::$formatter->format("SELECT\n * FROM\n MyTable", false);
         $sql      = "/* this is a comment */SELECT#This is another comment\n * FROM-- One final comment\n MyTable";
-        $actual   = SqlFormatter::removeComments($sql);
+        $actual   = self::$formatter->removeComments($sql);
 
         $this->assertEquals($expected, $actual);
     }
 
     public function testCacheStats() : void
     {
-        $stats = SqlFormatter::getCacheStats();
+        $stats = self::$formatter->getCacheStats();
         $this->assertGreaterThan(1, $stats['hits']);
     }
 
@@ -263,14 +267,14 @@ final class SqlFormatterTest extends TestCase
         $clihighlight = array();
 
         foreach($this->sqlData as $sql) {
-            $formatHighlight[] = trim(SqlFormatter::format($sql));
-            $highlight[] = trim(SqlFormatter::highlight($sql));
-            $format[] = trim(SqlFormatter::format($sql, false));
-            $compress[] = trim(SqlFormatter::compress($sql));
+            $formatHighlight[] = trim(self::$formatter->format($sql));
+            $highlight[] = trim(self::$formatter->highlight($sql));
+            $format[] = trim(self::$formatter->format($sql, false));
+            $compress[] = trim(self::$formatter->compress($sql));
 
-            SqlFormatter::$cli = true;
-            $clihighlight[] = trim(SqlFormatter::format($sql));
-            SqlFormatter::$cli = false;
+            self::$formatter->cli = true;
+            $clihighlight[] = trim(self::$formatter->format($sql));
+            self::$formatter->cli = false;
         }
 
         file_put_contents(__DIR__."/format-highlight.html", implode("\n\n",$formatHighlight));
