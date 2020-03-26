@@ -2,7 +2,8 @@
 
 A lightweight php class for formatting sql statements.
 
-It can automatically indent and add line breaks in addition to syntax highlighting.
+It can automatically indent and add line breaks in addition to syntax
+highlighting.
 
 ## History
 
@@ -66,8 +67,8 @@ Output:
 There is a separate method `highlight` that preserves all original whitespace
 and just adds syntax highlighting.
 
-This is useful for sql that is already well formatted and just needs to be a little
-easier to read.
+This is useful for sql that is already well formatted and just needs to be a
+little easier to read.
 
 ```php
 <?php
@@ -82,7 +83,8 @@ Output:
 
 The `compress` method removes all comments and compresses whitespace.
 
-This is useful for outputting queries that can be copy pasted to the command line easily.
+This is useful for outputting queries that can be copy pasted to the command
+line easily.
 
 ```sql
 -- This is a comment
@@ -133,7 +135,8 @@ Output:
 
 ### Split SQL String into Queries
 
-Another feature, which is unrelated to formatting, is the ability to break up a SQL string into multiple queries.
+Another feature, which is unrelated to formatting, is the ability to break up a
+SQL string into multiple queries.
 
 For Example:
 
@@ -162,7 +165,8 @@ Result:
 
 Why not just use `explode(';', $sql)` or a regular expression?
 
-The following example sql and others like it are _impossible_ to split correctly using regular expressions, no matter how complex.
+The following example sql and others like it are _impossible_ to split
+correctly using regular expressions, no matter how complex.
 
 ```sql
 SELECT ";"; SELECT ";\"; a;";
@@ -172,7 +176,8 @@ SELECT a,b #comment;
 FROM test;
 ```
 
-SqlFormatter breaks the string into tokens instead of using regular expressions and will correctly produce:
+SqlFormatter breaks the string into tokens instead of using regular expressions
+and will correctly produce:
 
 1.    `SELECT ";"`;
 2.    `SELECT ";\"; a;"`;
@@ -181,6 +186,7 @@ SqlFormatter breaks the string into tokens instead of using regular expressions 
 FROM test`;
 
 Please note, the splitQuery method will still fail in the following cases:
-*    The DELIMITER command can be used to change the delimiter from the default ';' to something else.
+*    The DELIMITER command can be used to change the delimiter from the default
+     ';' to something else.
 *    The CREATE PROCEDURE command has a ';' in the middle of it
 *    The USE command is not terminated with a ';'
