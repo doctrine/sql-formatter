@@ -6,7 +6,7 @@
     "license": "MIT",
     "type": "library",
     "require": {
-        "php": ">=5.2.4"
+        "php": "^7.2"
     },
     "require-dev": {
         "doctrine/coding-standard": "^7.0",
