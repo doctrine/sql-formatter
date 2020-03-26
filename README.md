@@ -23,8 +23,8 @@ Here is what the original History section says:
 
 ## Usage
 
-The SqlFormatter class has a static method 'format' which takes a SQL string
-as input and returns a formatted HTML block inside a pre tag.
+The `SqlFormatter` class has a static method `format` which takes a SQL string
+as input and returns a formatted HTML block inside a `pre` tag.
 
 Sample usage:
 
@@ -48,7 +48,7 @@ Output:
 ### Formatting Only
 
 If you don't want syntax highlighting and only want the indentations and
-line breaks, pass in false as the second parameter.
+line breaks, pass in `false` as the second parameter.
 
 This is useful for outputting to error logs or other non-html formats.
 
@@ -63,7 +63,7 @@ Output:
 
 ### Syntax Highlighting Only
 
-There is a separate method 'highlight' that preserves all original whitespace
+There is a separate method `highlight` that preserves all original whitespace
 and just adds syntax highlighting.
 
 This is useful for sql that is already well formatted and just needs to be a little
@@ -80,11 +80,11 @@ Output:
 
 ### Compress Query
 
-The compress method removes all comments and compresses whitespace.
+The `compress` method removes all comments and compresses whitespace.
 
 This is useful for outputting queries that can be copy pasted to the command line easily.
 
-```
+```sql
 -- This is a comment
     SELECT
     /* This is another comment
@@ -99,7 +99,7 @@ echo SqlFormatter::compress($query)
 
 Output:
 
-```
+```sql
 SELECT Id as temp, DateCreated as Created FROM MyTable;
 ```
 
@@ -108,7 +108,7 @@ SELECT Id as temp, DateCreated as Created FROM MyTable;
 If you want to keep all original whitespace formatting and just remove comments, 
 you can use the removeComments method instead of compress.
 
-```
+```sql
 -- This is a comment
     SELECT
     /* This is another comment
@@ -123,7 +123,7 @@ echo SqlFormatter::removeComments($query);
 ```
 
 Output:
-```
+```sql
 
     SELECT
     
@@ -164,7 +164,7 @@ Why not just use `explode(';', $sql)` or a regular expression?
 
 The following example sql and others like it are _impossible_ to split correctly using regular expressions, no matter how complex.
 
-```
+```sql
 SELECT ";"; SELECT ";\"; a;";
 SELECT ";
     abc";
