@@ -1047,7 +1047,7 @@ final class SqlFormatter
 
     private function getQuotedString(string $string) : string
     {
-        $ret = null;
+        $ret = '';
 
         // This checks for the following patterns:
         // 1. backtick quoted string using `` to escape
