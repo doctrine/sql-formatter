@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
-use function defined;
 use function htmlentities;
 use function trim;
 use const ENT_COMPAT;
@@ -57,9 +56,7 @@ final class HtmlHighlighter implements Highlighter
     {
         [SqlFormatter::TOKEN_TYPE => $type, SqlFormatter::TOKEN_VALUE => $value] = $token;
 
-        $value = defined('ENT_IGNORE') ?
-             htmlentities($value, ENT_COMPAT | ENT_IGNORE, 'UTF-8'):
-             htmlentities($value, ENT_COMPAT, 'UTF-8');
+        $value = htmlentities($value, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
 
         if ($type === SqlFormatter::TOKEN_TYPE_BOUNDARY && ($value==='(' || $value===')')) {
             return $value;
