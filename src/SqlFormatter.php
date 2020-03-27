@@ -1610,59 +1610,37 @@ final class SqlFormatter
      */
     private function highlightToken(array $token) : string
     {
-        $type = $token[self::TOKEN_TYPE];
+        [self::TOKEN_TYPE => $type, self::TOKEN_VALUE => $value] = $token;
 
-        if ($this->isCli()) {
-            $token = $token[self::TOKEN_VALUE];
-        } else {
-            if (defined('ENT_IGNORE')) {
-                $token = htmlentities($token[self::TOKEN_VALUE], ENT_COMPAT | ENT_IGNORE, 'UTF-8');
-            } else {
-                $token = htmlentities($token[self::TOKEN_VALUE], ENT_COMPAT, 'UTF-8');
-            }
+        if (! $this->isCli()) {
+            $value = defined('ENT_IGNORE') ?
+                 htmlentities($value, ENT_COMPAT | ENT_IGNORE, 'UTF-8'):
+                 htmlentities($value, ENT_COMPAT, 'UTF-8');
         }
 
-        if ($type===self::TOKEN_TYPE_BOUNDARY) {
-            return $this->highlightBoundary($token);
+        switch ($type) {
+            case self::TOKEN_TYPE_BOUNDARY:
+                return $this->highlightBoundary($value);
+            case self::TOKEN_TYPE_WORD:
+                return $this->highlightWord($value);
+            case self::TOKEN_TYPE_BACKTICK_QUOTE:
+                return $this->highlightBacktickQuote($value);
+            case self::TOKEN_TYPE_QUOTE:
+                return $this->highlightQuote($value);
+            case self::TOKEN_TYPE_RESERVED:
+            case self::TOKEN_TYPE_RESERVED_TOPLEVEL:
+            case self::TOKEN_TYPE_RESERVED_NEWLINE:
+                return $this->highlightReservedWord($value);
+            case self::TOKEN_TYPE_NUMBER:
+                return $this->highlightNumber($value);
+            case self::TOKEN_TYPE_VARIABLE:
+                return $this->highlightVariable($value);
+            case self::TOKEN_TYPE_COMMENT:
+            case self::TOKEN_TYPE_BLOCK_COMMENT:
+                return $this->highlightComment($value);
+            default:
+                return $value;
         }
-
-        if ($type===self::TOKEN_TYPE_WORD) {
-            return $this->highlightWord($token);
-        }
-
-        if ($type===self::TOKEN_TYPE_BACKTICK_QUOTE) {
-            return $this->highlightBacktickQuote($token);
-        }
-
-        if ($type===self::TOKEN_TYPE_QUOTE) {
-            return $this->highlightQuote($token);
-        }
-
-        if ($type===self::TOKEN_TYPE_RESERVED) {
-            return $this->highlightReservedWord($token);
-        }
-
-        if ($type===self::TOKEN_TYPE_RESERVED_TOPLEVEL) {
-            return $this->highlightReservedWord($token);
-        }
-
-        if ($type===self::TOKEN_TYPE_RESERVED_NEWLINE) {
-            return $this->highlightReservedWord($token);
-        }
-
-        if ($type===self::TOKEN_TYPE_NUMBER) {
-            return $this->highlightNumber($token);
-        }
-
-        if ($type===self::TOKEN_TYPE_VARIABLE) {
-            return $this->highlightVariable($token);
-        }
-
-        if ($type===self::TOKEN_TYPE_COMMENT || $type===self::TOKEN_TYPE_BLOCK_COMMENT) {
-            return $this->highlightComment($token);
-        }
-
-        return $token;
     }
 
     /**
