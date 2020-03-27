@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter\Tests;
 
+use Doctrine\SqlFormatter\CliHighlighter;
+use Doctrine\SqlFormatter\HtmlHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
 use PHPUnit\Framework\TestCase;
 use function assert;
@@ -25,11 +27,15 @@ final class SqlFormatterTest extends TestCase
     /** @var SqlFormatter */
     private static $formatter;
 
+    /** @var HtmlHighlighter */
+    private static $highlighter;
+
     public static function setUpBeforeClass() : void
     {
-        self::$formatter = new SqlFormatter();
         // Force SqlFormatter to run in non-CLI mode for tests
-        self::$formatter->cli = false;
+        self::$highlighter = new HtmlHighlighter();
+
+        self::$formatter = new SqlFormatter(self::$highlighter);
     }
 
     /**
@@ -80,9 +86,8 @@ final class SqlFormatterTest extends TestCase
      */
     public function testCliHighlight(string $sql, string $html) : void
     {
-        self::$formatter->cli = true;
-        $this->assertEquals(trim($html), trim(self::$formatter->format($sql)));
-        self::$formatter->cli = false;
+        $formatter = new SqlFormatter(new CliHighlighter());
+        $this->assertEquals(trim($html), trim($formatter->format($sql)));
     }
 
     /**
@@ -95,14 +100,14 @@ final class SqlFormatterTest extends TestCase
 
     public function testUsePre() : void
     {
-        self::$formatter->usePre = false;
-        $actual                  = self::$formatter->highlight('test');
-        $expected                = '<span style="color: #333;">test</span>';
+        self::$highlighter->usePre = false;
+        $actual                    = self::$formatter->highlight('test');
+        $expected                  = '<span style="color: #333;">test</span>';
         $this->assertEquals($actual, $expected);
 
-        self::$formatter->usePre = true;
-        $actual                  = self::$formatter->highlight('test');
-        $expected                = '<pre style="color: black; background-color: white;">' .
+        self::$highlighter->usePre = true;
+        $actual                    = self::$formatter->highlight('test');
+        $expected                  = '<pre style="color: black; background-color: white;">' .
             '<span style="color: #333;">test</span></pre>';
         $this->assertEquals($actual, $expected);
     }

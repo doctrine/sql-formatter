@@ -1,6 +1,6 @@
 # SqlFormatter
 
-A lightweight php class for formatting sql statements.
+A lightweight php package for formatting sql statements.
 
 It can automatically indent and add line breaks in addition to syntax
 highlighting.

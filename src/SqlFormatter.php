@@ -21,8 +21,6 @@ use function arsort;
 use function assert;
 use function count;
 use function current;
-use function defined;
-use function htmlentities;
 use function implode;
 use function preg_match;
 use function preg_quote;
@@ -37,8 +35,6 @@ use function strpos;
 use function strtoupper;
 use function substr;
 use function trim;
-use const ENT_COMPAT;
-use const ENT_IGNORE;
 use const PHP_SAPI;
 
 final class SqlFormatter
@@ -709,37 +705,6 @@ final class SqlFormatter
         '#',
     ];
 
-    // For HTML syntax highlighting
-    // Styles applied to different token types
-    /** @var string */
-    public $quoteAttributes = 'style="color: blue;"';
-
-    /** @var string */
-    public $backtickQuoteAttributes = 'style="color: purple;"';
-
-    /** @var string */
-    public $reservedAttributes = 'style="font-weight:bold;"';
-
-    /** @var string */
-    public $boundaryAttributes = '';
-
-    /** @var string */
-    public $numberAttributes = 'style="color: green;"';
-
-    /** @var string */
-    public $wordAttributes = 'style="color: #333;"';
-
-    /** @var string */
-    public $errorAttributes = 'style="background-color: red;"';
-
-    /** @var string */
-    public $commentAttributes = 'style="color: #aaa;"';
-
-    /** @var string */
-    public $variableAttributes = 'style="color: orange;"';
-
-    /** @var string */
-    public $preAttributes = 'style="color: black; background-color: white;"';
 
     /**
      * Whether or not the current environment is the CLI
@@ -750,51 +715,12 @@ final class SqlFormatter
      */
     public $cli;
 
-    // For CLI syntax highlighting
-
-    /** @var string */
-    public $cliQuote = "\x1b[34;1m";
-
-    /** @var string */
-    public $cliBacktickQuote = "\x1b[35;1m";
-
-    /** @var string */
-    public $cliReserved = "\x1b[37m";
-
-    /** @var string */
-    public $cliBoundary = '';
-
-    /** @var string */
-    public $cliNumber = "\x1b[32;1m";
-
-    /** @var string */
-    public $cliWord = '';
-
-    /** @var string */
-    public $cliError = "\x1b[31;1;7m";
-
-    /** @var string */
-    public $cliComment = "\x1b[30;1m";
-
-    /** @var string */
-    public $cliFunctions = "\x1b[37m";
-
-    /** @var string */
-    public $cliVariable = "\x1b[36;1m";
-
     /**
      * The tab character to use when formatting SQL
      *
      * @var string
      */
     public $tab = '  ';
-
-    /**
-     * This flag tells us if queries need to be enclosed in <pre> tags
-     *
-     * @var bool
-     */
-    public $usePre = true;
 
     /**
      * This flag tells us if SqlFormatted has been initialized
@@ -834,6 +760,20 @@ final class SqlFormatter
 
     /** @var int */
     private $cacheMisses = 0;
+
+    /** @var Highlighter */
+    private $highlighter;
+
+    public function __construct(?Highlighter $highlighter = null)
+    {
+        if ($highlighter === null) {
+            $this->highlighter = $this->isCli() ? new CliHighlighter() : new HtmlHighlighter();
+
+            return;
+        }
+
+        $this->highlighter = $highlighter;
+    }
 
     /**
      * Get stats about the token cache
@@ -1187,7 +1127,7 @@ final class SqlFormatter
         foreach ($tokens as $i => $token) {
             // Get highlighted token if doing syntax highlighting
             if ($highlight) {
-                $highlighted = $this->highlightToken($token);
+                $highlighted = $this->highlighter->highlightToken($token);
             } else { // If returning raw text
                 $highlighted = $token[self::TOKEN_VALUE];
             }
@@ -1332,7 +1272,9 @@ final class SqlFormatter
                     $indentLevel = 0;
 
                     if ($highlight) {
-                        $return .= "\n" . $this->highlightError($token[self::TOKEN_VALUE]);
+                        $return .= "\n" . $this->highlighter->highlightError(
+                            $token[self::TOKEN_VALUE]
+                        );
                         continue;
                     }
                 }
@@ -1447,14 +1389,14 @@ final class SqlFormatter
 
         // If there are unmatched parentheses
         if ($highlight && array_search('block', $indentTypes) !== false) {
-            $return .= "\n" . $this->highlightError('WARNING: unclosed parentheses or section');
+            $return .= "\n" . $this->highlighter->highlightError('WARNING: unclosed parentheses or section');
         }
 
         // Replace tab characters with the configuration tab character
         $return = trim(str_replace("\t", $this->tab, $return));
 
         if ($highlight) {
-            $return = $this->output($return);
+            $return = $this->highlighter->output($return);
         }
 
         return $return;
@@ -1474,10 +1416,10 @@ final class SqlFormatter
         $return = '';
 
         foreach ($tokens as $token) {
-            $return .= $this->highlightToken($token);
+            $return .= $this->highlighter->highlightToken($token);
         }
 
-        return $this->output($return);
+        return $this->highlighter->output($return);
     }
 
     /**
@@ -1602,196 +1544,6 @@ final class SqlFormatter
     }
 
     /**
-     * Highlights a token depending on its type.
-     *
-     * @param mixed[] $token An associative array containing type and value.
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightToken(array $token) : string
-    {
-        [self::TOKEN_TYPE => $type, self::TOKEN_VALUE => $value] = $token;
-
-        if (! $this->isCli()) {
-            $value = defined('ENT_IGNORE') ?
-                 htmlentities($value, ENT_COMPAT | ENT_IGNORE, 'UTF-8'):
-                 htmlentities($value, ENT_COMPAT, 'UTF-8');
-        }
-
-        switch ($type) {
-            case self::TOKEN_TYPE_BOUNDARY:
-                return $this->highlightBoundary($value);
-            case self::TOKEN_TYPE_WORD:
-                return $this->highlightWord($value);
-            case self::TOKEN_TYPE_BACKTICK_QUOTE:
-                return $this->highlightBacktickQuote($value);
-            case self::TOKEN_TYPE_QUOTE:
-                return $this->highlightQuote($value);
-            case self::TOKEN_TYPE_RESERVED:
-            case self::TOKEN_TYPE_RESERVED_TOPLEVEL:
-            case self::TOKEN_TYPE_RESERVED_NEWLINE:
-                return $this->highlightReservedWord($value);
-            case self::TOKEN_TYPE_NUMBER:
-                return $this->highlightNumber($value);
-            case self::TOKEN_TYPE_VARIABLE:
-                return $this->highlightVariable($value);
-            case self::TOKEN_TYPE_COMMENT:
-            case self::TOKEN_TYPE_BLOCK_COMMENT:
-                return $this->highlightComment($value);
-            default:
-                return $value;
-        }
-    }
-
-    /**
-     * Highlights a quoted string
-     *
-     * @param string $value The token's value
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightQuote(string $value) : string
-    {
-        if ($this->isCli()) {
-            return $this->cliQuote . $value . "\x1b[0m";
-        }
-
-        return '<span ' . $this->quoteAttributes . '>' . $value . '</span>';
-    }
-
-    /**
-     * Highlights a backtick quoted string
-     *
-     * @param string $value The token's value
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightBacktickQuote(string $value) : string
-    {
-        if ($this->isCli()) {
-            return $this->cliBacktickQuote . $value . "\x1b[0m";
-        }
-
-        return '<span ' . $this->backtickQuoteAttributes . '>' . $value . '</span>';
-    }
-
-    /**
-     * Highlights a reserved word
-     *
-     * @param string $value The token's value
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightReservedWord(string $value) : string
-    {
-        if ($this->isCli()) {
-            return $this->cliReserved . $value . "\x1b[0m";
-        }
-
-        return '<span ' . $this->reservedAttributes . '>' . $value . '</span>';
-    }
-
-    /**
-     * Highlights a boundary token
-     *
-     * @param string $value The token's value
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightBoundary(string $value) : string
-    {
-        if ($value==='(' || $value===')') {
-            return $value;
-        }
-
-        if ($this->isCli()) {
-            return $this->cliBoundary . $value . "\x1b[0m";
-        }
-
-        return '<span ' . $this->boundaryAttributes . '>' . $value . '</span>';
-    }
-
-    /**
-     * Highlights a number
-     *
-     * @param string $value The token's value
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightNumber(string $value) : string
-    {
-        if ($this->isCli()) {
-            return $this->cliNumber . $value . "\x1b[0m";
-        }
-
-        return '<span ' . $this->numberAttributes . '>' . $value . '</span>';
-    }
-
-    /**
-     * Highlights an error
-     *
-     * @param string $value The token's value
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightError(string $value) : string
-    {
-        if ($this->isCli()) {
-            return $this->cliError . $value . "\x1b[0m";
-        }
-
-        return '<span ' . $this->errorAttributes . '>' . $value . '</span>';
-    }
-
-    /**
-     * Highlights a comment
-     *
-     * @param string $value The token's value
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightComment(string $value) : string
-    {
-        if ($this->isCli()) {
-            return $this->cliComment . $value . "\x1b[0m";
-        }
-
-        return '<span ' . $this->commentAttributes . '>' . $value . '</span>';
-    }
-
-    /**
-     * Highlights a word token
-     *
-     * @param string $value The token's value
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightWord(string $value) : string
-    {
-        if ($this->isCli()) {
-            return $this->cliWord . $value . "\x1b[0m";
-        }
-
-        return '<span ' . $this->wordAttributes . '>' . $value . '</span>';
-    }
-
-    /**
-     * Highlights a variable token
-     *
-     * @param string $value The token's value
-     *
-     * @return string HTML code of the highlighted token.
-     */
-    private function highlightVariable(string $value) : string
-    {
-        if ($this->isCli()) {
-            return $this->cliVariable . $value . "\x1b[0m";
-        }
-
-        return '<span ' . $this->variableAttributes . '>' . $value . '</span>';
-    }
-
-    /**
      * Helper function for building regular expressions for reserved words and boundary characters
      *
      * @param string[] $strings The strings to be quoted
@@ -1803,27 +1555,6 @@ final class SqlFormatter
         return array_map(static function (string $string) : string {
             return preg_quote($string, '/');
         }, $strings);
-    }
-
-    /**
-     * Helper function for building string output
-     *
-     * @param string $string The string to be quoted
-     *
-     * @return string The quoted string
-     */
-    private function output(string $string) : string
-    {
-        if ($this->isCli()) {
-            return $string . "\n";
-        }
-
-        $string =trim($string);
-        if (! $this->usePre) {
-            return $string;
-        }
-
-        return '<pre ' . $this->preAttributes . '>' . $string . '</pre>';
     }
 
     private function isCli() : bool
