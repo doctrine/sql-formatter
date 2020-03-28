@@ -6,6 +6,7 @@ namespace Doctrine\SqlFormatter\Tests;
 
 use Doctrine\SqlFormatter\CliHighlighter;
 use Doctrine\SqlFormatter\HtmlHighlighter;
+use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
 use Doctrine\SqlFormatter\Tokenizer;
 use PHPUnit\Framework\TestCase;
@@ -59,7 +60,8 @@ final class SqlFormatterTest extends TestCase
      */
     public function testFormat(string $sql, string $html) : void
     {
-        $this->assertEquals(trim($html), trim($this->formatter->format($sql, false)));
+        $formatter = new SqlFormatter(new Tokenizer(), new NullHighlighter());
+        $this->assertEquals(trim($html), trim($formatter->format($sql)));
     }
 
     /**

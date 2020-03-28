@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Doctrine\SqlFormatter;
 
 use function htmlentities;
+use function sprintf;
 use function trim;
 use const ENT_COMPAT;
 use const ENT_IGNORE;
+use const PHP_EOL;
 
 final class HtmlHighlighter implements Highlighter
 {
@@ -94,7 +96,7 @@ final class HtmlHighlighter implements Highlighter
 
     public function highlightError(string $value) : string
     {
-        return '<span ' . $this->errorAttributes . '>' . $value . '</span>';
+        return sprintf('%s<span %s>%s</span>', PHP_EOL, $this->errorAttributes, $value);
     }
 
     public function output(string $string) : string

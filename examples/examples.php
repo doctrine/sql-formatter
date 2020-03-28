@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
+use Doctrine\SqlFormatter\Tokenizer;
 
 $formatter = new SqlFormatter();
 
@@ -177,9 +179,9 @@ SQL,
         <div>
             Usage:
             <pre>
-            <?php highlight_string(
-                '<?php' . "\n" . '$formatted = (new SqlFormatter())->format($sql, false);' . "\n" . '?>'
-            ); ?>
+            <?php highlight_string('<?php' . "\n" .
+            '$formatted = (new SqlFormatter(mew Tokenizer(), new NullHighlighter()))->format($sql);' .
+            "\n" . '?>'); ?>
             </pre>
         </div>
         <table>
@@ -192,7 +194,10 @@ SQL,
                 <td>
                     <pre><?= $sql; ?></pre>
                 </td>
-                <td><pre><?= htmlentities($formatter->format($sql, false)); ?></pre></td>
+                <td><pre><?= htmlentities((new SqlFormatter(
+                    new Tokenizer(),
+                    new NullHighlighter()
+                ))->format($sql)); ?></pre></td>
             </tr>
             <?php endforeach ?>
         </table>

@@ -750,11 +750,10 @@ SELECT
 FROM 
   Test 
 WHERE 
-  (MyColumn = 1)
-) 
+  (MyColumn = 1))
 AND (
   (
-    (SomeOtherColumn = 2);
+    (SomeOtherColumn = 2); WARNING: unclosed parentheses or section 
 
 SELECT 
   * 

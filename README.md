@@ -49,13 +49,17 @@ Output:
 ### Formatting Only
 
 If you don't want syntax highlighting and only want the indentations and
-line breaks, pass in `false` as the second parameter.
+line breaks, pass in a `NullHighlighter` instance as the second parameter.
 
 This is useful for outputting to error logs or other non-html formats.
 
 ```php
 <?php
-echo (new SqlFormatter())->format($query, false);
+
+use Doctrine\SqlFormatter\NullHighlighter;
+use Doctrine\SqlFormatter\SqlFormatter;
+
+echo (new SqlFormatter(new NullHighlighter()))->format($query);
 ```
 
 Output:

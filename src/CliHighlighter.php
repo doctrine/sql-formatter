@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
+use function sprintf;
+use const PHP_EOL;
+
 final class CliHighlighter implements Highlighter
 {
     /** @var string */
@@ -79,7 +82,7 @@ final class CliHighlighter implements Highlighter
 
     public function highlightError(string $value) : string
     {
-        return $this->cliError . $value . "\x1b[0m";
+        return sprintf('%s%s%s%s', PHP_EOL, $this->cliError, $value, "\x1b[0m");
     }
 
     public function output(string $string) : string
