@@ -12,7 +12,6 @@ use function assert;
 use function defined;
 use function explode;
 use function file_get_contents;
-use function implode;
 use function pack;
 use function trim;
 
@@ -110,36 +109,6 @@ final class SqlFormatterTest extends TestCase
         $expected                  = '<pre style="color: black; background-color: white;">' .
             '<span style="color: #333;">test</span></pre>';
         $this->assertEquals($actual, $expected);
-    }
-
-    public function testSplitQuery() : void
-    {
-        $expected = [
-            "SELECT 'test' FROM MyTable;",
-            'SELECT Column2 FROM SomeOther Table WHERE (test = true);',
-        ];
-
-        $actual = self::$formatter->splitQuery(implode(';', $expected));
-
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testSplitQueryEmpty() : void
-    {
-        $sql      = "SELECT 1;SELECT 2;\n-- This is a comment\n;SELECT 3";
-        $expected = ['SELECT 1;','SELECT 2;','SELECT 3'];
-        $actual   = self::$formatter->splitQuery($sql);
-
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testRemoveComments() : void
-    {
-        $expected = self::$formatter->format("SELECT\n * FROM\n MyTable", false);
-        $sql      = "/* this is a comment */SELECT#This is another comment\n * FROM-- One final comment\n MyTable";
-        $actual   = self::$formatter->removeComments($sql);
-
-        $this->assertEquals($expected, $actual);
     }
 
     public function testCacheStats() : void
