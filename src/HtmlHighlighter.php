@@ -49,13 +49,8 @@ final class HtmlHighlighter implements Highlighter
      */
     public $usePre = true;
 
-    /**
-     * {@inheritDoc}
-     */
-    public function highlightToken(array $token) : string
+    public function highlightToken(int $type, string $value) : string
     {
-        [SqlFormatter::TOKEN_TYPE => $type, SqlFormatter::TOKEN_VALUE => $value] = $token;
-
         $value = htmlentities($value, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
 
         if ($type === SqlFormatter::TOKEN_TYPE_BOUNDARY && ($value==='(' || $value===')')) {

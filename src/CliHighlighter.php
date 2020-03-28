@@ -36,13 +36,8 @@ final class CliHighlighter implements Highlighter
     /** @var string */
     public $cliVariable = "\x1b[36;1m";
 
-    /**
-     * {@inheritDoc}
-     */
-    public function highlightToken(array $token) : string
+    public function highlightToken(int $type, string $value) : string
     {
-        [SqlFormatter::TOKEN_TYPE => $type, SqlFormatter::TOKEN_VALUE => $value] = $token;
-
         if ($type === SqlFormatter::TOKEN_TYPE_BOUNDARY && ($value==='(' || $value===')')) {
             return $value;
         }

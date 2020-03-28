@@ -8,10 +8,8 @@ interface Highlighter
 {
     /**
      * Highlights a token depending on its type.
-     *
-     * @param mixed[] $token An associative array containing type and value.
      */
-    public function highlightToken(array $token) : string;
+    public function highlightToken(int $type, string $value) : string;
 
     public function highlightError(string $value) : string;
 

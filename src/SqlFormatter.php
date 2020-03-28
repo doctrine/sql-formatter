@@ -1127,7 +1127,10 @@ final class SqlFormatter
         foreach ($tokens as $i => $token) {
             // Get highlighted token if doing syntax highlighting
             if ($highlight) {
-                $highlighted = $this->highlighter->highlightToken($token);
+                $highlighted = $this->highlighter->highlightToken(
+                    $token[self::TOKEN_TYPE],
+                    $token[self::TOKEN_VALUE]
+                );
             } else { // If returning raw text
                 $highlighted = $token[self::TOKEN_VALUE];
             }
@@ -1416,7 +1419,10 @@ final class SqlFormatter
         $return = '';
 
         foreach ($tokens as $token) {
-            $return .= $this->highlighter->highlightToken($token);
+            $return .= $this->highlighter->highlightToken(
+                $token[self::TOKEN_TYPE],
+                $token[self::TOKEN_VALUE]
+            );
         }
 
         return $this->highlighter->output($return);
