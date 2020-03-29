@@ -746,9 +746,6 @@ final class Tokenizer
     {
         $tokens = [];
 
-        // Used for debugging if there is an error while tokenizing the string
-        $originalLength = strlen($string);
-
         // Used to make sure the string keeps shrinking on each iteration
         $oldStringLen = strlen($string) + 1;
 
