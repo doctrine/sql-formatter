@@ -722,13 +722,6 @@ final class SqlFormatter
      */
     public $tab = '  ';
 
-    /**
-     * This flag tells us if SqlFormatted has been initialized
-     *
-     * @var bool
-     */
-    private $init;
-
     // Regular expressions for tokenizing
 
     /** @var string */
@@ -766,39 +759,6 @@ final class SqlFormatter
 
     public function __construct(?Highlighter $highlighter = null)
     {
-        if ($highlighter === null) {
-            $this->highlighter = $this->isCli() ? new CliHighlighter() : new HtmlHighlighter();
-
-            return;
-        }
-
-        $this->highlighter = $highlighter;
-    }
-
-    /**
-     * Get stats about the token cache
-     *
-     * @return mixed[] An array containing the keys 'hits', 'misses', 'entries', and 'size' in bytes
-     */
-    public function getCacheStats() : array
-    {
-        return [
-            'hits'=>$this->cacheHits,
-            'misses'=>$this->cacheMisses,
-            'entries'=>count($this->tokenCache),
-            'size'=>strlen(serialize($this->tokenCache)),
-        ];
-    }
-
-    /**
-     * Stuff that only needs to be done once.  Builds regular expressions and sorts the reserved words.
-     */
-    private function init() : void
-    {
-        if ($this->init) {
-            return;
-        }
-
         // Sort reserved word list from longest word to shortest, 3x faster than usort
         $reservedMap = array_combine($this->reserved, array_map('strlen', $this->reserved));
         assert($reservedMap !== false);
@@ -825,7 +785,28 @@ final class SqlFormatter
 
         $this->regexFunction = '(' . implode('|', $this->quoteRegex($this->functions)) . ')';
 
-        $this->init = true;
+        if ($highlighter === null) {
+            $this->highlighter = $this->isCli() ? new CliHighlighter() : new HtmlHighlighter();
+
+            return;
+        }
+
+        $this->highlighter = $highlighter;
+    }
+
+    /**
+     * Get stats about the token cache
+     *
+     * @return mixed[] An array containing the keys 'hits', 'misses', 'entries', and 'size' in bytes
+     */
+    public function getCacheStats() : array
+    {
+        return [
+            'hits'=>$this->cacheHits,
+            'misses'=>$this->cacheMisses,
+            'entries'=>count($this->tokenCache),
+            'size'=>strlen(serialize($this->tokenCache)),
+        ];
     }
 
     /**
@@ -1018,8 +999,6 @@ final class SqlFormatter
      */
     private function tokenize(string $string) : array
     {
-        $this->init();
-
         $tokens = [];
 
         // Used for debugging if there is an error while tokenizing the string
