@@ -26,5 +26,6 @@ if (isset($argv[1])) {
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\SqlFormatter\SqlFormatter;
+use Doctrine\SqlFormatter\Tokenizer;
 
 echo (new SqlFormatter())->format($sql);

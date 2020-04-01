@@ -7,6 +7,7 @@ namespace Doctrine\SqlFormatter\Tests;
 use Doctrine\SqlFormatter\CliHighlighter;
 use Doctrine\SqlFormatter\HtmlHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
+use Doctrine\SqlFormatter\Tokenizer;
 use PHPUnit\Framework\TestCase;
 use function assert;
 use function defined;
@@ -23,18 +24,26 @@ final class SqlFormatterTest extends TestCase
     /** @var string[] */
     private $sqlData;
 
+    /** @var Tokenizer */
+    private static $tokenizer;
+
     /** @var SqlFormatter */
-    private static $formatter;
+    private $formatter;
 
     /** @var HtmlHighlighter */
-    private static $highlighter;
+    private $highlighter;
 
     public static function setUpBeforeClass() : void
     {
-        // Force SqlFormatter to run in non-CLI mode for tests
-        self::$highlighter = new HtmlHighlighter();
+        self::$tokenizer = new Tokenizer();
+    }
 
-        self::$formatter = new SqlFormatter(self::$highlighter);
+    protected function setUp() : void
+    {
+        // Force SqlFormatter to run in non-CLI mode for tests
+        $this->highlighter = new HtmlHighlighter();
+
+        $this->formatter = new SqlFormatter(self::$tokenizer, $this->highlighter);
     }
 
     /**
@@ -42,7 +51,7 @@ final class SqlFormatterTest extends TestCase
      */
     public function testFormatHighlight(string $sql, string $html) : void
     {
-        $this->assertEquals(trim($html), trim(self::$formatter->format($sql)));
+        $this->assertEquals(trim($html), trim($this->formatter->format($sql)));
     }
 
     /**
@@ -50,7 +59,7 @@ final class SqlFormatterTest extends TestCase
      */
     public function testFormat(string $sql, string $html) : void
     {
-        $this->assertEquals(trim($html), trim(self::$formatter->format($sql, false)));
+        $this->assertEquals(trim($html), trim($this->formatter->format($sql, false)));
     }
 
     /**
@@ -58,7 +67,7 @@ final class SqlFormatterTest extends TestCase
      */
     public function testHighlight(string $sql, string $html) : void
     {
-        $this->assertEquals(trim($html), trim(self::$formatter->highlight($sql)));
+        $this->assertEquals(trim($html), trim($this->formatter->highlight($sql)));
     }
 
     public function testHighlightBinary() : void
@@ -77,7 +86,7 @@ final class SqlFormatterTest extends TestCase
             $binaryData .
             '</span> <span style="font-weight:bold;">AS</span> <span style="color: #333;">BINARY</span></pre>';
 
-        $this->assertEquals(trim($html), trim(self::$formatter->highlight($sql)));
+        $this->assertEquals(trim($html), trim($this->formatter->highlight($sql)));
     }
 
     /**
@@ -85,7 +94,7 @@ final class SqlFormatterTest extends TestCase
      */
     public function testCliHighlight(string $sql, string $html) : void
     {
-        $formatter = new SqlFormatter(new CliHighlighter());
+        $formatter = new SqlFormatter(self::$tokenizer, new CliHighlighter());
         $this->assertEquals(trim($html), trim($formatter->format($sql)));
     }
 
@@ -94,18 +103,18 @@ final class SqlFormatterTest extends TestCase
      */
     public function testCompress(string $sql, string $html) : void
     {
-        $this->assertEquals(trim($html), trim(self::$formatter->compress($sql)));
+        $this->assertEquals(trim($html), trim($this->formatter->compress($sql)));
     }
 
     public function testUsePre() : void
     {
-        self::$highlighter->usePre = false;
-        $actual                    = self::$formatter->highlight('test');
+        $this->highlighter->usePre = false;
+        $actual                    = $this->formatter->highlight('test');
         $expected                  = '<span style="color: #333;">test</span>';
         $this->assertEquals($actual, $expected);
 
-        self::$highlighter->usePre = true;
-        $actual                    = self::$formatter->highlight('test');
+        $this->highlighter->usePre = true;
+        $actual                    = $this->formatter->highlight('test');
         $expected                  = '<pre style="color: black; background-color: white;">' .
             '<span style="color: #333;">test</span></pre>';
         $this->assertEquals($actual, $expected);
@@ -113,7 +122,7 @@ final class SqlFormatterTest extends TestCase
 
     public function testCacheStats() : void
     {
-        $stats = self::$formatter->getCacheStats();
+        $stats = self::$tokenizer->getCacheStats();
         $this->assertGreaterThan(1, $stats['hits']);
     }
 
@@ -241,14 +250,14 @@ final class SqlFormatterTest extends TestCase
         $clihighlight = array();
 
         foreach($this->sqlData as $sql) {
-            $formatHighlight[] = trim(self::$formatter->format($sql));
-            $highlight[] = trim(self::$formatter->highlight($sql));
-            $format[] = trim(self::$formatter->format($sql, false));
-            $compress[] = trim(self::$formatter->compress($sql));
+            $formatHighlight[] = trim($this->formatter->format($sql));
+            $highlight[] = trim($this->formatter->highlight($sql));
+            $format[] = trim($this->formatter->format($sql, false));
+            $compress[] = trim($this->formatter->compress($sql));
 
-            self::$formatter->cli = true;
-            $clihighlight[] = trim(self::$formatter->format($sql));
-            self::$formatter->cli = false;
+            $this->formatter->cli = true;
+            $clihighlight[] = trim($this->formatter->format($sql));
+            $this->formatter->cli = false;
         }
 
         file_put_contents(__DIR__."/format-highlight.html", implode("\n\n",$formatHighlight));

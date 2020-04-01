@@ -53,7 +53,7 @@ final class HtmlHighlighter implements Highlighter
     {
         $value = htmlentities($value, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
 
-        if ($type === SqlFormatter::TOKEN_TYPE_BOUNDARY && ($value==='(' || $value===')')) {
+        if ($type === Token::TOKEN_TYPE_BOUNDARY && ($value==='(' || $value===')')) {
             return $value;
         }
 
@@ -68,24 +68,24 @@ final class HtmlHighlighter implements Highlighter
     public function attributes(int $type) : ?string
     {
         switch ($type) {
-            case SqlFormatter::TOKEN_TYPE_BOUNDARY:
+            case Token::TOKEN_TYPE_BOUNDARY:
                 return $this->boundaryAttributes;
-            case SqlFormatter::TOKEN_TYPE_WORD:
+            case Token::TOKEN_TYPE_WORD:
                 return $this->wordAttributes;
-            case SqlFormatter::TOKEN_TYPE_BACKTICK_QUOTE:
+            case Token::TOKEN_TYPE_BACKTICK_QUOTE:
                 return $this->backtickQuoteAttributes;
-            case SqlFormatter::TOKEN_TYPE_QUOTE:
+            case Token::TOKEN_TYPE_QUOTE:
                 return $this->quoteAttributes;
-            case SqlFormatter::TOKEN_TYPE_RESERVED:
-            case SqlFormatter::TOKEN_TYPE_RESERVED_TOPLEVEL:
-            case SqlFormatter::TOKEN_TYPE_RESERVED_NEWLINE:
+            case Token::TOKEN_TYPE_RESERVED:
+            case Token::TOKEN_TYPE_RESERVED_TOPLEVEL:
+            case Token::TOKEN_TYPE_RESERVED_NEWLINE:
                 return $this->reservedAttributes;
-            case SqlFormatter::TOKEN_TYPE_NUMBER:
+            case Token::TOKEN_TYPE_NUMBER:
                 return $this->numberAttributes;
-            case SqlFormatter::TOKEN_TYPE_VARIABLE:
+            case Token::TOKEN_TYPE_VARIABLE:
                 return $this->variableAttributes;
-            case SqlFormatter::TOKEN_TYPE_COMMENT:
-            case SqlFormatter::TOKEN_TYPE_BLOCK_COMMENT:
+            case Token::TOKEN_TYPE_COMMENT:
+            case Token::TOKEN_TYPE_BLOCK_COMMENT:
                 return $this->commentAttributes;
             default:
                 return null;

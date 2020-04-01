@@ -38,7 +38,7 @@ final class CliHighlighter implements Highlighter
 
     public function highlightToken(int $type, string $value) : string
     {
-        if ($type === SqlFormatter::TOKEN_TYPE_BOUNDARY && ($value==='(' || $value===')')) {
+        if ($type === Token::TOKEN_TYPE_BOUNDARY && ($value==='(' || $value===')')) {
             return $value;
         }
 
@@ -53,24 +53,24 @@ final class CliHighlighter implements Highlighter
     private function prefix(int $type) : ?string
     {
         switch ($type) {
-            case SqlFormatter::TOKEN_TYPE_BOUNDARY:
+            case Token::TOKEN_TYPE_BOUNDARY:
                 return $this->cliBoundary;
-            case SqlFormatter::TOKEN_TYPE_WORD:
+            case Token::TOKEN_TYPE_WORD:
                 return $this->cliWord;
-            case SqlFormatter::TOKEN_TYPE_BACKTICK_QUOTE:
+            case Token::TOKEN_TYPE_BACKTICK_QUOTE:
                 return $this->cliBacktickQuote;
-            case SqlFormatter::TOKEN_TYPE_QUOTE:
+            case Token::TOKEN_TYPE_QUOTE:
                 return $this->cliQuote;
-            case SqlFormatter::TOKEN_TYPE_RESERVED:
-            case SqlFormatter::TOKEN_TYPE_RESERVED_TOPLEVEL:
-            case SqlFormatter::TOKEN_TYPE_RESERVED_NEWLINE:
+            case Token::TOKEN_TYPE_RESERVED:
+            case Token::TOKEN_TYPE_RESERVED_TOPLEVEL:
+            case Token::TOKEN_TYPE_RESERVED_NEWLINE:
                 return $this->cliReserved;
-            case SqlFormatter::TOKEN_TYPE_NUMBER:
+            case Token::TOKEN_TYPE_NUMBER:
                 return $this->cliNumber;
-            case SqlFormatter::TOKEN_TYPE_VARIABLE:
+            case Token::TOKEN_TYPE_VARIABLE:
                 return $this->cliVariable;
-            case SqlFormatter::TOKEN_TYPE_COMMENT:
-            case SqlFormatter::TOKEN_TYPE_BLOCK_COMMENT:
+            case Token::TOKEN_TYPE_COMMENT:
+            case Token::TOKEN_TYPE_BLOCK_COMMENT:
                 return $this->cliComment;
             default:
                 return null;
