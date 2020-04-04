@@ -686,11 +686,14 @@ final class Tokenizer
         '#',
     ];
 
-    // Cache variables
-    // Only tokens shorter than this size will be cached.  Somewhere between 10
-    // and 20 seems to work well for most cases.
-    /** @var int */
-    public $maxCachekeySize = 15;
+    /**
+     * Cache variables
+     * Only tokens shorter than this size will be cached.  Somewhere between 10
+     * and 20 seems to work well for most cases.
+     *
+     * @var int
+     */
+    private $maxCachekeySize;
 
     /** @var Token[] */
     private $tokenCache = [];
@@ -705,8 +708,9 @@ final class Tokenizer
      * Stuff that only needs to be done once. Builds regular expressions and
      * sorts the reserved words.
      */
-    public function __construct()
+    public function __construct(int $maxCachekeySize = 15)
     {
+        $this->maxCachekeySize = $maxCachekeySize;
         // Sort reserved word list from longest word to shortest, 3x faster than usort
         $reservedMap = array_combine($this->reserved, array_map('strlen', $this->reserved));
         assert($reservedMap !== false);
