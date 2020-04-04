@@ -27,13 +27,6 @@ use const PHP_SAPI;
 
 final class SqlFormatter
 {
-    /**
-     * The tab character to use when formatting SQL
-     *
-     * @var string
-     */
-    public $tab = '  ';
-
     /** @var Tokenizer */
     private $tokenizer;
 
@@ -55,12 +48,12 @@ final class SqlFormatter
      *
      * @return string The SQL string with HTML styles and formatting wrapped in a <pre> tag
      */
-    public function format(string $string) : string
+    public function format(string $string, string $indentString = '  ') : string
     {
         // This variable will be populated with formatted html
         $return = '';
 
-        // Use an actual tab while formatting and then switch out with $this->tab at the end
+        // Use an actual tab while formatting and then switch out with $indentString at the end
         $tab = "\t";
 
         $indentLevel           = 0;
@@ -349,7 +342,7 @@ final class SqlFormatter
         }
 
         // Replace tab characters with the configuration tab character
-        $return = trim(str_replace("\t", $this->tab, $return));
+        $return = trim(str_replace("\t", $indentString, $return));
 
         return $this->highlighter->output($return);
     }
