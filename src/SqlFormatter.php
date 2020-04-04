@@ -28,15 +28,6 @@ use const PHP_SAPI;
 final class SqlFormatter
 {
     /**
-     * Whether or not the current environment is the CLI
-     * This affects the type of syntax highlighting
-     * If not defined, it will be determined automatically
-     *
-     * @var bool
-     */
-    public $cli;
-
-    /**
      * The tab character to use when formatting SQL
      *
      * @var string
@@ -54,7 +45,7 @@ final class SqlFormatter
         ?Highlighter $highlighter = null
     ) {
         $this->tokenizer   = $tokenizer ?? new Tokenizer();
-        $this->highlighter = $highlighter ?? ($this->isCli() ? new CliHighlighter() : new HtmlHighlighter());
+        $this->highlighter = $highlighter ?? (PHP_SAPI === 'cli' ? new CliHighlighter() : new HtmlHighlighter());
     }
 
     /**
@@ -435,14 +426,5 @@ final class SqlFormatter
         }
 
         return rtrim($result);
-    }
-
-    private function isCli() : bool
-    {
-        if (isset($this->cli)) {
-            return $this->cli;
-        }
-
-        return PHP_SAPI === 'cli';
     }
 }
