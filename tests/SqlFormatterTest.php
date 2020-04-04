@@ -110,14 +110,14 @@ final class SqlFormatterTest extends TestCase
 
     public function testUsePre() : void
     {
-        $this->highlighter->usePre = false;
-        $actual                    = $this->formatter->highlight('test');
-        $expected                  = '<span style="color: #333;">test</span>';
+        $formatter = new SqlFormatter(self::$tokenizer, new HtmlHighlighter([], false));
+        $actual    = $formatter->highlight('test');
+        $expected  = '<span style="color: #333;">test</span>';
         $this->assertEquals($actual, $expected);
 
-        $this->highlighter->usePre = true;
-        $actual                    = $this->formatter->highlight('test');
-        $expected                  = '<pre style="color: black; background-color: white;">' .
+        $formatter = new SqlFormatter(self::$tokenizer, new HtmlHighlighter([], true));
+        $actual    = $formatter->highlight('test');
+        $expected  = '<pre style="color: black; background-color: white;">' .
             '<span style="color: #333;">test</span></pre>';
         $this->assertEquals($actual, $expected);
     }

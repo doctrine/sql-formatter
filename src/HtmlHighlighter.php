@@ -20,7 +20,7 @@ final class HtmlHighlighter implements Highlighter
      *
      * @var bool
      */
-    public $usePre = true;
+    private $usePre;
 
     /** @var array<string, string> */
     private $htmlAttributes;
@@ -28,7 +28,7 @@ final class HtmlHighlighter implements Highlighter
     /**
      * @param array<string, string> $htmlAttributes
      */
-    public function __construct(array $htmlAttributes = [])
+    public function __construct(array $htmlAttributes = [], bool $usePre = true)
     {
         $this->htmlAttributes = $htmlAttributes + [
             self::HIGHLIGHT_QUOTE => 'style="color: blue;"',
@@ -42,6 +42,7 @@ final class HtmlHighlighter implements Highlighter
             self::HIGHLIGHT_VARIABLE => 'style="color: orange;"',
             self::HIGHLIGHT_PRE => 'style="color: black; background-color: white;"',
         ];
+        $this->usePre         = $usePre;
     }
 
     public function highlightToken(int $type, string $value) : string
