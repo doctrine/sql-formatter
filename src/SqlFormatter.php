@@ -60,12 +60,11 @@ final class SqlFormatter
     /**
      * Format the whitespace in a SQL string to make it easier to read.
      *
-     * @param string $string    The SQL string
-     * @param bool   $highlight If true, syntax highlighting will also be performed
+     * @param string $string The SQL string
      *
      * @return string The SQL string with HTML styles and formatting wrapped in a <pre> tag
      */
-    public function format(string $string, bool $highlight = true) : string
+    public function format(string $string) : string
     {
         // This variable will be populated with formatted html
         $return = '';
@@ -99,13 +98,11 @@ final class SqlFormatter
 
         // Format token by token
         foreach ($indexedTokens as $i => $indexedToken) {
-            $token = $indexedToken['token'];
-            // Get highlighted token if doing syntax highlighting
-            if ($highlight) {
-                $highlighted = $this->highlighter->highlightToken($token->type(), $token->value());
-            } else { // If returning raw text
-                $highlighted = $token->value();
-            }
+            $token       = $indexedToken['token'];
+            $highlighted = $this->highlighter->highlightToken(
+                $token->type(),
+                $token->value()
+            );
 
             // If we are increasing the special indent level now
             if ($increaseSpecialIndent) {
@@ -247,12 +244,8 @@ final class SqlFormatter
                     // This is an error
                     $indentLevel = 0;
 
-                    if ($highlight) {
-                        $return .= "\n" . $this->highlighter->highlightError(
-                            $token->value()
-                        );
-                        continue;
-                    }
+                    $return .= $this->highlighter->highlightError($token->value());
+                    continue;
                 }
 
                 // Add a newline before the closing parentheses (if not already added)
@@ -360,18 +353,14 @@ final class SqlFormatter
         }
 
         // If there are unmatched parentheses
-        if ($highlight && array_search('block', $indentTypes) !== false) {
-            $return .= "\n" . $this->highlighter->highlightError('WARNING: unclosed parentheses or section');
+        if (array_search('block', $indentTypes) !== false) {
+            $return .= $this->highlighter->highlightError('WARNING: unclosed parentheses or section');
         }
 
         // Replace tab characters with the configuration tab character
         $return = trim(str_replace("\t", $this->tab, $return));
 
-        if ($highlight) {
-            $return = $this->highlighter->output($return);
-        }
-
-        return $return;
+        return $this->highlighter->output($return);
     }
 
     /**
