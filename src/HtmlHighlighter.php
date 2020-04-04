@@ -13,36 +13,7 @@ use const PHP_EOL;
 
 final class HtmlHighlighter implements Highlighter
 {
-    // Styles applied to different token types
-    /** @var string */
-    public $quoteAttributes = 'style="color: blue;"';
-
-    /** @var string */
-    public $backtickQuoteAttributes = 'style="color: purple;"';
-
-    /** @var string */
-    public $reservedAttributes = 'style="font-weight:bold;"';
-
-    /** @var string */
-    public $boundaryAttributes = '';
-
-    /** @var string */
-    public $numberAttributes = 'style="color: green;"';
-
-    /** @var string */
-    public $wordAttributes = 'style="color: #333;"';
-
-    /** @var string */
-    public $errorAttributes = 'style="background-color: red;"';
-
-    /** @var string */
-    public $commentAttributes = 'style="color: #aaa;"';
-
-    /** @var string */
-    public $variableAttributes = 'style="color: orange;"';
-
-    /** @var string */
-    public $preAttributes = 'style="color: black; background-color: white;"';
+    public const HIGHLIGHT_PRE = 'pre';
 
     /**
      * This flag tells us if queries need to be enclosed in <pre> tags
@@ -50,6 +21,28 @@ final class HtmlHighlighter implements Highlighter
      * @var bool
      */
     public $usePre = true;
+
+    /** @var array<string, string> */
+    private $htmlAttributes;
+
+    /**
+     * @param array<string, string> $htmlAttributes
+     */
+    public function __construct(array $htmlAttributes = [])
+    {
+        $this->htmlAttributes = $htmlAttributes + [
+            self::HIGHLIGHT_QUOTE => 'style="color: blue;"',
+            self::HIGHLIGHT_BACKTICK_QUOTE => 'style="color: purple;"',
+            self::HIGHLIGHT_RESERVED => 'style="font-weight:bold;"',
+            self::HIGHLIGHT_BOUNDARY => '',
+            self::HIGHLIGHT_NUMBER => 'style="color: green;"',
+            self::HIGHLIGHT_WORD => 'style="color: #333;"',
+            self::HIGHLIGHT_ERROR => 'style="background-color: red;"',
+            self::HIGHLIGHT_COMMENT => 'style="color: #aaa;"',
+            self::HIGHLIGHT_VARIABLE => 'style="color: orange;"',
+            self::HIGHLIGHT_PRE => 'style="color: black; background-color: white;"',
+        ];
+    }
 
     public function highlightToken(int $type, string $value) : string
     {
@@ -69,34 +62,21 @@ final class HtmlHighlighter implements Highlighter
 
     public function attributes(int $type) : ?string
     {
-        switch ($type) {
-            case Token::TOKEN_TYPE_BOUNDARY:
-                return $this->boundaryAttributes;
-            case Token::TOKEN_TYPE_WORD:
-                return $this->wordAttributes;
-            case Token::TOKEN_TYPE_BACKTICK_QUOTE:
-                return $this->backtickQuoteAttributes;
-            case Token::TOKEN_TYPE_QUOTE:
-                return $this->quoteAttributes;
-            case Token::TOKEN_TYPE_RESERVED:
-            case Token::TOKEN_TYPE_RESERVED_TOPLEVEL:
-            case Token::TOKEN_TYPE_RESERVED_NEWLINE:
-                return $this->reservedAttributes;
-            case Token::TOKEN_TYPE_NUMBER:
-                return $this->numberAttributes;
-            case Token::TOKEN_TYPE_VARIABLE:
-                return $this->variableAttributes;
-            case Token::TOKEN_TYPE_COMMENT:
-            case Token::TOKEN_TYPE_BLOCK_COMMENT:
-                return $this->commentAttributes;
-            default:
-                return null;
+        if (! isset(self::TOKEN_TYPE_TO_HIGHLIGHT[$type])) {
+            return null;
         }
+
+        return $this->htmlAttributes[self::TOKEN_TYPE_TO_HIGHLIGHT[$type]];
     }
 
     public function highlightError(string $value) : string
     {
-        return sprintf('%s<span %s>%s</span>', PHP_EOL, $this->errorAttributes, $value);
+        return sprintf(
+            '%s<span %s>%s</span>',
+            PHP_EOL,
+            $this->htmlAttributes[self::HIGHLIGHT_ERROR],
+            $value
+        );
     }
 
     public function output(string $string) : string
@@ -106,6 +86,6 @@ final class HtmlHighlighter implements Highlighter
             return $string;
         }
 
-        return '<pre ' . $this->preAttributes . '>' . $string . '</pre>';
+        return '<pre ' . $this->htmlAttributes[self::HIGHLIGHT_PRE] . '>' . $string . '</pre>';
     }
 }
