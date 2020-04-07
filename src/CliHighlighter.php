@@ -9,35 +9,29 @@ use const PHP_EOL;
 
 final class CliHighlighter implements Highlighter
 {
-    /** @var string */
-    public $cliWord = '';
+    public const HIGHLIGHT_FUNCTIONS = 'functions';
 
-    /** @var string */
-    public $cliQuote = "\x1b[34;1m";
+    /** @var array<string, string> */
+    private $escapeSequences;
 
-    /** @var string */
-    public $cliBacktickQuote = "\x1b[35;1m";
-
-    /** @var string */
-    public $cliReserved = "\x1b[37m";
-
-    /** @var string */
-    public $cliBoundary = '';
-
-    /** @var string */
-    public $cliNumber = "\x1b[32;1m";
-
-    /** @var string */
-    public $cliError = "\x1b[31;1;7m";
-
-    /** @var string */
-    public $cliComment = "\x1b[30;1m";
-
-    /** @var string */
-    public $cliFunctions = "\x1b[37m";
-
-    /** @var string */
-    public $cliVariable = "\x1b[36;1m";
+    /**
+     * @param array<string, string> $escapeSequences
+     */
+    public function __construct(array $escapeSequences = [])
+    {
+        $this->escapeSequences = $escapeSequences + [
+            self::HIGHLIGHT_QUOTE => "\x1b[34;1m",
+            self::HIGHLIGHT_BACKTICK_QUOTE =>  "\x1b[35;1m",
+            self::HIGHLIGHT_RESERVED =>  "\x1b[37m",
+            self::HIGHLIGHT_BOUNDARY => '',
+            self::HIGHLIGHT_NUMBER =>  "\x1b[32;1m",
+            self::HIGHLIGHT_WORD => '',
+            self::HIGHLIGHT_ERROR => "\x1b[31;1;7m",
+            self::HIGHLIGHT_COMMENT =>  "\x1b[30;1m",
+            self::HIGHLIGHT_VARIABLE =>  "\x1b[36;1m",
+            self::HIGHLIGHT_FUNCTIONS => "\x1b[37m",
+        ];
+    }
 
     public function highlightToken(int $type, string $value) : string
     {
@@ -55,34 +49,22 @@ final class CliHighlighter implements Highlighter
 
     private function prefix(int $type) : ?string
     {
-        switch ($type) {
-            case Token::TOKEN_TYPE_BOUNDARY:
-                return $this->cliBoundary;
-            case Token::TOKEN_TYPE_WORD:
-                return $this->cliWord;
-            case Token::TOKEN_TYPE_BACKTICK_QUOTE:
-                return $this->cliBacktickQuote;
-            case Token::TOKEN_TYPE_QUOTE:
-                return $this->cliQuote;
-            case Token::TOKEN_TYPE_RESERVED:
-            case Token::TOKEN_TYPE_RESERVED_TOPLEVEL:
-            case Token::TOKEN_TYPE_RESERVED_NEWLINE:
-                return $this->cliReserved;
-            case Token::TOKEN_TYPE_NUMBER:
-                return $this->cliNumber;
-            case Token::TOKEN_TYPE_VARIABLE:
-                return $this->cliVariable;
-            case Token::TOKEN_TYPE_COMMENT:
-            case Token::TOKEN_TYPE_BLOCK_COMMENT:
-                return $this->cliComment;
-            default:
-                return null;
+        if (! isset(self::TOKEN_TYPE_TO_HIGHLIGHT[$type])) {
+            return null;
         }
+
+        return $this->escapeSequences[self::TOKEN_TYPE_TO_HIGHLIGHT[$type]];
     }
 
     public function highlightError(string $value) : string
     {
-        return sprintf('%s%s%s%s', PHP_EOL, $this->cliError, $value, "\x1b[0m");
+        return sprintf(
+            '%s%s%s%s',
+            PHP_EOL,
+            $this->escapeSequences[self::HIGHLIGHT_ERROR],
+            $value,
+            "\x1b[0m"
+        );
     }
 
     public function output(string $string) : string

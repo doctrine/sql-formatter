@@ -110,14 +110,14 @@ final class SqlFormatterTest extends TestCase
 
     public function testUsePre() : void
     {
-        $this->highlighter->usePre = false;
-        $actual                    = $this->formatter->highlight('test');
-        $expected                  = '<span style="color: #333;">test</span>';
+        $formatter = new SqlFormatter(self::$tokenizer, new HtmlHighlighter([], false));
+        $actual    = $formatter->highlight('test');
+        $expected  = '<span style="color: #333;">test</span>';
         $this->assertEquals($actual, $expected);
 
-        $this->highlighter->usePre = true;
-        $actual                    = $this->formatter->highlight('test');
-        $expected                  = '<pre style="color: black; background-color: white;">' .
+        $formatter = new SqlFormatter(self::$tokenizer, new HtmlHighlighter([], true));
+        $actual    = $formatter->highlight('test');
+        $expected  = '<pre style="color: black; background-color: white;">' .
             '<span style="color: #333;">test</span></pre>';
         $this->assertEquals($actual, $expected);
     }
@@ -243,31 +243,6 @@ final class SqlFormatterTest extends TestCase
             assert($contents !== false);
             $this->sqlData = explode("\n\n", $contents);
         }
-
-        /**
-        $formatHighlight = array();
-        $highlight = array();
-        $format = array();
-        $compress = array();
-        $clihighlight = array();
-
-        foreach($this->sqlData as $sql) {
-            $formatHighlight[] = trim($this->formatter->format($sql));
-            $highlight[] = trim($this->formatter->highlight($sql));
-            $format[] = trim($this->formatter->format($sql, false));
-            $compress[] = trim($this->formatter->compress($sql));
-
-            $this->formatter->cli = true;
-            $clihighlight[] = trim($this->formatter->format($sql));
-            $this->formatter->cli = false;
-        }
-
-        file_put_contents(__DIR__."/format-highlight.html", implode("\n\n",$formatHighlight));
-        file_put_contents(__DIR__."/highlight.html", implode("\n\n",$highlight));
-        file_put_contents(__DIR__."/format.html", implode("\n\n",$format));
-        file_put_contents(__DIR__."/compress.html", implode("\n\n",$compress));
-        file_put_contents(__DIR__."/clihighlight.html", implode("\n\n",$clihighlight));
-        /**/
 
         return $this->sqlData;
     }

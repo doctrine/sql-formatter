@@ -27,22 +27,6 @@ use const PHP_SAPI;
 
 final class SqlFormatter
 {
-    /**
-     * Whether or not the current environment is the CLI
-     * This affects the type of syntax highlighting
-     * If not defined, it will be determined automatically
-     *
-     * @var bool
-     */
-    public $cli;
-
-    /**
-     * The tab character to use when formatting SQL
-     *
-     * @var string
-     */
-    public $tab = '  ';
-
     /** @var Tokenizer */
     private $tokenizer;
 
@@ -54,7 +38,7 @@ final class SqlFormatter
         ?Highlighter $highlighter = null
     ) {
         $this->tokenizer   = $tokenizer ?? new Tokenizer();
-        $this->highlighter = $highlighter ?? ($this->isCli() ? new CliHighlighter() : new HtmlHighlighter());
+        $this->highlighter = $highlighter ?? (PHP_SAPI === 'cli' ? new CliHighlighter() : new HtmlHighlighter());
     }
 
     /**
@@ -64,12 +48,12 @@ final class SqlFormatter
      *
      * @return string The SQL string with HTML styles and formatting wrapped in a <pre> tag
      */
-    public function format(string $string) : string
+    public function format(string $string, string $indentString = '  ') : string
     {
         // This variable will be populated with formatted html
         $return = '';
 
-        // Use an actual tab while formatting and then switch out with $this->tab at the end
+        // Use an actual tab while formatting and then switch out with $indentString at the end
         $tab = "\t";
 
         $indentLevel           = 0;
@@ -358,7 +342,7 @@ final class SqlFormatter
         }
 
         // Replace tab characters with the configuration tab character
-        $return = trim(str_replace("\t", $this->tab, $return));
+        $return = trim(str_replace("\t", $indentString, $return));
 
         return $this->highlighter->output($return);
     }
@@ -435,14 +419,5 @@ final class SqlFormatter
         }
 
         return rtrim($result);
-    }
-
-    private function isCli() : bool
-    {
-        if (isset($this->cli)) {
-            return $this->cli;
-        }
-
-        return PHP_SAPI === 'cli';
     }
 }

@@ -7,9 +7,8 @@ require __DIR__ . '/../vendor/autoload.php';
 use Doctrine\SqlFormatter\SqlFormatter;
 use Doctrine\SqlFormatter\Tokenizer;
 
-$tokenizer                  = new Tokenizer();
-$tokenizer->maxCachekeySize = 15;
-//this is the default value
+$tokenizer = new Tokenizer($maxCachekeySize = 15);
+//15 is the default value
 //set to '0' to disable caching
 //a value between 10 and 20 seems to give the best result
 $formatter = new SqlFormatter($tokenizer);
@@ -42,7 +41,7 @@ $uend = memory_get_usage(true);
 $end  = microtime(true);
 ?>
 
-    <p>Formatted <?= $num ?> queries using a maxCachekeySize of <?= $tokenizer->maxCachekeySize ?></p>
+    <p>Formatted <?= $num ?> queries using a maxCachekeySize of <?= $maxCachekeySize ?></p>
     <p>Average query length of <?= number_format($chars/$num, 5) ?> characters</p>
     <p>
         Took <?= number_format($end-$start, 5) ?> seconds total,
