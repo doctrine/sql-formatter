@@ -9,11 +9,9 @@ use function array_keys;
 use function array_map;
 use function arsort;
 use function assert;
-use function count;
 use function implode;
 use function preg_match;
 use function preg_quote;
-use function serialize;
 use function str_replace;
 use function strlen;
 use function strpos;
@@ -687,30 +685,11 @@ final class Tokenizer
     ];
 
     /**
-     * Cache variables
-     * Only tokens shorter than this size will be cached.  Somewhere between 10
-     * and 20 seems to work well for most cases.
-     *
-     * @var int
-     */
-    private $maxCachekeySize;
-
-    /** @var Token[] */
-    private $tokenCache = [];
-
-    /** @var int */
-    private $cacheHits = 0;
-
-    /** @var int */
-    private $cacheMisses = 0;
-
-    /**
      * Stuff that only needs to be done once. Builds regular expressions and
      * sorts the reserved words.
      */
-    public function __construct(int $maxCachekeySize = 15)
+    public function __construct()
     {
-        $this->maxCachekeySize = $maxCachekeySize;
         // Sort reserved word list from longest word to shortest, 3x faster than usort
         $reservedMap = array_combine($this->reserved, array_map('strlen', $this->reserved));
         assert($reservedMap !== false);
@@ -768,30 +747,9 @@ final class Tokenizer
 
             $oldStringLen =  $currentLength;
 
-            // Determine if we can use caching
-            if ($currentLength >= $this->maxCachekeySize) {
-                $cacheKey = substr($string, 0, $this->maxCachekeySize);
-            } else {
-                $cacheKey = false;
-            }
-
-            // See if the token is already cached
-            if ($cacheKey && isset($this->tokenCache[$cacheKey])) {
-                // Retrieve from cache
-                $token       = $this->tokenCache[$cacheKey];
-                $tokenLength = strlen($token->value());
-                $this->cacheHits++;
-            } else {
-                // Get the next token and the token type
-                $token       = $this->getNextToken($string, $token);
-                $tokenLength = strlen($token->value());
-                $this->cacheMisses++;
-
-                // If the token is shorter than the max length, store it in cache
-                if ($cacheKey && $tokenLength < $this->maxCachekeySize) {
-                    $this->tokenCache[$cacheKey] = $token;
-                }
-            }
+            // Get the next token and the token type
+            $token       = $this->getNextToken($string, $token);
+            $tokenLength = strlen($token->value());
 
             $tokens[] = $token;
 
@@ -959,21 +917,6 @@ final class Tokenizer
         return array_map(static function (string $string) : string {
             return preg_quote($string, '/');
         }, $strings);
-    }
-
-    /**
-     * Get stats about the token cache
-     *
-     * @return mixed[] An array containing the keys 'hits', 'misses', 'entries', and 'size' in bytes
-     */
-    public function getCacheStats() : array
-    {
-        return [
-            'hits' => $this->cacheHits,
-            'misses' => $this->cacheMisses,
-            'entries' => count($this->tokenCache),
-            'size' => strlen(serialize($this->tokenCache)),
-        ];
     }
 
     private function getQuotedString(string $string) : string
