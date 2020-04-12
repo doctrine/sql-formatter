@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94daea11d89b25da611c2c07331a8433",
+    "content-hash": "30d4b2992bbb9241eaf18a979bc3405e",
     "packages": [],
     "packages-dev": [
         {
             "name": "amphp/amp",
-            "version": "v2.4.1",
+            "version": "v2.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/amp.git",
-                "reference": "2ac3b550c4997f2ec304faa63c8b2885079a2dc4"
+                "reference": "feca077369a47263b22156b3c6389e55f3809f24"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/amp/zipball/2ac3b550c4997f2ec304faa63c8b2885079a2dc4",
-                "reference": "2ac3b550c4997f2ec304faa63c8b2885079a2dc4",
+                "url": "https://api.github.com/repos/amphp/amp/zipball/feca077369a47263b22156b3c6389e55f3809f24",
+                "reference": "feca077369a47263b22156b3c6389e55f3809f24",
                 "shasum": ""
             },
             "require": {
@@ -28,14 +28,15 @@
                 "amphp/php-cs-fixer-config": "dev-master",
                 "amphp/phpunit-util": "^1",
                 "ext-json": "*",
-                "phpstan/phpstan": "^0.8.5",
+                "jetbrains/phpstorm-stubs": "^2019.3",
                 "phpunit/phpunit": "^6.0.9 | ^7",
-                "react/promise": "^2"
+                "react/promise": "^2",
+                "vimeo/psalm": "^3.9@dev"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.x-dev"
                 }
             },
             "autoload": {
@@ -82,20 +83,20 @@
                 "non-blocking",
                 "promise"
             ],
-            "time": "2020-02-10T18:10:57+00:00"
+            "time": "2020-04-04T15:05:26+00:00"
         },
         {
             "name": "amphp/byte-stream",
-            "version": "v1.7.2",
+            "version": "v1.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/byte-stream.git",
-                "reference": "1e52f1752b2e20e2a7e464476ef887a2388e3832"
+                "reference": "b867505edb79dda8f253ca3c3a2bbadae4b16592"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/1e52f1752b2e20e2a7e464476ef887a2388e3832",
-                "reference": "1e52f1752b2e20e2a7e464476ef887a2388e3832",
+                "url": "https://api.github.com/repos/amphp/byte-stream/zipball/b867505edb79dda8f253ca3c3a2bbadae4b16592",
+                "reference": "b867505edb79dda8f253ca3c3a2bbadae4b16592",
                 "shasum": ""
             },
             "require": {
@@ -105,10 +106,16 @@
                 "amphp/php-cs-fixer-config": "dev-master",
                 "amphp/phpunit-util": "^1",
                 "friendsofphp/php-cs-fixer": "^2.3",
-                "infection/infection": "^0.9.3",
-                "phpunit/phpunit": "^6"
+                "jetbrains/phpstorm-stubs": "^2019.3",
+                "phpunit/phpunit": "^6 || ^7 || ^8",
+                "vimeo/psalm": "^3.9@dev"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Amp\\ByteStream\\": "lib"
@@ -141,7 +148,7 @@
                 "non-blocking",
                 "stream"
             ],
-            "time": "2020-01-29T18:22:23+00:00"
+            "time": "2020-04-04T16:56:54+00:00"
         },
         {
             "name": "composer/semver",
@@ -615,16 +622,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.3.0",
+            "version": "v4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc"
+                "reference": "bd43ec7152eaaab3bd8c6d0aa95ceeb1df8ee120"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9a9981c347c5c49d6dfe5cf826bb882b824080dc",
-                "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/bd43ec7152eaaab3bd8c6d0aa95ceeb1df8ee120",
+                "reference": "bd43ec7152eaaab3bd8c6d0aa95ceeb1df8ee120",
                 "shasum": ""
             },
             "require": {
@@ -663,7 +670,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-11-08T13:50:10+00:00"
+            "time": "2020-04-10T16:34:50+00:00"
         },
         {
             "name": "ocramius/package-versions",
@@ -1422,16 +1429,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.2",
+            "version": "8.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "018b6ac3c8ab20916db85fa91bf6465acb64d1e0"
+                "reference": "67750516bc02f300e2742fed2f50177f8f37bedf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/018b6ac3c8ab20916db85fa91bf6465acb64d1e0",
-                "reference": "018b6ac3c8ab20916db85fa91bf6465acb64d1e0",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/67750516bc02f300e2742fed2f50177f8f37bedf",
+                "reference": "67750516bc02f300e2742fed2f50177f8f37bedf",
                 "shasum": ""
             },
             "require": {
@@ -1501,7 +1508,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2020-01-08T08:49:49+00:00"
+            "time": "2020-03-31T08:52:04+00:00"
         },
         {
             "name": "psr/container",
@@ -2216,33 +2223,38 @@
         },
         {
             "name": "slevomat/coding-standard",
-            "version": "6.1.5",
+            "version": "6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slevomat/coding-standard.git",
-                "reference": "d767b5e302ff096327466c97fec3cb57f6d16086"
+                "reference": "c4bf9cad66da885cc843cc24d708661d9d8fbb95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/d767b5e302ff096327466c97fec3cb57f6d16086",
-                "reference": "d767b5e302ff096327466c97fec3cb57f6d16086",
+                "url": "https://api.github.com/repos/slevomat/coding-standard/zipball/c4bf9cad66da885cc843cc24d708661d9d8fbb95",
+                "reference": "c4bf9cad66da885cc843cc24d708661d9d8fbb95",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1",
-                "phpstan/phpdoc-parser": "0.3.5 - 0.4.3",
+                "phpstan/phpdoc-parser": "0.4.0 - 0.4.3",
                 "squizlabs/php_codesniffer": "^3.5.4"
             },
             "require-dev": {
                 "dealerdirect/phpcodesniffer-composer-installer": "0.6.2",
-                "grogy/php-parallel-lint": "1.1.0",
                 "phing/phing": "2.16.3",
-                "phpstan/phpstan": "0.11.19|0.12.9",
-                "phpstan/phpstan-phpunit": "0.11.2|0.12.6",
-                "phpstan/phpstan-strict-rules": "0.11.1|0.12.2",
-                "phpunit/phpunit": "7.5.18|8.5.2"
+                "php-parallel-lint/php-parallel-lint": "1.1.0",
+                "phpstan/phpstan": "0.12.18",
+                "phpstan/phpstan-phpunit": "0.12.6",
+                "phpstan/phpstan-strict-rules": "0.12.2",
+                "phpunit/phpunit": "7.5.20|8.5.2|9.0.1"
             },
             "type": "phpcodesniffer-standard",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.x-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "SlevomatCodingStandard\\": "SlevomatCodingStandard"
@@ -2253,7 +2265,7 @@
                 "MIT"
             ],
             "description": "Slevomat Coding Standard for PHP_CodeSniffer complements Consistence Coding Standard by providing sniffs with additional checks.",
-            "time": "2020-02-05T21:17:34+00:00"
+            "time": "2020-03-28T22:04:31+00:00"
         },
         {
             "name": "squizlabs/php_codesniffer",
@@ -2308,16 +2320,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v4.4.6",
+            "version": "v4.4.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "20bc0c1068565103075359f5ce9e0639b36f92d1"
+                "reference": "10bb3ee3c97308869d53b3e3d03f6ac23ff985f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/20bc0c1068565103075359f5ce9e0639b36f92d1",
-                "reference": "20bc0c1068565103075359f5ce9e0639b36f92d1",
+                "url": "https://api.github.com/repos/symfony/console/zipball/10bb3ee3c97308869d53b3e3d03f6ac23ff985f7",
+                "reference": "10bb3ee3c97308869d53b3e3d03f6ac23ff985f7",
                 "shasum": ""
             },
             "require": {
@@ -2380,7 +2392,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2020-03-16T08:56:54+00:00"
+            "time": "2020-03-30T11:41:10+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2901,7 +2913,9 @@
     "platform": {
         "php": "^7.2"
     },
-    "platform-dev": [],
+    "platform-dev": {
+        "ext-mbstring": "*"
+    },
     "platform-overrides": {
         "php": "7.2.0"
     }

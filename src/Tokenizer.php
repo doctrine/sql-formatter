@@ -751,11 +751,11 @@ final class Tokenizer
         $tokens = [];
 
         // Used to make sure the string keeps shrinking on each iteration
-        $oldStringLen = strlen($string) + 1;
+        $oldStringLen = mb_strlen($string) + 1;
 
         $token = null;
 
-        $currentLength = strlen($string);
+        $currentLength = mb_strlen($string);
 
         // Keep processing the string until it is empty
         while ($currentLength) {
@@ -770,7 +770,7 @@ final class Tokenizer
 
             // Determine if we can use caching
             if ($currentLength >= $this->maxCachekeySize) {
-                $cacheKey = substr($string, 0, $this->maxCachekeySize);
+                $cacheKey = mb_substr($string, 0, $this->maxCachekeySize);
             } else {
                 $cacheKey = false;
             }
@@ -779,12 +779,12 @@ final class Tokenizer
             if ($cacheKey && isset($this->tokenCache[$cacheKey])) {
                 // Retrieve from cache
                 $token       = $this->tokenCache[$cacheKey];
-                $tokenLength = strlen($token->value());
+                $tokenLength = mb_strlen($token->value());
                 $this->cacheHits++;
             } else {
                 // Get the next token and the token type
                 $token       = $this->getNextToken($string, $token);
-                $tokenLength = strlen($token->value());
+                $tokenLength = mb_strlen($token->value());
                 $this->cacheMisses++;
 
                 // If the token is shorter than the max length, store it in cache
@@ -796,7 +796,7 @@ final class Tokenizer
             $tokens[] = $token;
 
             // Advance the string
-            $string = substr($string, $tokenLength);
+            $string = mb_substr($string, $tokenLength);
 
             $currentLength -= $tokenLength;
         }
@@ -828,20 +828,20 @@ final class Tokenizer
             (isset($string[1]) && $string[0]==='/' && $string[1]==='*'))) {
             // Comment until end of line
             if ($string[0] === '-' || $string[0] === '#') {
-                $last = strpos($string, "\n");
+                $last = mb_strpos($string, "\n");
                 $type = Token::TOKEN_TYPE_COMMENT;
             } else { // Comment until closing comment tag
-                $pos = strpos($string, '*/', 2);
+                $pos = mb_strpos($string, '*/', 2);
                 assert($pos !== false);
                 $last = $pos + 2;
                 $type = Token::TOKEN_TYPE_BLOCK_COMMENT;
             }
 
             if ($last === false) {
-                $last = strlen($string);
+                $last = mb_strlen($string);
             }
 
-            return new Token($type, substr($string, 0, $last));
+            return new Token($type, mb_substr($string, 0, $last));
         }
 
         // Quoted String
@@ -861,7 +861,7 @@ final class Tokenizer
 
             // If the variable name is quoted
             if ($string[1]==='"' || $string[1]==='\'' || $string[1]==='`') {
-                $value = $string[0] . $this->getQuotedString(substr($string, 1));
+                $value = $string[0] . $this->getQuotedString(mb_substr($string, 1));
             } else {
                 // Non-quoted variable name
                 preg_match('/^(' . $string[0] . '[a-zA-Z0-9\._\$]+)/', $string, $matches);
@@ -892,7 +892,7 @@ final class Tokenizer
         // A reserved word cannot be preceded by a '.'
         // this makes it so in "mytable.from", "from" is not considered a reserved word
         if (! $previous || $previous->value() !== '.') {
-            $upper = strtoupper($string);
+            $upper = mb_strtoupper($string);
             // Top Level Reserved Word
             if (preg_match(
                 '/^(' . $this->regexReservedToplevel . ')($|\s|' . $this->regexBoundaries . ')/',
@@ -901,7 +901,7 @@ final class Tokenizer
             )) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
-                    substr($string, 0, strlen($matches[1]))
+                    mb_substr($string, 0, mb_strlen($matches[1]))
                 );
             }
 
@@ -913,7 +913,7 @@ final class Tokenizer
             )) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                    substr($string, 0, strlen($matches[1]))
+                    mb_substr($string, 0, mb_strlen($matches[1]))
                 );
             }
 
@@ -925,19 +925,19 @@ final class Tokenizer
             )) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED,
-                    substr($string, 0, strlen($matches[1]))
+                    mb_substr($string, 0, mb_strlen($matches[1]))
                 );
             }
         }
 
         // A function must be succeeded by '('
         // this makes it so "count(" is considered a function, but "count" alone is not
-        $upper = strtoupper($string);
+        $upper = mb_strtoupper($string);
         // function
         if (preg_match('/^(' . $this->regexFunction . '[(]|\s|[)])/', $upper, $matches)) {
             return new Token(
                 Token::TOKEN_TYPE_RESERVED,
-                substr($string, 0, strlen($matches[1])-1)
+                mb_substr($string, 0, mb_strlen($matches[1])-1)
             );
         }
 
@@ -972,7 +972,7 @@ final class Tokenizer
             'hits' => $this->cacheHits,
             'misses' => $this->cacheMisses,
             'entries' => count($this->tokenCache),
-            'size' => strlen(serialize($this->tokenCache)),
+            'size' => mb_strlen(serialize($this->tokenCache)),
         ];
     }
 

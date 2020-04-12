@@ -34,7 +34,7 @@ foreach ($queries as $query) {
     $formatter->format($query);
 
     $num++;
-    $chars += strlen($query);
+    $chars += mb_strlen($query);
 }
 
 $uend = memory_get_usage(true);

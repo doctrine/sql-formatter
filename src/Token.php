@@ -57,9 +57,9 @@ final class Token
 
     public function hasExtraWhitespace() : bool
     {
-        return strpos($this->value(), ' ')!== false ||
-            strpos($this->value(), "\n") !== false ||
-            strpos($this->value(), "\t") !== false;
+        return mb_strpos($this->value(), ' ')!== false ||
+            mb_strpos($this->value(), "\n") !== false ||
+            mb_strpos($this->value(), "\t") !== false;
     }
 
     public function withValue(string $value) : self

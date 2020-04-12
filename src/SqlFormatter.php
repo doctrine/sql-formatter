@@ -148,7 +148,7 @@ final class SqlFormatter
                     }
                 }
 
-                $inlineCount += strlen($token->value());
+                $inlineCount += mb_strlen($token->value());
             }
 
             // Opening parentheses increase the block indent level and start a new line
@@ -188,7 +188,7 @@ final class SqlFormatter
                         break;
                     }
 
-                    $length += strlen($next->value());
+                    $length += mb_strlen($next->value());
                 }
 
                 if ($inlineParentheses && $length > 30) {
