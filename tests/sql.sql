@@ -263,3 +263,7 @@ SELECT :pdoParam;
 SELECT "no closing quote
 
 SELECT [sqlserver] FROM [escap[e]]d style];
+
+SELECT a FROM b LEFT
+OUTER
+JOIN c on (d=f);
