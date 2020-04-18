@@ -9,6 +9,7 @@ use Doctrine\SqlFormatter\HtmlHighlighter;
 use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
 use Doctrine\SqlFormatter\Tokenizer;
+use Generator;
 use PHPUnit\Framework\TestCase;
 use function assert;
 use function defined;
@@ -123,108 +124,58 @@ final class SqlFormatterTest extends TestCase
     }
 
     /**
-     * @return mixed[][]
+     * @return Generator<mixed[]>
      */
-    public function formatHighlightData() : array
+    private function fileDataProvider(string $file) : Generator
     {
-        $contents = file_get_contents(__DIR__ . '/format-highlight.html');
+        $contents = file_get_contents(__DIR__ . '/' . $file);
         assert($contents !== false);
         $formatHighlightData = explode("\n\n", $contents);
         $sqlData             = $this->sqlData();
 
-        $return = [];
         foreach ($formatHighlightData as $i => $data) {
-            $return[] = [
-                $sqlData[$i],
-                $data,
-            ];
+            yield [$sqlData[$i], $data];
         }
-
-        return $return;
     }
 
     /**
-     * @return mixed[][]
+     * @return Generator<mixed[]>
      */
-    public function highlightCliData() : array
+    public function formatHighlightData() : Generator
     {
-        $contents = file_get_contents(__DIR__ . '/clihighlight.html');
-        assert($contents !== false);
-        $clidata = explode("\n\n", $contents);
-        $sqlData = $this->sqlData();
-
-        $return = [];
-        foreach ($clidata as $i => $data) {
-            $return[] = [
-                $sqlData[$i],
-                $data,
-            ];
-        }
-
-        return $return;
+        return $this->fileDataProvider('format-highlight.html');
     }
 
     /**
-     * @return mixed[][]
+     * @return Generator<mixed[]>
      */
-    public function formatData() : array
+    public function highlightCliData() : Generator
     {
-        $contents = file_get_contents(__DIR__ . '/format.html');
-        assert($contents !== false);
-        $formatData = explode("\n\n", $contents);
-        $sqlData    = $this->sqlData();
-
-        $return = [];
-        foreach ($formatData as $i => $data) {
-            $return[] = [
-                $sqlData[$i],
-                $data,
-            ];
-        }
-
-        return $return;
+        return $this->fileDataProvider('clihighlight.html');
     }
 
     /**
-     * @return mixed[][]
+     * @return Generator<mixed[]>
      */
-    public function compressData() : array
+    public function formatData() : Generator
     {
-        $contents = file_get_contents(__DIR__ . '/compress.html');
-        assert($contents !== false);
-        $compressData = explode("\n\n", $contents);
-        $sqlData      = $this->sqlData();
-
-        $return = [];
-        foreach ($compressData as $i => $data) {
-            $return[] = [
-                $sqlData[$i],
-                $data,
-            ];
-        }
-
-        return $return;
+        return $this->fileDataProvider('format.html');
     }
 
     /**
-     * @return mixed[][]
+     * @return Generator<mixed[]>
      */
-    public function highlightData() : array
+    public function compressData() : Generator
     {
-        $contents = file_get_contents(__DIR__ . '/highlight.html');
-        assert($contents !== false);
-        $highlightData = explode("\n\n", $contents);
-        $sqlData       = $this->sqlData();
+        return $this->fileDataProvider('compress.html');
+    }
 
-        $return = [];
-        foreach ($highlightData as $i => $data) {
-            $return[] = [
-                $sqlData[$i],
-                $data,
-            ];
-        }
-
-        return $return;
+    /**
+     * @return Generator<mixed[]>
+     */
+    public function highlightData() : Generator
+    {
+        return $this->fileDataProvider('highlight.html');
     }
 
     /**
