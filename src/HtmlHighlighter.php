@@ -58,7 +58,7 @@ final class HtmlHighlighter implements Highlighter
             return $value;
         }
 
-        return '<span ' . $this->attributes($type) . '>' . $value . '</span>';
+        return '<span ' . $attributes . '>' . $value . '</span>';
     }
 
     public function attributes(int $type) : ?string
