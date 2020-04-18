@@ -77,8 +77,14 @@ final class SqlFormatter
                 continue;
             }
 
-            $indexedTokens[] = ['originalIndex' => $i, 'token' => $token];
+            $indexedTokens[] = [
+                'wasPrecededByWhitespace' => ! isset($originalTokens[$i-1]) ||
+                    $originalTokens[$i-1]->isOfType(Token::TOKEN_TYPE_WHITESPACE),
+                'token' => $token,
+            ];
         }
+
+        unset($originalTokens);
 
         // Format token by token
         foreach ($indexedTokens as $i => $indexedToken) {
@@ -198,8 +204,7 @@ final class SqlFormatter
                 }
 
                 // Take out the preceding space unless there was whitespace there in the original query
-                if (isset($originalTokens[$indexedToken['originalIndex']-1]) &&
-                    ! $originalTokens[$indexedToken['originalIndex']-1]->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
+                if (! $indexedToken['wasPrecededByWhitespace']) {
                     $return = rtrim($return, ' ');
                 }
 
@@ -294,8 +299,7 @@ final class SqlFormatter
                 // Multiple boundary characters in a row should not have spaces between them (not including parentheses)
                 if (isset($indexedTokens[$i-1]) &&
                     $indexedTokens[$i-1]['token']->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
-                    if (isset($originalTokens[$indexedToken['originalIndex']-1]) &&
-                        ! $originalTokens[$indexedToken['originalIndex']-1]->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
+                    if (! $indexedToken['wasPrecededByWhitespace']) {
                         $return = rtrim($return, ' ');
                     }
                 }
