@@ -8,7 +8,6 @@ use Doctrine\SqlFormatter\CliHighlighter;
 use Doctrine\SqlFormatter\HtmlHighlighter;
 use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
-use Doctrine\SqlFormatter\Tokenizer;
 use Generator;
 use PHPUnit\Framework\TestCase;
 use function assert;
@@ -26,9 +25,6 @@ final class SqlFormatterTest extends TestCase
     /** @var string[] */
     private $sqlData;
 
-    /** @var Tokenizer */
-    private $tokenizer;
-
     /** @var SqlFormatter */
     private $formatter;
 
@@ -43,9 +39,8 @@ final class SqlFormatterTest extends TestCase
     {
         // Force SqlFormatter to run in non-CLI mode for tests
         $this->highlighter = new HtmlHighlighter();
-        $this->tokenizer   = new Tokenizer();
 
-        $this->formatter = new SqlFormatter($this->tokenizer, $this->highlighter);
+        $this->formatter = new SqlFormatter($this->highlighter);
     }
 
     /**
@@ -61,7 +56,7 @@ final class SqlFormatterTest extends TestCase
      */
     public function testFormat(string $sql, string $html) : void
     {
-        $formatter = new SqlFormatter(new Tokenizer(), new NullHighlighter());
+        $formatter = new SqlFormatter(new NullHighlighter());
         $this->assertEquals(trim($html), trim($formatter->format($sql)));
     }
 
@@ -97,7 +92,7 @@ final class SqlFormatterTest extends TestCase
      */
     public function testCliHighlight(string $sql, string $html) : void
     {
-        $formatter = new SqlFormatter($this->tokenizer, new CliHighlighter());
+        $formatter = new SqlFormatter(new CliHighlighter());
         $this->assertEquals(trim($html), trim($formatter->format($sql)));
     }
 
@@ -111,12 +106,12 @@ final class SqlFormatterTest extends TestCase
 
     public function testUsePre() : void
     {
-        $formatter = new SqlFormatter($this->tokenizer, new HtmlHighlighter([], false));
+        $formatter = new SqlFormatter(new HtmlHighlighter([], false));
         $actual    = $formatter->highlight('test');
         $expected  = '<span style="color: #333;">test</span>';
         $this->assertEquals($actual, $expected);
 
-        $formatter = new SqlFormatter($this->tokenizer, new HtmlHighlighter([], true));
+        $formatter = new SqlFormatter(new HtmlHighlighter([], true));
         $actual    = $formatter->highlight('test');
         $expected  = '<pre style="color: black; background-color: white;">' .
             '<span style="color: #333;">test</span></pre>';

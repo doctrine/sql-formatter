@@ -722,10 +722,8 @@ final class Tokenizer
      * Each token is an associative array with type and value.
      *
      * @param string $string The SQL string
-     *
-     * @return array<int,Token> An array of tokens.
      */
-    public function tokenize(string $string) : array
+    public function tokenize(string $string) : Cursor
     {
         $tokens = [];
 
@@ -742,13 +740,13 @@ final class Tokenizer
             if ($oldStringLen <= $currentLength) {
                 $tokens[] = new Token(Token::TOKEN_TYPE_ERROR, $string);
 
-                return $tokens;
+                return new Cursor($tokens);
             }
 
             $oldStringLen =  $currentLength;
 
             // Get the next token and the token type
-            $token       = $this->getNextToken($string, $token);
+            $token       = $this->createNextToken($string, $token);
             $tokenLength = strlen($token->value());
 
             $tokens[] = $token;
@@ -759,7 +757,7 @@ final class Tokenizer
             $currentLength -= $tokenLength;
         }
 
-        return $tokens;
+        return new Cursor($tokens);
     }
 
     /**
@@ -768,11 +766,11 @@ final class Tokenizer
      * are all their own tokens.
      *
      * @param string     $string   The SQL string
-     * @param Token|null $previous The result of the previous getNextToken() call
+     * @param Token|null $previous The result of the previous createNextToken() call
      *
      * @return Token An associative array containing the type and value of the token.
      */
-    private function getNextToken(string $string, ?Token $previous = null) : Token
+    private function createNextToken(string $string, ?Token $previous = null) : Token
     {
         $matches = [];
         // Whitespace

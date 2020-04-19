@@ -195,7 +195,6 @@ SQL,
                     <pre><?= $sql; ?></pre>
                 </td>
                 <td><pre><?= htmlentities((new SqlFormatter(
-                    new Tokenizer(),
                     new NullHighlighter()
                 ))->format($sql)); ?></pre></td>
             </tr>

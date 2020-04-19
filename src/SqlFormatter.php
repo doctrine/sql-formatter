@@ -27,17 +27,15 @@ use const PHP_SAPI;
 
 final class SqlFormatter
 {
-    /** @var Tokenizer */
-    private $tokenizer;
-
     /** @var Highlighter */
     private $highlighter;
 
-    public function __construct(
-        ?Tokenizer $tokenizer = null,
-        ?Highlighter $highlighter = null
-    ) {
-        $this->tokenizer   = $tokenizer ?? new Tokenizer();
+    /** @var Tokenizer */
+    private $tokenizer;
+
+    public function __construct(?Highlighter $highlighter = null)
+    {
+        $this->tokenizer   = new Tokenizer();
         $this->highlighter = $highlighter ?? (PHP_SAPI === 'cli' ? new CliHighlighter() : new HtmlHighlighter());
     }
 
@@ -68,21 +66,10 @@ final class SqlFormatter
         $clauseLimit           = false;
 
         // Tokenize String
-        $originalTokens = $this->tokenizer->tokenize($string);
-
-        // Remove existing whitespace
-        $indexedTokens = [];
-        foreach ($originalTokens as $i => $token) {
-            if ($token->type() === Token::TOKEN_TYPE_WHITESPACE) {
-                continue;
-            }
-
-            $indexedTokens[] = ['originalIndex' => $i, 'token' => $token];
-        }
+        $cursor = $this->tokenizer->tokenize($string);
 
         // Format token by token
-        foreach ($indexedTokens as $i => $indexedToken) {
-            $token       = $indexedToken['token'];
+        while ($token = $cursor->next(Token::TOKEN_TYPE_WHITESPACE)) {
             $highlighted = $this->highlighter->highlightToken(
                 $token->type(),
                 $token->value()
@@ -156,14 +143,14 @@ final class SqlFormatter
                 // First check if this should be an inline parentheses block
                 // Examples are "NOW()", "COUNT(*)", "int(10)", key(`somecolumn`), DECIMAL(7,2)
                 // Allow up to 3 non-whitespace tokens inside inline parentheses
-                $length = 0;
+                $length    = 0;
+                $subCursor = $cursor->subCursor();
                 for ($j=1; $j<=250; $j++) {
                     // Reached end of string
-                    if (! isset($indexedTokens[$i+$j])) {
+                    $next = $subCursor->next(Token::TOKEN_TYPE_WHITESPACE);
+                    if (! $next) {
                         break;
                     }
-
-                    $next = $indexedTokens[$i+$j]['token'];
 
                     // Reached closing parentheses, able to inline it
                     if ($next->value() === ')') {
@@ -198,8 +185,8 @@ final class SqlFormatter
                 }
 
                 // Take out the preceding space unless there was whitespace there in the original query
-                if (isset($originalTokens[$indexedToken['originalIndex']-1]) &&
-                    ! $originalTokens[$indexedToken['originalIndex']-1]->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
+                $prevToken = $cursor->subCursor()->previous();
+                if ($prevToken && ! $prevToken->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
                     $return = rtrim($return, ' ');
                 }
 
@@ -292,10 +279,10 @@ final class SqlFormatter
                 }
             } elseif ($token->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
                 // Multiple boundary characters in a row should not have spaces between them (not including parentheses)
-                if (isset($indexedTokens[$i-1]) &&
-                    $indexedTokens[$i-1]['token']->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
-                    if (isset($originalTokens[$indexedToken['originalIndex']-1]) &&
-                        ! $originalTokens[$indexedToken['originalIndex']-1]->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
+                $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
+                if ($prevNotWhitespaceToken && $prevNotWhitespaceToken->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
+                    $prevToken = $cursor->subCursor()->previous();
+                    if ($prevToken && ! $prevToken->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
                         $return = rtrim($return, ' ');
                     }
                 }
@@ -316,14 +303,20 @@ final class SqlFormatter
             }
 
             // If this is the "-" of a negative number, it shouldn't have a space after it
-            if ($token->value() !== '-' ||
-                ! isset($indexedTokens[$i+1]) ||
-                ! $indexedTokens[$i+1]['token']->isOfType(Token::TOKEN_TYPE_NUMBER) ||
-                ! isset($indexedTokens[$i-1])) {
+            if ($token->value() !== '-') {
                 continue;
             }
 
-            $prev = $indexedTokens[$i-1]['token'];
+            $nextNotWhitespace = $cursor->subCursor()->next(Token::TOKEN_TYPE_WHITESPACE);
+            if (! $nextNotWhitespace || ! $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_NUMBER)) {
+                continue;
+            }
+
+            $prev = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
+            if (! $prev) {
+                continue;
+            }
+
             if ($prev->isOfType(
                 Token::TOKEN_TYPE_QUOTE,
                 Token::TOKEN_TYPE_BACKTICK_QUOTE,
@@ -356,11 +349,11 @@ final class SqlFormatter
      */
     public function highlight(string $string) : string
     {
-        $tokens = $this->tokenizer->tokenize($string);
+        $cursor = $this->tokenizer->tokenize($string);
 
         $return = '';
 
-        foreach ($tokens as $token) {
+        while ($token = $cursor->next()) {
             $return .= $this->highlighter->highlightToken(
                 $token->type(),
                 $token->value()
@@ -380,11 +373,10 @@ final class SqlFormatter
     public function compress(string $string) : string
     {
         $result = '';
-
-        $tokens = $this->tokenizer->tokenize($string);
+        $cursor = $this->tokenizer->tokenize($string);
 
         $whitespace = true;
-        foreach ($tokens as $token) {
+        while ($token = $cursor->next()) {
             // Skip comment tokens
             if ($token->isOfType(Token::TOKEN_TYPE_COMMENT, Token::TOKEN_TYPE_BLOCK_COMMENT)) {
                 continue;
