@@ -35,10 +35,6 @@ final class SqlFormatterTest extends TestCase
     /** @var HtmlHighlighter */
     private $highlighter;
 
-    public static function setUpBeforeClass() : void
-    {
-    }
-
     protected function setUp() : void
     {
         // Force SqlFormatter to run in non-CLI mode for tests

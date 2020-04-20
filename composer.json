@@ -12,6 +12,7 @@
         "doctrine/coding-standard": "^7.0",
         "phpstan/phpstan": "^0.12.18",
         "phpunit/phpunit": "^8.0",
+        "psalm/plugin-phpunit": "^0.10.0",
         "vimeo/psalm": "^3.10"
     },
     "authors": [
