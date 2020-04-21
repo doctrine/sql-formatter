@@ -23,7 +23,7 @@ final class Cursor
     public function next(?int $exceptTokenType = null) : ?Token
     {
         while ($token = $this->tokens[++$this->position] ?? null) {
-            if ($exceptTokenType !== null && $token->type() === $exceptTokenType) {
+            if ($exceptTokenType !== null && $token->isOfType($exceptTokenType)) {
                 continue;
             }
 
@@ -36,7 +36,7 @@ final class Cursor
     public function previous(?int $exceptTokenType = null) : ?Token
     {
         while ($token = $this->tokens[--$this->position] ?? null) {
-            if ($exceptTokenType !== null && $token->type() === $exceptTokenType) {
+            if ($exceptTokenType !== null && $token->isOfType($exceptTokenType)) {
                 continue;
             }
 
