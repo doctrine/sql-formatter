@@ -18,6 +18,9 @@ use function strpos;
 use function strtoupper;
 use function substr;
 
+/**
+ * @internal
+ */
 final class Tokenizer
 {
     /**
