@@ -5,9 +5,8 @@ declare(strict_types=1);
 require __DIR__ . '/../vendor/autoload.php';
 
 use Doctrine\SqlFormatter\SqlFormatter;
-use Doctrine\SqlFormatter\Tokenizer;
 
-$formatter = new SqlFormatter(new Tokenizer());
+$formatter = new SqlFormatter();
 
 //the sample query file is filled with install scripts for PrestaShop
 //and some sample catalog data from Magento
