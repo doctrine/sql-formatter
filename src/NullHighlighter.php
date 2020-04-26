@@ -16,6 +16,11 @@ final class NullHighlighter implements Highlighter
         return $value;
     }
 
+    public function highlightErrorMessage(string $value) : string
+    {
+        return ' ' . $value;
+    }
+
     public function output(string $string) : string
     {
         return $string;
