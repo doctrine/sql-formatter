@@ -80,6 +80,11 @@ final class HtmlHighlighter implements Highlighter
         );
     }
 
+    public function highlightErrorMessage(string $value) : string
+    {
+        return $this->highlightError($value);
+    }
+
     public function output(string $string) : string
     {
         $string =trim($string);

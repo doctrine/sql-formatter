@@ -91,6 +91,7 @@ final class SqlFormatter
 
             // If we need a new line before the token
             if ($newline) {
+                $return       = rtrim($return, ' ');
                 $return      .= "\n" . str_repeat($tab, $indentLevel);
                 $newline      = false;
                 $addedNewline = true;
@@ -102,6 +103,7 @@ final class SqlFormatter
             if ($token->isOfType(Token::TOKEN_TYPE_COMMENT, Token::TOKEN_TYPE_BLOCK_COMMENT)) {
                 if ($token->isOfType(Token::TOKEN_TYPE_BLOCK_COMMENT)) {
                     $indent      = str_repeat($tab, $indentLevel);
+                    $return      = rtrim($return, " \t");
                     $return     .= "\n" . $indent;
                     $highlighted = str_replace("\n", "\n" . $indent, $highlighted);
                 }
@@ -119,6 +121,7 @@ final class SqlFormatter
                     if ($inlineIndented) {
                         array_shift($indentTypes);
                         $indentLevel--;
+                        $return  = rtrim($return, ' ');
                         $return .= "\n" . str_repeat($tab, $indentLevel);
                     }
 
@@ -238,6 +241,7 @@ final class SqlFormatter
                 $newline = true;
                 // Add a newline before the top level reserved word (if not already added)
                 if (! $addedNewline) {
+                    $return  = rtrim($return, ' ');
                     $return .= "\n" . str_repeat($tab, $indentLevel);
                 } else {
                     // If we already added a newline, redo the indentation since it may be different now
@@ -271,6 +275,7 @@ final class SqlFormatter
             // Newline reserved words start a new line
                 // Add a newline before the reserved word (if not already added)
                 if (! $addedNewline) {
+                    $return  = rtrim($return, ' ');
                     $return .= "\n" . str_repeat($tab, $indentLevel);
                 }
 
@@ -331,7 +336,10 @@ final class SqlFormatter
 
         // If there are unmatched parentheses
         if (array_search('block', $indentTypes) !== false) {
-            $return .= $this->highlighter->highlightError('WARNING: unclosed parentheses or section');
+            $return  = rtrim($return, ' ');
+            $return .= $this->highlighter->highlightErrorMessage(
+                'WARNING: unclosed parentheses or section'
+            );
         }
 
         // Replace tab characters with the configuration tab character

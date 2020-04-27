@@ -121,7 +121,7 @@ final class SqlFormatterTest extends TestCase
     {
         $contents = file_get_contents(__DIR__ . '/' . $file);
         assert($contents !== false);
-        $formatHighlightData = explode("\n\n", $contents);
+        $formatHighlightData = explode("\n---\n", $contents);
         $sqlData             = $this->sqlData();
 
         foreach ($formatHighlightData as $i => $data) {
@@ -177,7 +177,7 @@ final class SqlFormatterTest extends TestCase
         if (! $this->sqlData) {
             $contents = file_get_contents(__DIR__ . '/sql.sql');
             assert($contents !== false);
-            $this->sqlData = explode("\n\n", $contents);
+            $this->sqlData = explode("\n---\n", $contents);
         }
 
         return $this->sqlData;
