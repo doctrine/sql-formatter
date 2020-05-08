@@ -19,6 +19,13 @@
     <file>src</file>
     <file>tests</file>
 
+    <!-- Disable the rules that will require PHP 7.4 -->
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
+        <properties>
+            <property name="enableNativeTypeHint" value="false"/>
+        </properties>
+    </rule>
+
     <rule ref="Generic.Files.InlineHTML">
         <exclude-pattern>examples/*.php</exclude-pattern>
         <exclude-pattern>tests/performance.php</exclude-pattern>
