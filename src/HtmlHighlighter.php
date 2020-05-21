@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
-use function htmlentities;
-use function sprintf;
-use function trim;
 use const ENT_COMPAT;
 use const ENT_IGNORE;
 use const PHP_EOL;
+use function htmlentities;
+use function sprintf;
+use function trim;
 
 final class HtmlHighlighter implements Highlighter
 {

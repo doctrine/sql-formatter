@@ -114,9 +114,6 @@ final class SqlFormatterTest extends TestCase
         $this->assertEquals($actual, $expected);
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
     private function fileDataProvider(string $file) : Generator
     {
         $contents = file_get_contents(__DIR__ . '/' . $file);
@@ -129,41 +126,26 @@ final class SqlFormatterTest extends TestCase
         }
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
     public function formatHighlightData() : Generator
     {
         return $this->fileDataProvider('format-highlight.html');
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
     public function highlightCliData() : Generator
     {
         return $this->fileDataProvider('clihighlight.html');
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
     public function formatData() : Generator
     {
         return $this->fileDataProvider('format.html');
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
     public function compressData() : Generator
     {
         return $this->fileDataProvider('compress.html');
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
     public function highlightData() : Generator
     {
         return $this->fileDataProvider('highlight.html');

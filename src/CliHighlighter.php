@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
-use function sprintf;
 use const PHP_EOL;
+use function sprintf;
 
 final class CliHighlighter implements Highlighter
 {

@@ -1,4 +1,5 @@
 parameters:
+    checkMissingIterableValueType: false
     level: max
     paths:
         - %currentWorkingDirectory%/src

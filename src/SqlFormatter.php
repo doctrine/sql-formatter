@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
+use const PHP_SAPI;
 use function array_search;
 use function array_shift;
 use function array_unshift;
@@ -23,7 +24,6 @@ use function str_repeat;
 use function str_replace;
 use function strlen;
 use function trim;
-use const PHP_SAPI;
 
 final class SqlFormatter
 {

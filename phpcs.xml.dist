@@ -19,23 +19,12 @@
     <file>src</file>
     <file>tests</file>
 
-    <!-- Disable the rules that will require PHP 7.4 -->
-    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
-        <properties>
-            <property name="enableNativeTypeHint" value="false"/>
-        </properties>
-    </rule>
-
     <rule ref="Generic.Files.InlineHTML">
         <exclude-pattern>examples/*.php</exclude-pattern>
         <exclude-pattern>tests/performance.php</exclude-pattern>
     </rule>
     <!-- The sniff does not detect usages for some reason -->
     <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
-        <exclude-pattern>examples/*.php</exclude-pattern>
-    </rule>
-    <!-- The sniff attempts to badly format templating syntax end blocks -->
-    <rule ref="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountAfterControlStructure">
         <exclude-pattern>examples/*.php</exclude-pattern>
     </rule>
 </ruleset>
