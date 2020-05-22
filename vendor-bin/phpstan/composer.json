@@ -1,0 +1,11 @@
+{
+    "require": {
+        "phpstan/phpstan": "^0.12.25"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "7.4.0"
+        }
+    }
+}
