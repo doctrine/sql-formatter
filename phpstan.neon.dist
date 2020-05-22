@@ -1,4 +1,6 @@
 parameters:
+    autoload_directories:
+        - vendor-bin/phpunit/vendor/phpunit/phpunit/src
     level: max
     paths:
         - %currentWorkingDirectory%/src
