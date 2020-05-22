@@ -6,13 +6,10 @@
     "license": "MIT",
     "type": "library",
     "require": {
-        "php": "^7.2"
+        "php": "^7.1"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^7.0",
-        "phpstan/phpstan": "^0.12.18",
-        "phpunit/phpunit": "^8.0",
-        "vimeo/psalm": "^3.10"
+        "bamarni/composer-bin-plugin": "^1.4"
     },
     "authors": [
         {
@@ -34,7 +31,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "7.2.0"
+            "php": "7.1.0"
         }
     },
     "extra": {

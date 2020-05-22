@@ -1,0 +1,11 @@
+{
+    "require": {
+        "doctrine/coding-standard": "^7.0"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "7.4.0"
+        }
+    }
+}
