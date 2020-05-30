@@ -1,123 +1,164 @@
-# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
 
 name: "Continuous Integration"
 
 on:
   pull_request:
-  push:
-    branches:
-      - "master"
 
 jobs:
 
   unit-tests:
     name: "Unit tests"
 
-    runs-on: "ubuntu-18.04"
+    runs-on: "ubuntu-latest"
 
     strategy:
       matrix:
         php-version:
+          - "7.1"
           - "7.2"
           - "7.3"
           - "7.4"
+          - "8.0"
 
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
+      - name: "Checkout code"
+        uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.1"
+        uses: "shivammathur/setup-php@v2"
         with:
-          coverage: "pcov"
+          coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          tools: "cs2pr"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1.0.3"
+        uses: "actions/cache@v1"
         with:
           path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-"
+          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}-${{ hashFiles('vendor-bin/*/composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
 
       - name: "Install dependencies with composer"
-        run: "composer update --no-interaction --no-progress --no-suggest"
+        run: "composer install --no-interaction --no-progress --no-suggest"
+
+      - name: "Install phpunit with composer"
+        run: "composer bin phpunit install --no-interaction --no-progress --no-suggest"
 
       - name: "Test fixes"
         run: "vendor/bin/phpunit --coverage-text"
 
-  coding-standards:
-    name: "Coding Standards"
-
-    runs-on: "ubuntu-18.04"
+  static-analysis-phpstan:
+    name: "Static Analysis with PHPStan"
+    runs-on: "ubuntu-latest"
 
     strategy:
       matrix:
         php-version:
-          - "7.2"
+          - "7.4"
+
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          extensions: mbstring
+          tools: cs2pr
+
+      - name: "Cache dependencies installed with composer"
+        uses: "actions/cache@v1"
+        with:
+          path: "~/.composer/cache"
+          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}-${{ hashFiles('vendor-bin/*/composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
+
+      - name: "Install dependencies with composer"
+        run: "composer install --no-interaction --no-progress --no-suggest"
+
+      - name: "Install phpunit with composer"
+        run: "composer bin phpunit install --no-interaction --no-progress --no-suggest"
+
+      - name: "Install phpstan with composer"
+        run: "composer bin phpstan install --no-interaction --no-progress --no-suggest"
+
+      - name: "Run a static analysis with phpstan/phpstan"
+        run: "vendor/bin/phpstan analyse --error-format=checkstyle | cs2pr"
+
+
+  static-analysis-psalm:
+    name: "Static Analysis with Psalm"
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php-version:
+          - "7.4"
+
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+
+      - name: "Cache dependencies installed with composer"
+        uses: "actions/cache@v1"
+        with:
+          path: "~/.composer/cache"
+          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}-${{ hashFiles('vendor-bin/*/composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
+
+      - name: "Install dependencies with composer"
+        run: "composer install --no-interaction --no-progress --no-suggest"
+
+      - name: "Install phpunit with composer"
+        run: "composer bin phpunit install --no-interaction --no-progress --no-suggest"
+
+      - name: "Install psalm with composer"
+        run: "composer bin all install --no-interaction --no-progress --no-suggest"
+
+      - name: "Run a static analysis with vimeo/psalm"
+        run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=4"
+
+  coding-standards:
+    name: "Coding Standards"
+    runs-on: "ubuntu-latest"
+
+    strategy:
+      matrix:
+        php-version:
+          - "7.4"
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v2.0.0"
+        uses: "actions/checkout@v2"
 
       - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.1"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          tools: "cs2pr"
 
       - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1.0.3"
+        uses: "actions/cache@v1"
         with:
           path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-"
+          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}-${{ hashFiles('vendor-bin/*/composer.lock') }}"
+          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
 
       - name: "Install dependencies with composer"
-        run: "composer update --no-interaction --no-progress --no-suggest"
+        run: "composer install --no-interaction --no-progress --no-suggest"
 
+      - name: "Install phpcs with composer"
+        run: "composer bin all install --no-interaction --no-progress --no-suggest"
+
+      # Remove -q when updating to phpcs v4
       - name: "Run squizlabs/php_codesniffer"
-        run: "vendor/bin/phpcs"
-
-  static-analysis-phpstan:
-    name: Static Analysis with PHPStan
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: PHPStan
-        uses: "docker://oskarstark/phpstan-ga"
-        env:
-          REQUIRE_DEV: 'true'
-        with:
-          args: analyse
-
-  static-analysis-psalm:
-    name: Static Analysis with Psalm
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.2"
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@1.8.1"
-        with:
-          coverage: "none"
-          php-version: "${{ matrix.php-version }}"
-
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1.0.3"
-        with:
-          path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-"
-
-      - name: "Install dependencies with composer"
-        run: "composer update --no-interaction --no-progress --no-suggest"
-
-      - name: Psalm
-        run: "vendor/bin/psalm"
+        run: "vendor/bin/phpcs -q --no-colors --report=checkstyle | cs2pr"

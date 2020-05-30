@@ -1,0 +1,11 @@
+{
+    "require": {
+        "phpunit/phpunit": "^7.0 || 8.0"
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "7.1.0"
+        }
+    }
+}
