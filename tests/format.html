@@ -755,6 +755,16 @@ AND (
   (
     (SomeOtherColumn = 2); WARNING: unclosed parentheses or section
 ---
+ALTER TABLE
+  `test_modify`
+MODIFY
+  `id` INT(11) UNSIGNED NOT NULL;
+---
+ALTER TABLE
+  `test_change`
+CHANGE
+  `id` `_id` BIGINT(20) UNSIGNED NULL;
+---
 SELECT
   *
 LIMIT

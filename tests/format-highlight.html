@@ -757,6 +757,16 @@
     (<span style="color: #333;">SomeOtherColumn</span> <span >=</span> <span style="color: green;">2</span>)<span >;</span>
 <span style="background-color: red;">WARNING: unclosed parentheses or section</span></pre>
 ---
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">ALTER TABLE</span>
+  <span style="color: purple;">`test_modify`</span>
+<span style="font-weight:bold;">MODIFY</span>
+  <span style="color: purple;">`id`</span> <span style="color: #333;">INT</span>(<span style="color: green;">11</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >;</span></pre>
+---
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">ALTER TABLE</span>
+  <span style="color: purple;">`test_change`</span>
+<span style="font-weight:bold;">CHANGE</span>
+  <span style="color: purple;">`id`</span> <span style="color: purple;">`_id`</span> <span style="color: #333;">BIGINT</span>(<span style="color: green;">20</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NULL</span><span >;</span></pre>
+---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
   <span >*</span>
 <span style="font-weight:bold;">LIMIT</span>
