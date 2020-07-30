@@ -454,9 +454,7 @@
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">ALTER TABLE</span>
   <span style="color: purple;">`PREFIX_employee`</span>
 <span style="font-weight:bold;">ADD</span>
-  <span style="color: purple;">`bo_color`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">32</span>) <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span>
-<span style="font-weight:bold;">AFTER</span>
-  <span style="color: purple;">`stats_date_to`</span></pre>
+  <span style="color: purple;">`bo_color`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">32</span>) <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">AFTER</span> <span style="color: purple;">`stats_date_to`</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">INSERT</span> <span style="font-weight:bold;">INTO</span> <span style="color: purple;">`PREFIX_cms_category_lang`</span>
 <span style="font-weight:bold;">VALUES</span>
@@ -477,16 +475,12 @@
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">ALTER TABLE</span>
   <span style="color: purple;">`PREFIX_customer`</span>
 <span style="font-weight:bold;">ADD</span>
-  <span style="color: purple;">`note`</span> <span style="color: #333;">text</span>
-<span style="font-weight:bold;">AFTER</span>
-  <span style="color: purple;">`secure_key`</span></pre>
+  <span style="color: purple;">`note`</span> <span style="color: #333;">text</span> <span style="font-weight:bold;">AFTER</span> <span style="color: purple;">`secure_key`</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">ALTER TABLE</span>
   <span style="color: purple;">`PREFIX_contact`</span>
 <span style="font-weight:bold;">ADD</span>
-  <span style="color: purple;">`customer_service`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: green;">0</span>
-<span style="font-weight:bold;">AFTER</span>
-  <span style="color: purple;">`email`</span></pre>
+  <span style="color: purple;">`customer_service`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: green;">0</span> <span style="font-weight:bold;">AFTER</span> <span style="color: purple;">`email`</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">INSERT</span> <span style="font-weight:bold;">INTO</span> <span style="color: purple;">`PREFIX_specific_price`</span> (
   <span style="color: purple;">`id_product`</span><span >,</span> <span style="color: purple;">`id_shop`</span><span >,</span> <span style="color: purple;">`id_currency`</span><span >,</span>

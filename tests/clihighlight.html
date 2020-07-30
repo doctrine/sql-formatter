@@ -454,9 +454,7 @@
 [37mALTER TABLE[0m
   [35;1m`PREFIX_employee`[0m
 [37mADD[0m
-  [35;1m`bo_color`[0m varchar[0m([32;1m32[0m) [37mdefault[0m [37mNULL[0m
-[37mAFTER[0m
-  [35;1m`stats_date_to`[0m
+  [35;1m`bo_color`[0m varchar[0m([32;1m32[0m) [37mdefault[0m [37mNULL[0m [37mAFTER[0m [35;1m`stats_date_to`[0m
 ---
 [37mINSERT[0m [37mINTO[0m [35;1m`PREFIX_cms_category_lang`[0m
 [37mVALUES[0m
@@ -477,16 +475,12 @@
 [37mALTER TABLE[0m
   [35;1m`PREFIX_customer`[0m
 [37mADD[0m
-  [35;1m`note`[0m text[0m
-[37mAFTER[0m
-  [35;1m`secure_key`[0m
+  [35;1m`note`[0m text[0m [37mAFTER[0m [35;1m`secure_key`[0m
 ---
 [37mALTER TABLE[0m
   [35;1m`PREFIX_contact`[0m
 [37mADD[0m
-  [35;1m`customer_service`[0m tinyint[0m([32;1m1[0m) [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [32;1m0[0m
-[37mAFTER[0m
-  [35;1m`email`[0m
+  [35;1m`customer_service`[0m tinyint[0m([32;1m1[0m) [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [32;1m0[0m [37mAFTER[0m [35;1m`email`[0m
 ---
 [37mINSERT[0m [37mINTO[0m [35;1m`PREFIX_specific_price`[0m (
   [35;1m`id_product`[0m,[0m [35;1m`id_shop`[0m,[0m [35;1m`id_currency`[0m,[0m
