@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Doctrine\SqlFormatter;
 
 use function sprintf;
+
 use const PHP_EOL;
 
 final class CliHighlighter implements Highlighter
@@ -33,9 +34,9 @@ final class CliHighlighter implements Highlighter
         ];
     }
 
-    public function highlightToken(int $type, string $value) : string
+    public function highlightToken(int $type, string $value): string
     {
-        if ($type === Token::TOKEN_TYPE_BOUNDARY && ($value==='(' || $value===')')) {
+        if ($type === Token::TOKEN_TYPE_BOUNDARY && ($value === '(' || $value === ')')) {
             return $value;
         }
 
@@ -47,7 +48,7 @@ final class CliHighlighter implements Highlighter
         return $prefix . $value . "\x1b[0m";
     }
 
-    private function prefix(int $type) : ?string
+    private function prefix(int $type): ?string
     {
         if (! isset(self::TOKEN_TYPE_TO_HIGHLIGHT[$type])) {
             return null;
@@ -56,7 +57,7 @@ final class CliHighlighter implements Highlighter
         return $this->escapeSequences[self::TOKEN_TYPE_TO_HIGHLIGHT[$type]];
     }
 
-    public function highlightError(string $value) : string
+    public function highlightError(string $value): string
     {
         return sprintf(
             '%s%s%s%s',
@@ -67,12 +68,12 @@ final class CliHighlighter implements Highlighter
         );
     }
 
-    public function highlightErrorMessage(string $value) : string
+    public function highlightErrorMessage(string $value): string
     {
         return $this->highlightError($value);
     }
 
-    public function output(string $string) : string
+    public function output(string $string): string
     {
         return $string . "\n";
     }

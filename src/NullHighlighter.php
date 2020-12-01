@@ -6,22 +6,22 @@ namespace Doctrine\SqlFormatter;
 
 final class NullHighlighter implements Highlighter
 {
-    public function highlightToken(int $type, string $value) : string
+    public function highlightToken(int $type, string $value): string
     {
         return $value;
     }
 
-    public function highlightError(string $value) : string
+    public function highlightError(string $value): string
     {
         return $value;
     }
 
-    public function highlightErrorMessage(string $value) : string
+    public function highlightErrorMessage(string $value): string
     {
         return ' ' . $value;
     }
 
-    public function output(string $string) : string
+    public function output(string $string): string
     {
         return $string;
     }

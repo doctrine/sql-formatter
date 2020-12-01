@@ -23,6 +23,7 @@ use function str_repeat;
 use function str_replace;
 use function strlen;
 use function trim;
+
 use const PHP_SAPI;
 
 final class SqlFormatter
@@ -46,7 +47,7 @@ final class SqlFormatter
      *
      * @return string The SQL string with HTML styles and formatting wrapped in a <pre> tag
      */
-    public function format(string $string, string $indentString = '  ') : string
+    public function format(string $string, string $indentString = '  '): string
     {
         // This variable will be populated with formatted html
         $return = '';
@@ -148,7 +149,7 @@ final class SqlFormatter
                 // Allow up to 3 non-whitespace tokens inside inline parentheses
                 $length    = 0;
                 $subCursor = $cursor->subCursor();
-                for ($j=1; $j<=250; $j++) {
+                for ($j = 1; $j <= 250; $j++) {
                     // Reached end of string
                     $next = $subCursor->next(Token::TOKEN_TYPE_WHITESPACE);
                     if (! $next) {
@@ -164,17 +165,19 @@ final class SqlFormatter
                     }
 
                     // Reached an invalid token for inline parentheses
-                    if ($next->value()===';' || $next->value()==='(') {
+                    if ($next->value() === ';' || $next->value() === '(') {
                         break;
                     }
 
                     // Reached an invalid token type for inline parentheses
-                    if ($next->isOfType(
-                        Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
-                        Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                        Token::TOKEN_TYPE_COMMENT,
-                        Token::TOKEN_TYPE_BLOCK_COMMENT
-                    )) {
+                    if (
+                        $next->isOfType(
+                            Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
+                            Token::TOKEN_TYPE_RESERVED_NEWLINE,
+                            Token::TOKEN_TYPE_COMMENT,
+                            Token::TOKEN_TYPE_BLOCK_COMMENT
+                        )
+                    ) {
                         break;
                     }
 
@@ -206,8 +209,8 @@ final class SqlFormatter
                 $indentLevel--;
 
                 // Reset indent level
-                while ($j=array_shift($indentTypes)) {
-                    if ($j!=='special') {
+                while ($j = array_shift($indentTypes)) {
+                    if ($j !== 'special') {
                         break;
                     }
 
@@ -232,7 +235,7 @@ final class SqlFormatter
 
                 // If the last indent type was 'special', decrease the special indent for this round
                 reset($indentTypes);
-                if (current($indentTypes)==='special') {
+                if (current($indentTypes) === 'special') {
                     $indentLevel--;
                     array_shift($indentTypes);
                 }
@@ -256,9 +259,11 @@ final class SqlFormatter
                 if ($token->value() === 'LIMIT' && ! $inlineParentheses) {
                     $clauseLimit = true;
                 }
-            } elseif ($clauseLimit &&
+            } elseif (
+                $clauseLimit &&
                 $token->value() !== ',' &&
-                ! $token->isOfType(Token::TOKEN_TYPE_NUMBER, Token::TOKEN_TYPE_WHITESPACE)) {
+                ! $token->isOfType(Token::TOKEN_TYPE_NUMBER, Token::TOKEN_TYPE_WHITESPACE)
+            ) {
                 // Checks if we are out of the limit clause
                 $clauseLimit = false;
             } elseif ($token->value() === ',' && ! $inlineParentheses) {
@@ -294,9 +299,11 @@ final class SqlFormatter
             }
 
             // If the token shouldn't have a space before it
-            if ($token->value() === '.' ||
+            if (
+                $token->value() === '.' ||
                 $token->value() === ',' ||
-                $token->value() === ';') {
+                $token->value() === ';'
+            ) {
                 $return = rtrim($return, ' ');
             }
 
@@ -322,12 +329,14 @@ final class SqlFormatter
                 continue;
             }
 
-            if ($prev->isOfType(
-                Token::TOKEN_TYPE_QUOTE,
-                Token::TOKEN_TYPE_BACKTICK_QUOTE,
-                Token::TOKEN_TYPE_WORD,
-                Token::TOKEN_TYPE_NUMBER
-            )) {
+            if (
+                $prev->isOfType(
+                    Token::TOKEN_TYPE_QUOTE,
+                    Token::TOKEN_TYPE_BACKTICK_QUOTE,
+                    Token::TOKEN_TYPE_WORD,
+                    Token::TOKEN_TYPE_NUMBER
+                )
+            ) {
                 continue;
             }
 
@@ -355,7 +364,7 @@ final class SqlFormatter
      *
      * @return string The SQL string with HTML styles applied
      */
-    public function highlight(string $string) : string
+    public function highlight(string $string): string
     {
         $cursor = $this->tokenizer->tokenize($string);
 
@@ -378,7 +387,7 @@ final class SqlFormatter
      *
      * @return string The SQL string without comments
      */
-    public function compress(string $string) : string
+    public function compress(string $string): string
     {
         $result = '';
         $cursor = $this->tokenizer->tokenize($string);
@@ -392,11 +401,13 @@ final class SqlFormatter
 
             // Remove extra whitespace in reserved words (e.g "OUTER     JOIN" becomes "OUTER JOIN")
 
-            if ($token->isOfType(
-                Token::TOKEN_TYPE_RESERVED,
-                Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                Token::TOKEN_TYPE_RESERVED_TOPLEVEL
-            )) {
+            if (
+                $token->isOfType(
+                    Token::TOKEN_TYPE_RESERVED,
+                    Token::TOKEN_TYPE_RESERVED_NEWLINE,
+                    Token::TOKEN_TYPE_RESERVED_TOPLEVEL
+                )
+            ) {
                 $newValue = preg_replace('/\s+/', ' ', $token->value());
                 assert($newValue !== null);
                 $token = $token->withValue($newValue);

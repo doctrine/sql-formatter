@@ -40,29 +40,29 @@ final class Token
         $this->value = $value;
     }
 
-    public function value() : string
+    public function value(): string
     {
         return $this->value;
     }
 
-    public function type() : int
+    public function type(): int
     {
         return $this->type;
     }
 
-    public function isOfType(int ...$types) : bool
+    public function isOfType(int ...$types): bool
     {
         return in_array($this->type, $types, true);
     }
 
-    public function hasExtraWhitespace() : bool
+    public function hasExtraWhitespace(): bool
     {
-        return strpos($this->value(), ' ')!== false ||
+        return strpos($this->value(), ' ') !== false ||
             strpos($this->value(), "\n") !== false ||
             strpos($this->value(), "\t") !== false;
     }
 
-    public function withValue(string $value) : self
+    public function withValue(string $value): self
     {
         return new self($this->type(), $value);
     }

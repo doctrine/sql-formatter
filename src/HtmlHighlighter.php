@@ -7,6 +7,7 @@ namespace Doctrine\SqlFormatter;
 use function htmlentities;
 use function sprintf;
 use function trim;
+
 use const ENT_COMPAT;
 use const ENT_IGNORE;
 use const PHP_EOL;
@@ -45,11 +46,11 @@ final class HtmlHighlighter implements Highlighter
         $this->usePre         = $usePre;
     }
 
-    public function highlightToken(int $type, string $value) : string
+    public function highlightToken(int $type, string $value): string
     {
         $value = htmlentities($value, ENT_COMPAT | ENT_IGNORE, 'UTF-8');
 
-        if ($type === Token::TOKEN_TYPE_BOUNDARY && ($value==='(' || $value===')')) {
+        if ($type === Token::TOKEN_TYPE_BOUNDARY && ($value === '(' || $value === ')')) {
             return $value;
         }
 
@@ -61,7 +62,7 @@ final class HtmlHighlighter implements Highlighter
         return '<span ' . $attributes . '>' . $value . '</span>';
     }
 
-    public function attributes(int $type) : ?string
+    public function attributes(int $type): ?string
     {
         if (! isset(self::TOKEN_TYPE_TO_HIGHLIGHT[$type])) {
             return null;
@@ -70,7 +71,7 @@ final class HtmlHighlighter implements Highlighter
         return $this->htmlAttributes[self::TOKEN_TYPE_TO_HIGHLIGHT[$type]];
     }
 
-    public function highlightError(string $value) : string
+    public function highlightError(string $value): string
     {
         return sprintf(
             '%s<span %s>%s</span>',
@@ -80,14 +81,14 @@ final class HtmlHighlighter implements Highlighter
         );
     }
 
-    public function highlightErrorMessage(string $value) : string
+    public function highlightErrorMessage(string $value): string
     {
         return $this->highlightError($value);
     }
 
-    public function output(string $string) : string
+    public function output(string $string): string
     {
-        $string =trim($string);
+        $string = trim($string);
         if (! $this->usePre) {
             return $string;
         }
