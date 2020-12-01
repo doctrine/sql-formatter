@@ -13,8 +13,7 @@ $formatter = new SqlFormatter();
 $contents = file_get_contents(__DIR__ . '/sql.sql');
 
 assert($contents !== false);
-//queries are separated by 2 new lines
-$queries = explode("\n\n", $contents);
+$queries = explode("\n---\n", $contents);
 
 //track time and memory usage
 $start  = microtime(true);
