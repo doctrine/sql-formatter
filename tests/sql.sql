@@ -245,6 +245,10 @@ SELECT Test FROM Test WHERE
 (
  MyColumn = 1 )) AND ((( SomeOtherColumn = 2);
 ---
+ALTER TABLE `test_modify` MODIFY `id` INT(11) UNSIGNED NOT NULL;
+---
+ALTER TABLE `test_change` CHANGE `id` `_id` BIGINT(20) UNSIGNED NULL;
+---
 SELECT * LIMIT 1; SELECT a,b,c,d FROM e LIMIT 1, 2; SELECT 1,2,3 WHERE a in (1,2,3,4,5) and b=5;
 ---
 SELECT count - 50
