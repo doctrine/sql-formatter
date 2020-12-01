@@ -37,10 +37,10 @@ $end  = microtime(true);
 ?>
 
     <p>Formatted <?= $num ?> queries</p>
-    <p>Average query length of <?= number_format($chars/$num, 5) ?> characters</p>
+    <p>Average query length of <?= number_format($chars / $num, 5) ?> characters</p>
     <p>
-        Took <?= number_format($end-$start, 5) ?> seconds total,
-        <?= number_format(($end-$start)/$num, 5) ?> seconds per query,
-        <?= number_format(1000*($end-$start)/$chars, 5) ?> seconds per 1000 characters
+        Took <?= number_format($end - $start, 5) ?> seconds total,
+        <?= number_format(($end - $start) / $num, 5) ?> seconds per query,
+        <?= number_format(1000 * ($end - $start) / $chars, 5) ?> seconds per 1000 characters
     </p>
-    <p>Used <?= number_format($uend-$ustart) ?> bytes of memory</p>
+    <p>Used <?= number_format($uend - $ustart) ?> bytes of memory</p>

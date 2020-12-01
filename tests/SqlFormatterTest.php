@@ -10,6 +10,7 @@ use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
 use Generator;
 use PHPUnit\Framework\TestCase;
+
 use function assert;
 use function defined;
 use function explode;
@@ -31,7 +32,7 @@ final class SqlFormatterTest extends TestCase
     /** @var HtmlHighlighter */
     private $highlighter;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         // Force SqlFormatter to run in non-CLI mode for tests
         $this->highlighter = new HtmlHighlighter();
@@ -42,7 +43,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @dataProvider formatHighlightData
      */
-    public function testFormatHighlight(string $sql, string $html) : void
+    public function testFormatHighlight(string $sql, string $html): void
     {
         $this->assertEquals(trim($html), trim($this->formatter->format($sql)));
     }
@@ -50,7 +51,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @dataProvider formatData
      */
-    public function testFormat(string $sql, string $html) : void
+    public function testFormat(string $sql, string $html): void
     {
         $formatter = new SqlFormatter(new NullHighlighter());
         $this->assertEquals(trim($html), trim($formatter->format($sql)));
@@ -59,12 +60,12 @@ final class SqlFormatterTest extends TestCase
     /**
      * @dataProvider highlightData
      */
-    public function testHighlight(string $sql, string $html) : void
+    public function testHighlight(string $sql, string $html): void
     {
         $this->assertEquals(trim($html), trim($this->formatter->highlight($sql)));
     }
 
-    public function testHighlightBinary() : void
+    public function testHighlightBinary(): void
     {
         $sql = 'SELECT "' . pack('H*', 'ed180e98a47a45b3bdd304b798bc5797') . '" AS BINARY';
 
@@ -86,7 +87,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @dataProvider highlightCliData
      */
-    public function testCliHighlight(string $sql, string $html) : void
+    public function testCliHighlight(string $sql, string $html): void
     {
         $formatter = new SqlFormatter(new CliHighlighter());
         $this->assertEquals(trim($html), trim($formatter->format($sql)));
@@ -95,12 +96,12 @@ final class SqlFormatterTest extends TestCase
     /**
      * @dataProvider compressData
      */
-    public function testCompress(string $sql, string $html) : void
+    public function testCompress(string $sql, string $html): void
     {
         $this->assertEquals(trim($html), trim($this->formatter->compress($sql)));
     }
 
-    public function testUsePre() : void
+    public function testUsePre(): void
     {
         $formatter = new SqlFormatter(new HtmlHighlighter([], false));
         $actual    = $formatter->highlight('test');
@@ -117,7 +118,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @return Generator<mixed[]>
      */
-    private function fileDataProvider(string $file) : Generator
+    private function fileDataProvider(string $file): Generator
     {
         $contents = file_get_contents(__DIR__ . '/' . $file);
         assert($contents !== false);
@@ -132,7 +133,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @return Generator<mixed[]>
      */
-    public function formatHighlightData() : Generator
+    public function formatHighlightData(): Generator
     {
         return $this->fileDataProvider('format-highlight.html');
     }
@@ -140,7 +141,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @return Generator<mixed[]>
      */
-    public function highlightCliData() : Generator
+    public function highlightCliData(): Generator
     {
         return $this->fileDataProvider('clihighlight.html');
     }
@@ -148,7 +149,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @return Generator<mixed[]>
      */
-    public function formatData() : Generator
+    public function formatData(): Generator
     {
         return $this->fileDataProvider('format.html');
     }
@@ -156,7 +157,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @return Generator<mixed[]>
      */
-    public function compressData() : Generator
+    public function compressData(): Generator
     {
         return $this->fileDataProvider('compress.html');
     }
@@ -164,7 +165,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @return Generator<mixed[]>
      */
-    public function highlightData() : Generator
+    public function highlightData(): Generator
     {
         return $this->fileDataProvider('highlight.html');
     }
@@ -172,7 +173,7 @@ final class SqlFormatterTest extends TestCase
     /**
      * @return mixed[]
      */
-    public function sqlData() : array
+    public function sqlData(): array
     {
         if (! $this->sqlData) {
             $contents = file_get_contents(__DIR__ . '/sql.sql');

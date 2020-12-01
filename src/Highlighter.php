@@ -33,17 +33,17 @@ interface Highlighter
     /**
      * Highlights a token depending on its type.
      */
-    public function highlightToken(int $type, string $value) : string;
+    public function highlightToken(int $type, string $value): string;
 
     /**
      * Highlights a token which causes an issue
      */
-    public function highlightError(string $value) : string;
+    public function highlightError(string $value): string;
 
     /**
      * Highlights an error message
      */
-    public function highlightErrorMessage(string $value) : string;
+    public function highlightErrorMessage(string $value): string;
 
     /**
      * Helper function for building string output
@@ -52,5 +52,5 @@ interface Highlighter
      *
      * @return string The quoted string
      */
-    public function output(string $string) : string;
+    public function output(string $string): string;
 }

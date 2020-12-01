@@ -1,6 +1,6 @@
 {
     "require": {
-        "doctrine/coding-standard": "^7.0"
+        "doctrine/coding-standard": "^8.0"
     },
     "config": {
         "sort-packages": true,
