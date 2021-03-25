@@ -10,12 +10,15 @@ use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
 use Generator;
 use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
 
 use function assert;
+use function count;
 use function defined;
 use function explode;
 use function file_get_contents;
 use function pack;
+use function sprintf;
 use function trim;
 
 /**
@@ -124,6 +127,14 @@ final class SqlFormatterTest extends TestCase
         assert($contents !== false);
         $formatHighlightData = explode("\n---\n", $contents);
         $sqlData             = $this->sqlData();
+        if (count($formatHighlightData) !== count($sqlData)) {
+            throw new UnexpectedValueException(sprintf(
+                '"%s" (%d sections) and sql.sql (%d sections) should have the same number of sections',
+                $file,
+                count($formatHighlightData),
+                count($sqlData)
+            ));
+        }
 
         foreach ($formatHighlightData as $i => $data) {
             yield [$sqlData[$i], $data];
