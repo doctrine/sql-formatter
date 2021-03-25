@@ -31,15 +31,10 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           tools: "cs2pr"
 
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v1"
         with:
-          path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}-${{ hashFiles('vendor-bin/*/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
-
-      - name: "Install dependencies with composer"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+          dependency-versions: "highest"
 
       - name: "Install phpunit with composer"
         run: "composer bin phpunit install --no-interaction --no-progress --no-suggest"
@@ -65,18 +60,13 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
-          extensions: mbstring
-          tools: cs2pr
+          extensions: "mbstring"
+          tools: "cs2pr"
 
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v1"
         with:
-          path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}-${{ hashFiles('vendor-bin/*/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
-
-      - name: "Install dependencies with composer"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+          dependency-versions: "highest"
 
       - name: "Install phpunit with composer"
         run: "composer bin phpunit install --no-interaction --no-progress --no-suggest"
@@ -107,15 +97,10 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
 
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v1"
         with:
-          path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}-${{ hashFiles('vendor-bin/*/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
-
-      - name: "Install dependencies with composer"
-        run: "composer install --no-interaction --no-progress --no-suggest"
+          dependency-versions: "highest"
 
       - name: "Install phpunit with composer"
         run: "composer bin phpunit install --no-interaction --no-progress --no-suggest"
