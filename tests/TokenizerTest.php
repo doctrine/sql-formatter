@@ -12,7 +12,7 @@ final class TokenizerTest extends TestCase
     /**
      * @doesNotPerformAssertions
      */
-    public function testThereAreNoRegressions() : void
+    public function testThereAreNoRegressions(): void
     {
         (new Tokenizer())->tokenize('*/');
     }
