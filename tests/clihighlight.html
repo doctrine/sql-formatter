@@ -824,3 +824,55 @@
 [37mFROM[0m
   b[0m
   [37mLEFT OUTER JOIN[0m c[0m [37mon[0m (d[0m =[0m f[0m);[0m
+---
+[37mWITH[0m
+  cte[0m [37mAS[0m (
+    [37mSELECT[0m
+      a[0m,[0m
+      b[0m
+    [37mFROM[0m
+      [37mtable[0m
+  ),[0m
+  [37mRECURSIVE[0m fibonacci[0m (n[0m,[0m fib_n[0m,[0m next_fib_n[0m) [37mAS[0m (
+    [37mSELECT[0m
+      [32;1m1[0m,[0m
+      [32;1m0[0m,[0m
+      [32;1m1[0m
+    [37mUNION ALL[0m
+    [37mSELECT[0m
+      n[0m +[0m [32;1m1[0m,[0m
+      next_fib_n[0m,[0m
+      fib_n[0m +[0m next_fib_n[0m
+    [37mFROM[0m
+      fibonacci[0m
+    [37mWHERE[0m
+      n[0m <[0m [32;1m10[0m
+  )
+[37mSELECT[0m
+  *[0m
+[37mFROM[0m
+  fibonacci[0m;[0m
+---
+[37mWITH[0m
+  cte1[0m [37mAS[0m (
+    [37mSELECT[0m
+      a[0m,[0m
+      b[0m
+    [37mFROM[0m
+      table1[0m
+  ),[0m
+  cte2[0m [37mAS[0m (
+    [37mSELECT[0m
+      c[0m,[0m
+      d[0m
+    [37mFROM[0m
+      table2[0m
+  )
+[37mSELECT[0m
+  b[0m,[0m
+  d[0m
+[37mFROM[0m
+  cte1[0m
+  [37mJOIN[0m cte2[0m
+[37mWHERE[0m
+  cte1[0m.[0ma[0m =[0m cte2[0m.[0mc[0m;[0m

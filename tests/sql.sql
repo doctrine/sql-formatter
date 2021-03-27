@@ -272,3 +272,17 @@ SELECT [sqlserver] FROM [escap[e]]d style];
 SELECT a FROM b LEFT
 OUTER
 JOIN c on (d=f);
+---
+WITH cte AS (SELECT a, b FROM table),
+RECURSIVE fibonacci (n, fib_n, next_fib_n) AS (
+  SELECT 1, 0, 1
+  UNION ALL
+  SELECT n + 1, next_fib_n, fib_n + next_fib_n
+  FROM fibonacci WHERE n < 10
+)
+SELECT * FROM fibonacci;
+---
+WITH cte1 AS (SELECT a, b FROM table1),
+cte2 AS (SELECT c, d FROM table2)
+SELECT b, d FROM cte1 JOIN cte2
+WHERE cte1.a = cte2.c;

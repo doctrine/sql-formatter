@@ -272,3 +272,17 @@
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span> <span style="color: #333;">a</span> <span style="font-weight:bold;">FROM</span> <span style="color: #333;">b</span> <span style="font-weight:bold;">LEFT
 OUTER
 JOIN</span> <span style="color: #333;">c</span> <span style="font-weight:bold;">on</span> (<span style="color: #333;">d</span><span >=</span><span style="color: #333;">f</span>)<span >;</span></pre>
+---
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">WITH</span> <span style="color: #333;">cte</span> <span style="font-weight:bold;">AS</span> (<span style="font-weight:bold;">SELECT</span> <span style="color: #333;">a</span><span >,</span> <span style="color: #333;">b</span> <span style="font-weight:bold;">FROM</span> <span style="font-weight:bold;">table</span>)<span >,</span>
+<span style="font-weight:bold;">RECURSIVE</span> <span style="color: #333;">fibonacci</span> (<span style="color: #333;">n</span><span >,</span> <span style="color: #333;">fib_n</span><span >,</span> <span style="color: #333;">next_fib_n</span>) <span style="font-weight:bold;">AS</span> (
+  <span style="font-weight:bold;">SELECT</span> <span style="color: green;">1</span><span >,</span> <span style="color: green;">0</span><span >,</span> <span style="color: green;">1</span>
+  <span style="font-weight:bold;">UNION ALL</span>
+  <span style="font-weight:bold;">SELECT</span> <span style="color: #333;">n</span> <span >+</span> <span style="color: green;">1</span><span >,</span> <span style="color: #333;">next_fib_n</span><span >,</span> <span style="color: #333;">fib_n</span> <span >+</span> <span style="color: #333;">next_fib_n</span>
+  <span style="font-weight:bold;">FROM</span> <span style="color: #333;">fibonacci</span> <span style="font-weight:bold;">WHERE</span> <span style="color: #333;">n</span> <span >&lt;</span> <span style="color: green;">10</span>
+)
+<span style="font-weight:bold;">SELECT</span> <span >*</span> <span style="font-weight:bold;">FROM</span> <span style="color: #333;">fibonacci</span><span >;</span></pre>
+---
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">WITH</span> <span style="color: #333;">cte1</span> <span style="font-weight:bold;">AS</span> (<span style="font-weight:bold;">SELECT</span> <span style="color: #333;">a</span><span >,</span> <span style="color: #333;">b</span> <span style="font-weight:bold;">FROM</span> <span style="color: #333;">table1</span>)<span >,</span>
+<span style="color: #333;">cte2</span> <span style="font-weight:bold;">AS</span> (<span style="font-weight:bold;">SELECT</span> <span style="color: #333;">c</span><span >,</span> <span style="color: #333;">d</span> <span style="font-weight:bold;">FROM</span> <span style="color: #333;">table2</span>)
+<span style="font-weight:bold;">SELECT</span> <span style="color: #333;">b</span><span >,</span> <span style="color: #333;">d</span> <span style="font-weight:bold;">FROM</span> <span style="color: #333;">cte1</span> <span style="font-weight:bold;">JOIN</span> <span style="color: #333;">cte2</span>
+<span style="font-weight:bold;">WHERE</span> <span style="color: #333;">cte1</span><span >.</span><span style="color: #333;">a</span> <span >=</span> <span style="color: #333;">cte2</span><span >.</span><span style="color: #333;">c</span><span >;</span></pre>

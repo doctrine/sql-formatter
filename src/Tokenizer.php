@@ -213,6 +213,7 @@ final class Tokenizer
         'READ',
         'READ_ONLY',
         'READ_WRITE',
+        'RECURSIVE',
         'REFERENCES',
         'REGEXP',
         'RELOAD',
@@ -307,6 +308,7 @@ final class Tokenizer
      * @var string[]
      */
     private $reservedToplevel = [
+        'WITH',
         'SELECT',
         'FROM',
         'WHERE',
