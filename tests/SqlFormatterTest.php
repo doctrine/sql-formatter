@@ -64,7 +64,7 @@ final class SqlFormatterTest extends TestCase
     {
         $formatter = new SqlFormatter(new NullHighlighter());
 
-        $actual = $formatter->format('select a from b where c = d;', ' ', true);
+        $actual   = $formatter->format('select a from b where c = d;', ' ', true);
         $expected = "SELECT\n a\nFROM\n b\nWHERE\n c = d;";
 
         $this->assertEquals(trim($expected), trim($actual));

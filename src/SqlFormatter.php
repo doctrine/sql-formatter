@@ -16,12 +16,14 @@ use function array_shift;
 use function array_unshift;
 use function assert;
 use function current;
+use function in_array;
 use function preg_replace;
 use function reset;
 use function rtrim;
 use function str_repeat;
 use function str_replace;
 use function strlen;
+use function strtoupper;
 use function trim;
 
 use const PHP_SAPI;
@@ -36,7 +38,7 @@ final class SqlFormatter
 
     public function __construct(?Highlighter $highlighter = null)
     {
-        $this->tokenizer = new Tokenizer();
+        $this->tokenizer   = new Tokenizer();
         $this->highlighter = $highlighter ?? (PHP_SAPI === 'cli' ? new CliHighlighter() : new HtmlHighlighter());
     }
 
@@ -75,11 +77,11 @@ final class SqlFormatter
             $uppercaseTypes = [
                 Token::TOKEN_TYPE_RESERVED,
                 Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                Token::TOKEN_TYPE_RESERVED_TOPLEVEL
+                Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
             ];
 
             // Uppercase transformation if desired
-            if ($forceUppercase && in_array($token->type(), $uppercaseTypes)) {                
+            if ($forceUppercase && in_array($token->type(), $uppercaseTypes)) {
                 $tokenValue = strtoupper($token->value());
             } else {
                 $tokenValue = $token->value();
