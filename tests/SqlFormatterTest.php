@@ -60,6 +60,16 @@ final class SqlFormatterTest extends TestCase
         $this->assertEquals(trim($html), trim($formatter->format($sql)));
     }
 
+    public function testFormatUpperCase(): void
+    {
+        $formatter = new SqlFormatter(new NullHighlighter());
+
+        $actual = $formatter->format('select a from b where c = d;', ' ', true);
+        $expected = "SELECT\n a\nFROM\n b\nWHERE\n c = d;";
+
+        $this->assertEquals(trim($expected), trim($actual));
+    }
+
     /**
      * @dataProvider highlightData
      */
