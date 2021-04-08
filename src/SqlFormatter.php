@@ -6,7 +6,7 @@ declare(strict_types=1);
  * SQL Formatter is a collection of utilities for debugging SQL queries.
  * It includes methods for formatting, syntax highlighting, removing comments, etc.
  *
- * @link       http://github.com/jdorn/sql-formatter
+ * @see http://github.com/jdorn/sql-formatter
  */
 
 namespace Doctrine\SqlFormatter;
@@ -36,7 +36,7 @@ final class SqlFormatter
 
     public function __construct(?Highlighter $highlighter = null)
     {
-        $this->tokenizer   = new Tokenizer();
+        $this->tokenizer = new Tokenizer();
         $this->highlighter = $highlighter ?? (PHP_SAPI === 'cli' ? new CliHighlighter() : new HtmlHighlighter());
     }
 
