@@ -44,27 +44,7 @@ echo (new SqlFormatter())->format($query);
 
 Output:
 
-<pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
-  <span style="font-weight:bold;">count</span>(<span >*</span>)<span >,</span>
-  <span style="color: purple;">`Column1`</span><span >,</span>
-  <span style="color: purple;">`Testing`</span><span >,</span>
-  <span style="color: purple;">`Testing Three`</span>
-<span style="font-weight:bold;">FROM</span>
-  <span style="color: purple;">`Table1`</span>
-<span style="font-weight:bold;">WHERE</span>
-  <span style="color: #333;">Column1</span> <span >=</span> <span style="color: blue;">'testing'</span>
-  <span style="font-weight:bold;">AND</span> (
-    (
-      <span style="color: purple;">`Column2`</span> <span >=</span> <span style="color: purple;">`Column3`</span>
-      <span style="font-weight:bold;">OR</span> <span style="color: #333;">Column4</span> <span >&gt;</span><span >=</span> <span style="font-weight:bold;">NOW()</span>
-    )
-  )
-<span style="font-weight:bold;">GROUP BY</span>
-  <span style="color: #333;">Column1</span>
-<span style="font-weight:bold;">ORDER BY</span>
-  <span style="color: #333;">Column3</span> <span style="font-weight:bold;">DESC</span>
-<span style="font-weight:bold;">LIMIT</span>
-  <span style="color: green;">5</span><span >,</span> <span style="color: green;">10</span></pre>
+<img src="examples/readme_format_html.svg" width="600" height="450" alt="formatted output with HTML Highlight">
 
 When you run php under cli and instantiated `SqlFormatter` without argument, highlighted with `CliHighlighter`.
 
@@ -128,9 +108,7 @@ echo (new SqlFormatter())->highlight($query);
 
 Output:
 
-<pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span> <span style="font-weight:bold;">count</span>(<span >*</span>)<span >,</span><span style="color: purple;">`Column1`</span><span >,</span><span style="color: purple;">`Testing`</span><span >,</span> <span style="color: purple;">`Testing Three`</span> <span style="font-weight:bold;">FROM</span> <span style="color: purple;">`Table1`</span>
-    <span style="font-weight:bold;">WHERE</span> <span style="color: #333;">Column1</span> <span >=</span> <span style="color: blue;">'testing'</span> <span style="font-weight:bold;">AND</span> ( (<span style="color: purple;">`Column2`</span> <span >=</span> <span style="color: purple;">`Column3`</span> <span style="font-weight:bold;">OR</span> <span style="color: #333;">Column4</span> <span >&gt;</span><span >=</span> <span style="font-weight:bold;">NOW()</span>) )
-    <span style="font-weight:bold;">GROUP BY</span> <span style="color: #333;">Column1</span> <span style="font-weight:bold;">ORDER BY</span> <span style="color: #333;">Column3</span> <span style="font-weight:bold;">DESC</span> <span style="font-weight:bold;">LIMIT</span> <span style="color: green;">5</span><span >,</span><span style="color: green;">10</span></pre>
+<img src="examples/readme_highlight_html.svg" width="800" height="150" alt="HTML Highlight output">
 
 ### Compress Query
 
