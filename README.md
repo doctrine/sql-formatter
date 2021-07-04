@@ -25,7 +25,7 @@ Here is what the original History section says:
 ## Usage
 
 The `SqlFormatter` class has a method `format` which takes an SQL string as
-input and returns a formatted HTML block inside a `pre` tag.
+input and returns a formatted block.
 
 Sample usage:
 
@@ -44,7 +44,32 @@ echo (new SqlFormatter())->format($query);
 
 Output:
 
-![](http://jdorn.github.com/sql-formatter/format-highlight.png)
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
+  <span style="font-weight:bold;">count</span>(<span >*</span>)<span >,</span>
+  <span style="color: purple;">`Column1`</span><span >,</span>
+  <span style="color: purple;">`Testing`</span><span >,</span>
+  <span style="color: purple;">`Testing Three`</span>
+<span style="font-weight:bold;">FROM</span>
+  <span style="color: purple;">`Table1`</span>
+<span style="font-weight:bold;">WHERE</span>
+  <span style="color: #333;">Column1</span> <span >=</span> <span style="color: blue;">'testing'</span>
+  <span style="font-weight:bold;">AND</span> (
+    (
+      <span style="color: purple;">`Column2`</span> <span >=</span> <span style="color: purple;">`Column3`</span>
+      <span style="font-weight:bold;">OR</span> <span style="color: #333;">Column4</span> <span >&gt;</span><span >=</span> <span style="font-weight:bold;">NOW()</span>
+    )
+  )
+<span style="font-weight:bold;">GROUP BY</span>
+  <span style="color: #333;">Column1</span>
+<span style="font-weight:bold;">ORDER BY</span>
+  <span style="color: #333;">Column3</span> <span style="font-weight:bold;">DESC</span>
+<span style="font-weight:bold;">LIMIT</span>
+  <span style="color: green;">5</span><span >,</span> <span style="color: green;">10</span></pre>
+
+When you run php under cli and instantiated `SqlFormatter` without argument, highlighted with `CliHighlighter`.
+
+SqlFormatter constructor takes `Highlighter` implementations. `HtmlHighlighter` etc.
+
 
 ### Formatting Only
 
@@ -64,7 +89,29 @@ echo (new SqlFormatter(new NullHighlighter()))->format($query);
 
 Output:
 
-![](http://jdorn.github.com/sql-formatter/format.png)
+```
+SELECT
+  count(*),
+  `Column1`,
+  `Testing`,
+  `Testing Three`
+FROM
+  `Table1`
+WHERE
+  Column1 = 'testing'
+  AND (
+    (
+      `Column2` = `Column3`
+      OR Column4 >= NOW()
+    )
+  )
+GROUP BY
+  Column1
+ORDER BY
+  Column3 DESC
+LIMIT
+  5, 10
+```
 
 ### Syntax Highlighting Only
 
@@ -81,7 +128,9 @@ echo (new SqlFormatter())->highlight($query);
 
 Output:
 
-![](http://jdorn.github.com/sql-formatter/highlight.png)
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span> <span style="font-weight:bold;">count</span>(<span >*</span>)<span >,</span><span style="color: purple;">`Column1`</span><span >,</span><span style="color: purple;">`Testing`</span><span >,</span> <span style="color: purple;">`Testing Three`</span> <span style="font-weight:bold;">FROM</span> <span style="color: purple;">`Table1`</span>
+    <span style="font-weight:bold;">WHERE</span> <span style="color: #333;">Column1</span> <span >=</span> <span style="color: blue;">'testing'</span> <span style="font-weight:bold;">AND</span> ( (<span style="color: purple;">`Column2`</span> <span >=</span> <span style="color: purple;">`Column3`</span> <span style="font-weight:bold;">OR</span> <span style="color: #333;">Column4</span> <span >&gt;</span><span >=</span> <span style="font-weight:bold;">NOW()</span>) )
+    <span style="font-weight:bold;">GROUP BY</span> <span style="color: #333;">Column1</span> <span style="font-weight:bold;">ORDER BY</span> <span style="color: #333;">Column3</span> <span style="font-weight:bold;">DESC</span> <span style="font-weight:bold;">LIMIT</span> <span style="color: green;">5</span><span >,</span><span style="color: green;">10</span></pre>
 
 ### Compress Query
 
@@ -100,7 +149,7 @@ line easily.
 ```
 
 ```php
-echo (new SqlFormatter())->compress($query)
+echo (new SqlFormatter())->compress($query);
 ```
 
 Output:
