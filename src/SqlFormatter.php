@@ -6,7 +6,7 @@ declare(strict_types=1);
  * SQL Formatter is a collection of utilities for debugging SQL queries.
  * It includes methods for formatting, syntax highlighting, removing comments, etc.
  *
- * @link       http://github.com/jdorn/sql-formatter
+ * @see http://github.com/jdorn/sql-formatter
  */
 
 namespace Doctrine\SqlFormatter;
@@ -16,12 +16,14 @@ use function array_shift;
 use function array_unshift;
 use function assert;
 use function current;
+use function in_array;
 use function preg_replace;
 use function reset;
 use function rtrim;
 use function str_repeat;
 use function str_replace;
 use function strlen;
+use function strtoupper;
 use function trim;
 
 use const PHP_SAPI;
@@ -47,7 +49,7 @@ final class SqlFormatter
      *
      * @return string The SQL string with HTML styles and formatting wrapped in a <pre> tag
      */
-    public function format(string $string, string $indentString = '  '): string
+    public function format(string $string, string $indentString = '  ', bool $forceUppercase = false): string
     {
         // This variable will be populated with formatted html
         $return = '';
@@ -71,9 +73,23 @@ final class SqlFormatter
 
         // Format token by token
         while ($token = $cursor->next(Token::TOKEN_TYPE_WHITESPACE)) {
+            // Uppercase reserved words
+            $uppercaseTypes = [
+                Token::TOKEN_TYPE_RESERVED,
+                Token::TOKEN_TYPE_RESERVED_NEWLINE,
+                Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
+            ];
+
+            // Uppercase transformation if desired
+            if ($forceUppercase && in_array($token->type(), $uppercaseTypes)) {
+                $tokenValue = strtoupper($token->value());
+            } else {
+                $tokenValue = $token->value();
+            }
+
             $highlighted = $this->highlighter->highlightToken(
                 $token->type(),
-                $token->value()
+                $tokenValue
             );
 
             // If we are increasing the special indent level now

@@ -62,6 +62,19 @@ use Doctrine\SqlFormatter\SqlFormatter;
 echo (new SqlFormatter(new NullHighlighter()))->format($query);
 ```
 
+#### Forcing uppercase for SQL keywords
+
+If you wish to also force SQL keywords to be uppercase, you can do the following:
+
+```php
+<?php
+
+use Doctrine\SqlFormatter\NullHighlighter;
+use Doctrine\SqlFormatter\SqlFormatter;
+
+echo (new SqlFormatter(new NullHighlighter()))->format($query, '  ', true);
+```
+
 Output:
 
 ![](http://jdorn.github.com/sql-formatter/format.png)
