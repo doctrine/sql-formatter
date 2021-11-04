@@ -1,6 +1,6 @@
 {
     "require": {
-        "phpstan/phpstan": "^0.12.25"
+        "phpstan/phpstan": "^1.0"
     },
     "config": {
         "sort-packages": true,
