@@ -1,0 +1,27 @@
+<svg fill="none" viewBox="0 0 600 450" width="600" height="450" xmlns="http://www.w3.org/2000/svg">
+    <foreignObject width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml">
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
+  <span style="font-weight:bold;">count</span>(<span >*</span>)<span >,</span>
+  <span style="color: purple;">`Column1`</span><span >,</span>
+  <span style="color: purple;">`Testing`</span><span >,</span>
+  <span style="color: purple;">`Testing Three`</span>
+<span style="font-weight:bold;">FROM</span>
+  <span style="color: purple;">`Table1`</span>
+<span style="font-weight:bold;">WHERE</span>
+  <span style="color: #333;">Column1</span> <span >=</span> <span style="color: blue;">'testing'</span>
+  <span style="font-weight:bold;">AND</span> (
+    (
+      <span style="color: purple;">`Column2`</span> <span >=</span> <span style="color: purple;">`Column3`</span>
+      <span style="font-weight:bold;">OR</span> <span style="color: #333;">Column4</span> <span >&gt;</span><span >=</span> <span style="font-weight:bold;">NOW()</span>
+    )
+  )
+<span style="font-weight:bold;">GROUP BY</span>
+  <span style="color: #333;">Column1</span>
+<span style="font-weight:bold;">ORDER BY</span>
+  <span style="color: #333;">Column3</span> <span style="font-weight:bold;">DESC</span>
+<span style="font-weight:bold;">LIMIT</span>
+  <span style="color: green;">5</span><span >,</span> <span style="color: green;">10</span></pre>
+        </div>
+    </foreignObject>
+</svg>

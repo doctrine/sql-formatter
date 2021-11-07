@@ -1,6 +1,6 @@
 {
     "require": {
-        "vimeo/psalm": "^3.11"
+        "vimeo/psalm": "^4.11"
     },
     "config": {
         "sort-packages": true,
