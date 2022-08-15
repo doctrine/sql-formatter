@@ -710,6 +710,7 @@ final class Tokenizer
     private $boundaries = [
         ',',
         ';',
+        '::', // PostgreSQL cast operator
         ':',
         ')',
         '(',
@@ -855,11 +856,6 @@ final class Tokenizer
                     : Token::TOKEN_TYPE_QUOTE),
                 $this->getQuotedString($string)
             );
-        }
-
-        // PostgreSQL cast operator
-        if (substr($string, 0, 2) === '::') {
-            return new Token(Token::TOKEN_TYPE_BOUNDARY, '::');
         }
 
         // User-defined Variable
