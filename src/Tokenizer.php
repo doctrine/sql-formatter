@@ -857,6 +857,11 @@ final class Tokenizer
             );
         }
 
+        // PostgreSQL cast operator
+        if (substr($string, 0, 2) === '::') {
+            return new Token(Token::TOKEN_TYPE_BOUNDARY, '::');
+        }
+
         // User-defined Variable
         if (($string[0] === '@' || $string[0] === ':') && isset($string[1])) {
             $value = null;

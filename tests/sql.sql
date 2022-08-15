@@ -302,3 +302,5 @@ SELECT a,
     MIN(Revenue) OVER (PARTITION BY DepartmentID ORDER BY RevenueYear ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS MinRevenueBeyond
 FROM t1
 WINDOW w1 AS (PARTITION BY department, division), w2 AS (w1 ORDER BY hire_date);
+---
+SELECT 1::text;
