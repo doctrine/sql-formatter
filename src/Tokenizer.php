@@ -710,6 +710,7 @@ final class Tokenizer
     private $boundaries = [
         ',',
         ';',
+        '::', // PostgreSQL cast operator
         ':',
         ')',
         '(',
