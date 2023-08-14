@@ -1,5 +1,6 @@
 SELECT customer_id, customer_name, COUNT(order_id) as total
-FROM customers INNER JOIN orders ON customers.customer_id = orders.customer_id
+FROM customers INNER JOIN orders ON customers.customer_id = orders.customer_id AND orders.type = 1 OR orders.type = 2
+INNER JOIN orders2 ON customers.customer_id2 = orders2.customer_id AND orders2.type = 1 OR orders2.type = 2
 GROUP BY customer_id, customer_name
 HAVING COUNT(order_id) > 5
 ORDER BY COUNT(order_id) DESC;

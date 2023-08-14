@@ -189,7 +189,6 @@ final class Tokenizer
         'NOW()',
         'NULL',
         'OFFSET',
-        'ON',
         'OPEN',
         'OPTIMIZE',
         'OPTION',
@@ -358,6 +357,7 @@ final class Tokenizer
         'OR',
         'AND',
         'EXCLUDE',
+        'ON',
     ];
 
     /** @var string[] */
@@ -922,7 +922,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                    substr($string, 0, strlen($matches[1]))
+                    preg_replace('/\s+/', ' ', substr($string, 0, strlen($matches[1])))
                 );
             }
 

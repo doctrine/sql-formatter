@@ -23,6 +23,7 @@ final class Token
     public const TOKEN_TYPE_NUMBER            = 10;
     public const TOKEN_TYPE_ERROR             = 11;
     public const TOKEN_TYPE_VARIABLE          = 12;
+    public const TOKEN_TYPE_EOF               = 13;
 
     // Constants for different components of a token
     public const TOKEN_TYPE  = 0;
@@ -65,5 +66,50 @@ final class Token
     public function withValue(string $value): self
     {
         return new self($this->type(), $value);
+    }
+
+    public function isBlockStart()
+    {
+        if ($this->value === '(') {
+            return [
+                'values' => [')'],
+                'addNewline' => true,
+            ];
+        }
+
+        $joins = [
+            'LEFT OUTER JOIN',
+            'RIGHT OUTER JOIN',
+            'LEFT JOIN',
+            'RIGHT JOIN',
+            'OUTER JOIN',
+            'INNER JOIN',
+            'JOIN',
+        ];
+        if (in_array($this->value, $joins, true)) {
+            return [
+                'types' => [
+                    self::TOKEN_TYPE_RESERVED_TOPLEVEL,
+                    self::TOKEN_TYPE_EOF,
+                ],
+                'values' => $joins,
+                'addNewline' => false,
+            ];
+        }
+
+        return false;
+    }
+
+    public function isBlockEnd($condition)
+    {
+        if (isset($condition['types']) && $this->isOfType(...$condition['types'])) {
+            return true;
+        }
+
+        if (isset($condition['values']) && in_array($this->value, $condition['values'], true)) {
+            return true;
+        }
+
+        return false;
     }
 }
