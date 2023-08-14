@@ -11,13 +11,9 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
-use function array_search;
-use function array_shift;
-use function array_unshift;
+use function array_pop;
 use function assert;
-use function current;
 use function preg_replace;
-use function reset;
 use function rtrim;
 use function str_repeat;
 use function str_replace;
@@ -58,6 +54,9 @@ final class SqlFormatter
         // Use an actual tab while formatting and then switch out with $indentString at the end
         $tab = "\t";
 
+        /** @var Condition[] $expectedBlockEnds */
+        $expectedBlockEnds = [];
+
         $indentLevel           = 0;
         $newline               = false;
         $inlineBlock           = false;
@@ -67,7 +66,6 @@ final class SqlFormatter
         $inlineCount           = 0;
         $inlineIndented        = false;
         $clauseLimit           = false;
-        $expectedBlockEnds     = [];
 
         // Tokenize String
         $cursor = $this->tokenizer->tokenize($string);
@@ -120,13 +118,10 @@ final class SqlFormatter
                 $last = end($expectedBlockEnds);
                 $prev = prev($expectedBlockEnds);
 
-                if ($token->isBlockEnd($prev) && !in_array(Token::TOKEN_TYPE_EOF, ($prev['types'] ?? []), true)) {
-                    if (isset($last['types']) && in_array(Token::TOKEN_TYPE_EOF, ($last['types'] ?? []), true)) {
-                        // TODO loop instead?
-                        array_pop($expectedBlockEnds);
-                        array_pop($indentTypes);
-                        $indentLevel--;
-                    }
+                if ($last->eof && ! $prev->eof && $token->isBlockEnd($prev)) {
+                    array_pop($expectedBlockEnds);
+                    array_pop($indentTypes);
+                    $indentLevel--;
                 }
             }
 
@@ -220,7 +215,7 @@ final class SqlFormatter
                 if (! $inlineBlock) {
                     $increaseBlockIndent = true;
                     // Add a newline after the block
-                    if ($newBlockEndCondition['addNewline']) {
+                    if ($newBlockEndCondition->addNewline) {
                         $newline = true;
                     }
                 }
@@ -250,7 +245,7 @@ final class SqlFormatter
                 }
 
                 // Add a newline before the closing block (if not already added)
-                if (! $addedNewline && $blockEndCondition['addNewline']) {
+                if (! $addedNewline && $blockEndCondition->addNewline) {
                     $return .= "\n" . str_repeat($tab, $indentLevel);
                 }
             }
@@ -293,7 +288,7 @@ final class SqlFormatter
                 $clauseLimit = false;
             } elseif ($token->value() === ',' && ! $inlineBlock) {
                 // Commas start a new line (unless within inline block or SQL 'LIMIT' clause)
-                //If the previous TOKEN_VALUE is 'LIMIT', resets new line
+                // If the previous TOKEN_VALUE is 'LIMIT', resets new line
                 if ($clauseLimit === true) {
                     $newline     = false;
                     $clauseLimit = false;
@@ -369,7 +364,7 @@ final class SqlFormatter
         }
 
         $blockEndCondition = end($expectedBlockEnds);
-        if ($blockEndCondition && in_array(Token::TOKEN_TYPE_EOF, $blockEndCondition['types'] ?? [], true)) {
+        if ($blockEndCondition && $blockEndCondition->eof) {
             array_pop($expectedBlockEnds);
         }
 

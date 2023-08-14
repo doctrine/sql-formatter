@@ -23,7 +23,6 @@ final class Token
     public const TOKEN_TYPE_NUMBER            = 10;
     public const TOKEN_TYPE_ERROR             = 11;
     public const TOKEN_TYPE_VARIABLE          = 12;
-    public const TOKEN_TYPE_EOF               = 13;
 
     // Constants for different components of a token
     public const TOKEN_TYPE  = 0;
@@ -70,11 +69,12 @@ final class Token
 
     public function isBlockStart()
     {
+        $condition = new Condition();
+
         if ($this->value === '(') {
-            return [
-                'values' => [')'],
-                'addNewline' => true,
-            ];
+            $condition->values = [')'];
+            $condition->addNewline = true;
+            return $condition;
         }
 
         $joins = [
@@ -87,26 +87,22 @@ final class Token
             'JOIN',
         ];
         if (in_array($this->value, $joins, true)) {
-            return [
-                'types' => [
-                    self::TOKEN_TYPE_RESERVED_TOPLEVEL,
-                    self::TOKEN_TYPE_EOF,
-                ],
-                'values' => $joins,
-                'addNewline' => false,
-            ];
+            $condition->values = $joins;
+            $condition->types = [self::TOKEN_TYPE_RESERVED_TOPLEVEL];
+            $condition->eof = true;
+            return $condition;
         }
 
         return false;
     }
 
-    public function isBlockEnd($condition)
+    public function isBlockEnd(Condition $condition): bool
     {
-        if (isset($condition['types']) && $this->isOfType(...$condition['types'])) {
+        if ($this->isOfType(...$condition->types)) {
             return true;
         }
 
-        if (isset($condition['values']) && in_array($this->value, $condition['values'], true)) {
+        if (in_array($this->value, $condition->values, true)) {
             return true;
         }
 
