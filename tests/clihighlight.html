@@ -4,7 +4,14 @@
   [37mCOUNT[0m(order_id[0m) [37mas[0m total[0m
 [37mFROM[0m
   customers[0m
-  [37mINNER JOIN[0m orders[0m [37mON[0m customers[0m.[0mcustomer_id[0m =[0m orders[0m.[0mcustomer_id[0m
+  [37mINNER JOIN[0m orders[0m
+    [37mON[0m customers[0m.[0mcustomer_id[0m =[0m orders[0m.[0mcustomer_id[0m
+    [37mAND[0m orders[0m.[0mtype[0m =[0m [32;1m1[0m
+    [37mOR[0m orders[0m.[0mtype[0m =[0m [32;1m2[0m
+  [37mINNER JOIN[0m orders2[0m
+    [37mON[0m customers[0m.[0mcustomer_id2[0m =[0m orders2[0m.[0mcustomer_id[0m
+    [37mAND[0m orders2[0m.[0mtype[0m =[0m [32;1m1[0m
+    [37mOR[0m orders2[0m.[0mtype[0m =[0m [32;1m2[0m
 [37mGROUP BY[0m
   customer_id[0m,[0m
   customer_name[0m
@@ -509,7 +516,8 @@
     [34;1m'0000-00-00 00:00:00'[0m
   [37mFROM[0m
     [35;1m`PREFIX_discount_quantity`[0m dq[0m
-    [37mINNER JOIN[0m [35;1m`PREFIX_product`[0m p[0m [37mON[0m (p[0m.[0m[35;1m`id_product`[0m =[0m dq[0m.[0m[35;1m`id_product`[0m)
+    [37mINNER JOIN[0m [35;1m`PREFIX_product`[0m p[0m
+      [37mON[0m (p[0m.[0m[35;1m`id_product`[0m =[0m dq[0m.[0m[35;1m`id_product`[0m)
 )
 ---
 [37mDROP[0m
@@ -744,12 +752,11 @@
 [37mFROM[0m
   Test[0m
 [37mWHERE[0m
-  (MyColumn[0m =[0m [32;1m1[0m)
-[31;1;7m)[0m
-[37mAND[0m (
-  (
-    (SomeOtherColumn[0m =[0m [32;1m2[0m);[0m
-[31;1;7mWARNING: unclosed parentheses or section[0m
+  (MyColumn[0m =[0m [32;1m1[0m))
+  [37mAND[0m (
+    (
+      (SomeOtherColumn[0m =[0m [32;1m2[0m);[0m
+[31;1;7mWARNING: unclosed block[0m
 ---
 [37mALTER TABLE[0m
   [35;1m`test_modify`[0m
@@ -823,7 +830,8 @@
   a[0m
 [37mFROM[0m
   b[0m
-  [37mLEFT OUTER JOIN[0m c[0m [37mon[0m (d[0m =[0m f[0m);[0m
+  [37mLEFT OUTER JOIN[0m c[0m
+    [37mon[0m (d[0m =[0m f[0m);[0m
 ---
 [37mWITH[0m
   cte[0m [37mAS[0m (

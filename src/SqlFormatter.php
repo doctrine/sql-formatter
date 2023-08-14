@@ -12,8 +12,10 @@ declare(strict_types=1);
 namespace Doctrine\SqlFormatter;
 
 use function array_pop;
-use function assert;
+use function count;
+use function end;
 use function preg_replace;
+use function prev;
 use function rtrim;
 use function str_repeat;
 use function str_replace;
@@ -24,7 +26,7 @@ use const PHP_SAPI;
 
 final class SqlFormatter
 {
-    private const INDENT_BLOCK = 1;
+    private const INDENT_BLOCK   = 1;
     private const INDENT_SPECIAL = 2;
 
     /** @var Highlighter */
@@ -81,7 +83,7 @@ final class SqlFormatter
             if ($increaseSpecialIndent) {
                 $indentLevel++;
                 $increaseSpecialIndent = false;
-                $indentTypes[] = self::INDENT_SPECIAL;
+                $indentTypes[]         = self::INDENT_SPECIAL;
             }
 
             // If we are increasing the block indent level now
@@ -118,7 +120,7 @@ final class SqlFormatter
                 $last = end($expectedBlockEnds);
                 $prev = prev($expectedBlockEnds);
 
-                if ($last->eof && ! $prev->eof && $token->isBlockEnd($prev)) {
+                if ($prev && $last->eof && ! $prev->eof && $token->isBlockEnd($prev)) {
                     array_pop($expectedBlockEnds);
                     array_pop($indentTypes);
                     $indentLevel--;
@@ -159,7 +161,7 @@ final class SqlFormatter
             $newBlockEndCondition = $token->isBlockStart();
 
             // Start of new block, increase the indent level and start a new line
-            if ($newBlockEndCondition !== false) {
+            if ($newBlockEndCondition !== null) {
                 // First check if this should be an inline block
                 // Examples are "NOW()", "COUNT(*)", "int(10)", key(`somecolumn`), DECIMAL(7,2)
                 // Allow up to 3 non-whitespace tokens inside inline block
@@ -422,21 +424,6 @@ final class SqlFormatter
             // Skip comment tokens
             if ($token->isOfType(Token::TOKEN_TYPE_COMMENT, Token::TOKEN_TYPE_BLOCK_COMMENT)) {
                 continue;
-            }
-
-            // Remove extra whitespace in reserved words (e.g "OUTER     JOIN" becomes "OUTER JOIN")
-            // TODO move to Tokenizer
-
-            if (
-                $token->isOfType(
-                    Token::TOKEN_TYPE_RESERVED,
-                    Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                    Token::TOKEN_TYPE_RESERVED_TOPLEVEL
-                )
-            ) {
-                $newValue = preg_replace('/\s+/', ' ', $token->value());
-                assert($newValue !== null);
-                $token = $token->withValue($newValue);
             }
 
             if ($token->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {

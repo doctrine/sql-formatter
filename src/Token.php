@@ -67,13 +67,14 @@ final class Token
         return new self($this->type(), $value);
     }
 
-    public function isBlockStart()
+    public function isBlockStart(): ?Condition
     {
         $condition = new Condition();
 
         if ($this->value === '(') {
-            $condition->values = [')'];
+            $condition->values     = [')'];
             $condition->addNewline = true;
+
             return $condition;
         }
 
@@ -88,12 +89,13 @@ final class Token
         ];
         if (in_array($this->value, $joins, true)) {
             $condition->values = $joins;
-            $condition->types = [self::TOKEN_TYPE_RESERVED_TOPLEVEL];
-            $condition->eof = true;
+            $condition->types  = [self::TOKEN_TYPE_RESERVED_TOPLEVEL];
+            $condition->eof    = true;
+
             return $condition;
         }
 
-        return false;
+        return null;
     }
 
     public function isBlockEnd(Condition $condition): bool
@@ -102,10 +104,6 @@ final class Token
             return true;
         }
 
-        if (in_array($this->value, $condition->values, true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($this->value, $condition->values, true);
     }
 }

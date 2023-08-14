@@ -12,6 +12,7 @@ use function assert;
 use function implode;
 use function preg_match;
 use function preg_quote;
+use function preg_replace;
 use function str_replace;
 use function strlen;
 use function strpos;
@@ -908,7 +909,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
-                    substr($string, 0, strlen($matches[1]))
+                    (string) preg_replace('/\s+/', ' ', substr($string, 0, strlen($matches[1])))
                 );
             }
 
@@ -922,7 +923,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                    preg_replace('/\s+/', ' ', substr($string, 0, strlen($matches[1])))
+                    (string) preg_replace('/\s+/', ' ', substr($string, 0, strlen($matches[1])))
                 );
             }
 
@@ -936,7 +937,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED,
-                    substr($string, 0, strlen($matches[1]))
+                    (string) preg_replace('/\s+/', ' ', substr($string, 0, strlen($matches[1])))
                 );
             }
         }

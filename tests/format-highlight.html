@@ -4,7 +4,14 @@
   <span style="font-weight:bold;">COUNT</span>(<span style="color: #333;">order_id</span>) <span style="font-weight:bold;">as</span> <span style="color: #333;">total</span>
 <span style="font-weight:bold;">FROM</span>
   <span style="color: #333;">customers</span>
-  <span style="font-weight:bold;">INNER JOIN</span> <span style="color: #333;">orders</span> <span style="font-weight:bold;">ON</span> <span style="color: #333;">customers</span><span >.</span><span style="color: #333;">customer_id</span> <span >=</span> <span style="color: #333;">orders</span><span >.</span><span style="color: #333;">customer_id</span>
+  <span style="font-weight:bold;">INNER JOIN</span> <span style="color: #333;">orders</span>
+    <span style="font-weight:bold;">ON</span> <span style="color: #333;">customers</span><span >.</span><span style="color: #333;">customer_id</span> <span >=</span> <span style="color: #333;">orders</span><span >.</span><span style="color: #333;">customer_id</span>
+    <span style="font-weight:bold;">AND</span> <span style="color: #333;">orders</span><span >.</span><span style="color: #333;">type</span> <span >=</span> <span style="color: green;">1</span>
+    <span style="font-weight:bold;">OR</span> <span style="color: #333;">orders</span><span >.</span><span style="color: #333;">type</span> <span >=</span> <span style="color: green;">2</span>
+  <span style="font-weight:bold;">INNER JOIN</span> <span style="color: #333;">orders2</span>
+    <span style="font-weight:bold;">ON</span> <span style="color: #333;">customers</span><span >.</span><span style="color: #333;">customer_id2</span> <span >=</span> <span style="color: #333;">orders2</span><span >.</span><span style="color: #333;">customer_id</span>
+    <span style="font-weight:bold;">AND</span> <span style="color: #333;">orders2</span><span >.</span><span style="color: #333;">type</span> <span >=</span> <span style="color: green;">1</span>
+    <span style="font-weight:bold;">OR</span> <span style="color: #333;">orders2</span><span >.</span><span style="color: #333;">type</span> <span >=</span> <span style="color: green;">2</span>
 <span style="font-weight:bold;">GROUP BY</span>
   <span style="color: #333;">customer_id</span><span >,</span>
   <span style="color: #333;">customer_name</span>
@@ -509,7 +516,8 @@
     <span style="color: blue;">'0000-00-00 00:00:00'</span>
   <span style="font-weight:bold;">FROM</span>
     <span style="color: purple;">`PREFIX_discount_quantity`</span> <span style="color: #333;">dq</span>
-    <span style="font-weight:bold;">INNER JOIN</span> <span style="color: purple;">`PREFIX_product`</span> <span style="color: #333;">p</span> <span style="font-weight:bold;">ON</span> (<span style="color: #333;">p</span><span >.</span><span style="color: purple;">`id_product`</span> <span >=</span> <span style="color: #333;">dq</span><span >.</span><span style="color: purple;">`id_product`</span>)
+    <span style="font-weight:bold;">INNER JOIN</span> <span style="color: purple;">`PREFIX_product`</span> <span style="color: #333;">p</span>
+      <span style="font-weight:bold;">ON</span> (<span style="color: #333;">p</span><span >.</span><span style="color: purple;">`id_product`</span> <span >=</span> <span style="color: #333;">dq</span><span >.</span><span style="color: purple;">`id_product`</span>)
 )</pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">DROP</span>
@@ -744,12 +752,11 @@
 <span style="font-weight:bold;">FROM</span>
   <span style="color: #333;">Test</span>
 <span style="font-weight:bold;">WHERE</span>
-  (<span style="color: #333;">MyColumn</span> <span >=</span> <span style="color: green;">1</span>)
-<span style="background-color: red;">)</span>
-<span style="font-weight:bold;">AND</span> (
-  (
-    (<span style="color: #333;">SomeOtherColumn</span> <span >=</span> <span style="color: green;">2</span>)<span >;</span>
-<span style="background-color: red;">WARNING: unclosed parentheses or section</span></pre>
+  (<span style="color: #333;">MyColumn</span> <span >=</span> <span style="color: green;">1</span>))
+  <span style="font-weight:bold;">AND</span> (
+    (
+      (<span style="color: #333;">SomeOtherColumn</span> <span >=</span> <span style="color: green;">2</span>)<span >;</span>
+<span style="background-color: red;">WARNING: unclosed block</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">ALTER TABLE</span>
   <span style="color: purple;">`test_modify`</span>
@@ -823,7 +830,8 @@
   <span style="color: #333;">a</span>
 <span style="font-weight:bold;">FROM</span>
   <span style="color: #333;">b</span>
-  <span style="font-weight:bold;">LEFT OUTER JOIN</span> <span style="color: #333;">c</span> <span style="font-weight:bold;">on</span> (<span style="color: #333;">d</span> <span >=</span> <span style="color: #333;">f</span>)<span >;</span></pre>
+  <span style="font-weight:bold;">LEFT OUTER JOIN</span> <span style="color: #333;">c</span>
+    <span style="font-weight:bold;">on</span> (<span style="color: #333;">d</span> <span >=</span> <span style="color: #333;">f</span>)<span >;</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">WITH</span>
   <span style="color: #333;">cte</span> <span style="font-weight:bold;">AS</span> (
