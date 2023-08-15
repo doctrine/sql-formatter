@@ -70,13 +70,13 @@ final class Token
             return $condition;
         }
 
-        if ($this->value === 'THEN') {
+        if ($this->value === 'CASE WHEN' || $this->value === 'ELSE') {
             $condition->values = ['ELSE', 'END'];
 
             return $condition;
         }
 
-        if ($this->value === 'ELSE') {
+        if ($this->value === 'CASE') {
             $condition->values = ['END'];
 
             return $condition;

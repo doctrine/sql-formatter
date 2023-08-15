@@ -321,7 +321,8 @@ SELECT
     -- Extract service name from other message
     'Default'
   END new_service,
-  p.name current_service
+  p.name current_service,
+  CASE r.name WHEN 'pre-fix' THEN 'pre' WHEN 'post-fix' THEN 'post' END AS fix
 FROM
   (
     SELECT
@@ -372,6 +373,7 @@ WHERE
   -- No external products
   AND p.external = 0
   AND (p.type = 1 OR p.id = 7)
+  AND MD5(CONCAT(p.type, ?)) = '11'
 HAVING
   new_service = 'Old'
   -- Skip Old -> Old service
@@ -379,3 +381,8 @@ HAVING
 ORDER BY
   old_service,
   r.name ASC
+---
+INSERT INTO customers (id, username)
+VALUES (1, 'Joe')
+ON DUPLICATE KEY UPDATE
+username = VALUES(username)

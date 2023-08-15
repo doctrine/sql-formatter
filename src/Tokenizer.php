@@ -50,7 +50,6 @@ final class Tokenizer
         'BINLOG',
         'BOTH',
         'CASCADE',
-        'CASE',
         'CHANGE',
         'CHANGED',
         'CHARACTER SET',
@@ -300,7 +299,6 @@ final class Tokenizer
         'USING',
         'VARIABLES',
         'VIEW',
-        'WHEN',
         'WITH',
         'WORK',
         'WRITE',
@@ -340,6 +338,7 @@ final class Tokenizer
         'RANGE',
         'GROUPS',
         'WINDOW',
+        'ON DUPLICATE KEY UPDATE',
     ];
 
     /** @var string[] */
@@ -357,7 +356,8 @@ final class Tokenizer
         'EXCLUDE',
         'ON',
         'CASE WHEN',
-        'THEN',
+        'CASE',
+        'WHEN',
         'ELSE',
         'END',
     ];
@@ -671,6 +671,7 @@ final class Tokenizer
         'UTC_TIME',
         'UTC_TIMESTAMP',
         'UUID',
+        'VALUES',
         'VAR',
         'VARIANCE',
         'VARP',

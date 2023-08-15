@@ -269,6 +269,15 @@ final class SqlFormatter
             }
 
             if ($token->isOfType(Token::TOKEN_TYPE_RESERVED_TOPLEVEL)) {
+                // VALUES() is also a function
+                if ($token->value() === 'VALUES') {
+                    $prevNotWhitespace = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
+                    if ($prevNotWhitespace && $prevNotWhitespace->value() === '=') {
+                        $return .= ' ' . $highlighted;
+                        continue;
+                    }
+                }
+
                 // Top level reserved words start a new line and increase the special indent level
                 $increaseSpecialIndent = true;
 
@@ -356,6 +365,7 @@ final class SqlFormatter
             // Don't add whitespace between operators like != <> >= := && etc.
             if (
                 $token->isOfType(Token::TOKEN_TYPE_BOUNDARY)
+                && $token->value() !== ')'
                 && $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_BOUNDARY)
                 && ! in_array($nextNotWhitespace->value(), ['(', '-'], true)
             ) {

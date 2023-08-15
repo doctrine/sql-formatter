@@ -987,8 +987,7 @@
 [37mSELECT[0m
   [37mSQL_NO_CACHE[0m r[0m.[0mname[0m,[0m
   r[0m.[0mtime[0m,[0m
-  [37mCASE WHEN[0m r[0m.[0mmessage[0m [37mLIKE[0m [34;1m'old_service %'[0m
-  [37mTHEN[0m
+  [37mCASE WHEN[0m r[0m.[0mmessage[0m [37mLIKE[0m [34;1m'old_service %'[0m THEN[0m
     [30;1m-- Extract old service name from service message[0m
     [37mSUBSTRING_INDEX[0m(
       [37mSUBSTRING_INDEX[0m(
@@ -1007,8 +1006,7 @@
       [32;1m1[0m
     )
   [37mEND[0m old_service[0m,[0m
-  [37mCASE WHEN[0m r[0m.[0mmessage[0m [37mLIKE[0m [34;1m'service %'[0m
-  [37mTHEN[0m
+  [37mCASE WHEN[0m r[0m.[0mmessage[0m [37mLIKE[0m [34;1m'service %'[0m THEN[0m
     [30;1m-- Extract service name from service message[0m
     [37mSUBSTRING_INDEX[0m(
       [37mSUBSTRING_INDEX[0m(
@@ -1023,7 +1021,11 @@
     [30;1m-- Extract service name from other message[0m
     [34;1m'Default'[0m
   [37mEND[0m new_service[0m,[0m
-  p[0m.[0mname[0m current_service[0m
+  p[0m.[0mname[0m current_service[0m,[0m
+  [37mCASE[0m r[0m.[0mname[0m
+    [37mWHEN[0m [34;1m'pre-fix'[0m THEN[0m [34;1m'pre'[0m
+    [37mWHEN[0m [34;1m'post-fix'[0m THEN[0m [34;1m'post'[0m
+  [37mEND[0m [37mAS[0m fix[0m
 [37mFROM[0m
   (
     [37mSELECT[0m
@@ -1083,6 +1085,9 @@
     p[0m.[0mtype[0m =[0m [32;1m1[0m
     [37mOR[0m p[0m.[0mid[0m =[0m [32;1m7[0m
   )
+  [37mAND[0m [37mMD5[0m(
+    [37mCONCAT[0m(p[0m.[0mtype[0m,[0m ?[0m)
+  ) =[0m [34;1m'11'[0m
 [37mHAVING[0m
   new_service[0m =[0m [34;1m'Old'[0m
   [30;1m-- Skip Old -> Old service[0m
@@ -1090,3 +1095,9 @@
 [37mORDER BY[0m
   old_service[0m,[0m
   r[0m.[0mname[0m [37mASC[0m
+---
+[37mINSERT[0m [37mINTO[0m customers[0m (id[0m,[0m username[0m)
+[37mVALUES[0m
+  ([32;1m1[0m,[0m [34;1m'Joe'[0m)
+[37mON DUPLICATE KEY UPDATE[0m
+  username[0m =[0m [37mVALUES[0m(username[0m)
