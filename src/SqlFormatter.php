@@ -14,7 +14,6 @@ namespace Doctrine\SqlFormatter;
 use function array_pop;
 use function count;
 use function end;
-use function preg_replace;
 use function prev;
 use function rtrim;
 use function str_repeat;
@@ -95,7 +94,6 @@ final class SqlFormatter
             // If we need a new line before the token
             $addedNewline = false;
             if ($newline) {
-                $return       = rtrim($return, ' ');
                 $return      .= "\n" . str_repeat($tab, $indentLevel);
                 $newline      = false;
                 $addedNewline = true;
@@ -133,18 +131,22 @@ final class SqlFormatter
                 // End of inline block
                 if ($blockEndCondition && $token->isBlockEnd($blockEndCondition)) {
                     array_pop($expectedBlockEnds);
-                    $return = rtrim($return, ' ');
 
                     if ($inlineIndented) {
                         array_pop($indentTypes);
                         $indentLevel--;
-                        $return  = rtrim($return, ' ');
                         $return .= "\n" . str_repeat($tab, $indentLevel);
                     }
 
                     $inlineBlock = false;
 
-                    $return .= $highlighted . ' ';
+                    $return .= $highlighted;
+
+                    $nextNotWhitespace = $cursor->subCursor()->next(Token::TOKEN_TYPE_WHITESPACE);
+                    if ($nextNotWhitespace && $nextNotWhitespace->wantsSpaceBefore()) {
+                        $return .= ' ';
+                    }
+
                     continue;
                 }
 
@@ -231,9 +233,6 @@ final class SqlFormatter
 
             if ($blockEndCondition && $token->isBlockEnd($blockEndCondition)) {
                 // Closing block decrease the block indent level
-                // Remove whitespace before the closing block
-                $return = rtrim($return, ' ');
-
                 array_pop($expectedBlockEnds);
                 $indentLevel--;
 
@@ -266,15 +265,10 @@ final class SqlFormatter
                 $newline = true;
                 // Add a newline before the top level reserved word (if not already added)
                 if (! $addedNewline) {
-                    $return  = rtrim($return, ' ');
                     $return .= "\n" . str_repeat($tab, $indentLevel);
                 } else {
                     // If we already added a newline, redo the indentation since it may be different now
                     $return = rtrim($return, $tab) . str_repeat($tab, $indentLevel);
-                }
-
-                if ($token->hasExtraWhitespace()) {
-                    $highlighted = preg_replace('/\s+/', ' ', $highlighted);
                 }
 
                 // if SQL 'LIMIT' clause, start variable to reset newline
@@ -302,12 +296,7 @@ final class SqlFormatter
                 // Newline reserved words start a new line
                 // Add a newline before the reserved word (if not already added)
                 if (! $addedNewline) {
-                    $return  = rtrim($return, ' ');
                     $return .= "\n" . str_repeat($tab, $indentLevel);
-                }
-
-                if ($token->hasExtraWhitespace()) {
-                    $highlighted = preg_replace('/\s+/', ' ', $highlighted);
                 }
             } elseif ($token->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
                 // Multiple boundary characters in a row should not have spaces between them (not including parentheses)
@@ -320,49 +309,43 @@ final class SqlFormatter
                 }
             }
 
-            // If the token shouldn't have a space before it
-            if (
-                $token->value() === '.' ||
-                $token->value() === ',' ||
-                $token->value() === ';'
-            ) {
-                $return = rtrim($return, ' ');
-            }
-
-            $return .= $highlighted . ' ';
+            $return .= $highlighted;
 
             // If the token shouldn't have a space after it
-            if ($token->value() === '(' || $token->value() === '.') {
-                $return = rtrim($return, ' ');
-            }
-
-            // If this is the "-" of a negative number, it shouldn't have a space after it
-            if ($token->value() !== '-') {
+            if ($newline || $token->value() === '(' || $token->value() === '.') {
                 continue;
             }
 
             $nextNotWhitespace = $cursor->subCursor()->next(Token::TOKEN_TYPE_WHITESPACE);
-            if (! $nextNotWhitespace || ! $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_NUMBER)) {
+            if (! $nextNotWhitespace) {
                 continue;
             }
 
-            $prev = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
-            if (! $prev) {
+            if (! $nextNotWhitespace->wantsSpaceBefore()) {
                 continue;
             }
 
-            if (
-                $prev->isOfType(
-                    Token::TOKEN_TYPE_QUOTE,
-                    Token::TOKEN_TYPE_BACKTICK_QUOTE,
-                    Token::TOKEN_TYPE_WORD,
-                    Token::TOKEN_TYPE_NUMBER
-                )
-            ) {
-                continue;
+            // If this is the "-" of a negative number, it shouldn't have a space after it
+            if ($token->value() === '-') {
+                $prevNotWhitespace = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
+                if (! $prevNotWhitespace) {
+                    continue;
+                }
+
+                if (
+                    $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_NUMBER)
+                    && ! $prevNotWhitespace->isOfType(
+                        Token::TOKEN_TYPE_QUOTE,
+                        Token::TOKEN_TYPE_BACKTICK_QUOTE,
+                        Token::TOKEN_TYPE_WORD,
+                        Token::TOKEN_TYPE_NUMBER
+                    )
+                ) {
+                    continue;
+                }
             }
 
-            $return = rtrim($return, ' ');
+            $return .= ' ';
         }
 
         $blockEndCondition = end($expectedBlockEnds);
@@ -372,7 +355,6 @@ final class SqlFormatter
 
         // If there are unmatched blocks
         if (count($expectedBlockEnds)) {
-            $return  = rtrim($return, ' ');
             $return .= $this->highlighter->highlightErrorMessage(
                 'WARNING: unclosed block'
             );

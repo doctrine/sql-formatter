@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Doctrine\SqlFormatter;
 
 use function in_array;
-use function strpos;
 
 final class Token
 {
@@ -55,13 +54,6 @@ final class Token
         return in_array($this->type, $types, true);
     }
 
-    public function hasExtraWhitespace(): bool
-    {
-        return strpos($this->value(), ' ') !== false ||
-            strpos($this->value(), "\n") !== false ||
-            strpos($this->value(), "\t") !== false;
-    }
-
     public function withValue(string $value): self
     {
         return new self($this->type(), $value);
@@ -105,5 +97,14 @@ final class Token
         }
 
         return in_array($this->value, $condition->values, true);
+    }
+
+    public function wantsSpaceBefore(): bool
+    {
+        if (in_array($this->value, ['.', ',', ';', ')'], true)) {
+            return false;
+        }
+
+        return ! $this->isOfType(self::TOKEN_TYPE_RESERVED_NEWLINE, self::TOKEN_TYPE_RESERVED_TOPLEVEL);
     }
 }
