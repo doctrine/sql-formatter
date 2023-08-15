@@ -301,3 +301,79 @@
     <span style="font-weight:bold;">MIN</span>(<span style="color: #333;">Revenue</span>) <span style="font-weight:bold;">OVER</span> (<span style="font-weight:bold;">PARTITION BY</span> <span style="color: #333;">DepartmentID</span> <span style="font-weight:bold;">ORDER BY</span> <span style="color: #333;">RevenueYear</span> <span style="font-weight:bold;">ROWS</span> <span style="font-weight:bold;">BETWEEN</span> <span style="font-weight:bold;">CURRENT ROW</span> <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">UNBOUNDED</span> <span style="font-weight:bold;">FOLLOWING</span>) <span style="font-weight:bold;">AS</span> <span style="color: #333;">MinRevenueBeyond</span>
 <span style="font-weight:bold;">FROM</span> <span style="color: #333;">t1</span>
 <span style="font-weight:bold;">WINDOW</span> <span style="color: #333;">w1</span> <span style="font-weight:bold;">AS</span> (<span style="font-weight:bold;">PARTITION BY</span> <span style="color: #333;">department</span><span >,</span> <span style="color: #333;">division</span>)<span >,</span> <span style="color: #333;">w2</span> <span style="font-weight:bold;">AS</span> (<span style="color: #333;">w1</span> <span style="font-weight:bold;">ORDER BY</span> <span style="color: #333;">hire_date</span>)<span >;</span></pre>
+---
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
+  <span style="font-weight:bold;">SQL_NO_CACHE</span> <span style="color: #333;">r</span><span >.</span><span style="color: #333;">name</span><span >,</span>
+  <span style="color: #333;">r</span><span >.</span><span style="color: #333;">time</span><span >,</span>
+  <span style="font-weight:bold;">CASE WHEN</span> <span style="color: #333;">r</span><span >.</span><span style="color: #333;">message</span> <span style="font-weight:bold;">LIKE</span> <span style="color: blue;">'old_service %'</span> <span style="font-weight:bold;">THEN</span>
+    <span style="color: #aaa;">-- Extract old service name from service message</span>
+    <span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="color: #333;">r</span><span >.</span><span style="color: #333;">message</span><span >,</span><span style="color: blue;">'from '</span><span >,</span><span >-</span><span style="color: green;">1</span>)<span >,</span><span style="color: blue;">' ('</span><span >,</span><span style="color: green;">1</span>)<span >,</span><span style="color: blue;">' to '</span><span >,</span><span style="color: green;">1</span>)
+  <span style="font-weight:bold;">ELSE</span>
+    <span style="color: #aaa;">-- Extract old service name from other message</span>
+    <span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="color: #333;">r</span><span >.</span><span style="color: #333;">message</span><span >,</span><span style="color: blue;">'service '</span><span >,</span><span >-</span><span style="color: green;">1</span>)<span >,</span><span style="color: blue;">' ('</span><span >,</span><span style="color: green;">1</span>)
+  <span style="font-weight:bold;">END</span> <span style="color: #333;">old_service</span><span >,</span>
+  <span style="font-weight:bold;">CASE WHEN</span> <span style="color: #333;">r</span><span >.</span><span style="color: #333;">message</span> <span style="font-weight:bold;">LIKE</span> <span style="color: blue;">'service %'</span> <span style="font-weight:bold;">THEN</span>
+    <span style="color: #aaa;">-- Extract service name from service message</span>
+    <span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="color: #333;">r</span><span >.</span><span style="color: #333;">message</span><span >,</span><span style="color: blue;">'from '</span><span >,</span><span >-</span><span style="color: green;">1</span>)<span >,</span><span style="color: blue;">' ('</span><span >,</span><span style="color: green;">1</span>)<span >,</span><span style="color: blue;">' to '</span><span >,</span><span >-</span><span style="color: green;">1</span>)
+  <span style="font-weight:bold;">ELSE</span>
+    <span style="color: #aaa;">-- Extract service name from other message</span>
+    <span style="color: blue;">'Default'</span>
+  <span style="font-weight:bold;">END</span> <span style="color: #333;">new_service</span><span >,</span>
+  <span style="color: #333;">p</span><span >.</span><span style="color: #333;">name</span> <span style="color: #333;">current_service</span>
+<span style="font-weight:bold;">FROM</span>
+  (
+    <span style="font-weight:bold;">SELECT</span>
+      <span style="color: #333;">entries</span><span >.</span><span >*</span><span >,</span>
+      <span style="color: #aaa;">-- Variable to count rows by name</span>
+      (
+        <span style="color: orange;">@rn</span> <span >:</span><span >=</span> <span style="font-weight:bold;">IF</span>(
+          <span style="color: orange;">@id</span> <span >=</span> <span style="color: #333;">entries</span><span >.</span><span style="color: #333;">name</span><span >,</span>
+          <span style="color: orange;">@rn</span> <span >+</span> <span style="color: green;">1</span><span >,</span>
+          <span style="font-weight:bold;">IF</span>(<span style="color: orange;">@id</span> <span >:</span><span >=</span> <span style="color: #333;">entries</span><span >.</span><span style="color: #333;">name</span><span >,</span> <span style="color: green;">1</span><span >,</span> <span style="color: green;">1</span>)
+        )
+      ) <span style="color: #333;">entry_order</span>
+    <span style="font-weight:bold;">FROM</span>
+      (
+        <span style="color: #aaa;">-- Name is second word in both cases, ordering and cancelling a service</span>
+        <span style="font-weight:bold;">SELECT</span>
+          <span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="font-weight:bold;">SUBSTRING_INDEX</span>(<span style="color: #333;">message</span><span >,</span><span style="color: blue;">' '</span><span >,</span><span style="color: green;">2</span>)<span >,</span><span style="color: blue;">' '</span><span >,</span><span >-</span><span style="color: green;">1</span>) <span style="color: #333;">name</span><span >,</span>
+          <span style="color: #333;">time</span><span >,</span>
+          <span style="color: #333;">message</span>
+        <span style="font-weight:bold;">FROM</span>
+          <span style="color: #333;">log</span>
+            <span style="color: #aaa;">-- Only logged messages about service ordering or cancelling</span>
+        <span style="font-weight:bold;">WHERE</span>
+          (
+            <span style="color: #333;">message</span> <span style="font-weight:bold;">LIKE</span> <span style="color: blue;">'cancelled % service %'</span>
+            <span style="font-weight:bold;">OR</span> <span style="color: #333;">message</span> <span style="font-weight:bold;">LIKE</span> <span style="color: blue;">'ordered % service %'</span>
+          )
+          <span style="font-weight:bold;">AND</span> <span style="color: #333;">time</span> <span >&gt;</span><span >=</span> <span style="color: #333;">?</span>
+          <span style="font-weight:bold;">AND</span> <span style="color: #333;">time</span> <span >&lt;</span> <span style="color: #333;">?</span>
+        <span style="font-weight:bold;">ORDER BY</span>
+          <span style="color: #333;">name</span><span >,</span>
+          <span style="color: #333;">time</span> <span style="font-weight:bold;">DESC</span>
+      ) <span style="color: #333;">entries</span> <span style="font-weight:bold;">CROSS</span>
+    <span style="font-weight:bold;">JOIN</span>
+      (
+        <span style="font-weight:bold;">SELECT</span>
+          <span style="color: orange;">@rn</span> <span >:</span><span >=</span> <span style="color: green;">0</span><span >,</span>
+          <span style="color: orange;">@id</span> <span >:</span><span >=</span> <span >-</span><span style="color: green;">1</span>
+      ) <span style="color: #333;">params</span>
+  ) <span style="color: #333;">r</span>
+<span style="font-weight:bold;">INNER JOIN</span> <span style="color: #333;">serivce</span> <span style="color: #333;">s</span> <span style="font-weight:bold;">ON</span> <span style="color: #333;">s</span><span >.</span><span style="color: #333;">name</span> <span >=</span> <span style="color: #333;">r</span><span >.</span><span style="color: #333;">name</span>
+<span style="font-weight:bold;">INNER JOIN</span> <span style="color: purple;">`order`</span> <span style="color: #333;">o</span> <span style="font-weight:bold;">ON</span> <span style="color: #333;">o</span><span >.</span><span style="color: #333;">id</span> <span >=</span> <span style="color: #333;">d</span><span >.</span><span style="color: #333;">order_id</span>
+<span style="font-weight:bold;">INNER JOIN</span> <span style="color: #333;">product</span> <span style="color: #333;">p</span> <span style="font-weight:bold;">ON</span> <span style="color: #333;">p</span><span >.</span><span style="color: #333;">id</span> <span >=</span> <span style="color: #333;">o</span><span >.</span><span style="color: #333;">product_id</span>
+<span style="font-weight:bold;">WHERE</span>
+  <span style="color: #aaa;">-- Only keep the latest entry</span>
+  <span style="color: #333;">r</span><span >.</span><span style="color: #333;">entry_order</span> <span >=</span> <span style="color: green;">1</span>
+  <span style="font-weight:bold;">AND</span> <span style="color: #333;">o</span><span >.</span><span style="color: #333;">is_active</span> <span >=</span> <span style="color: green;">1</span>
+  <span style="color: #aaa;">-- No external products</span>
+  <span style="font-weight:bold;">AND</span> <span style="color: #333;">p</span><span >.</span><span style="color: #333;">external</span> <span >=</span> <span style="color: green;">0</span>
+  <span style="font-weight:bold;">AND</span> (<span style="color: #333;">p</span><span >.</span><span style="color: #333;">type</span> <span >=</span> <span style="color: green;">1</span> <span style="font-weight:bold;">OR</span> <span style="color: #333;">p</span><span >.</span><span style="color: #333;">id</span> <span >=</span> <span style="color: green;">7</span>)
+<span style="font-weight:bold;">HAVING</span>
+  <span style="color: #333;">new_service</span> <span >=</span> <span style="color: blue;">'Old'</span>
+  <span style="color: #aaa;">-- Skip Old -&gt; Old service</span>
+  <span style="font-weight:bold;">AND</span> <span style="color: #333;">old_service</span> <span >&lt;</span><span >&gt;</span> <span style="color: blue;">'Old'</span>
+<span style="font-weight:bold;">ORDER BY</span>
+  <span style="color: #333;">old_service</span><span >,</span>
+  <span style="color: #333;">r</span><span >.</span><span style="color: #333;">name</span> <span style="font-weight:bold;">ASC</span></pre>

@@ -303,3 +303,79 @@ SELECT a,
     MIN(Revenue) OVER (PARTITION BY DepartmentID ORDER BY RevenueYear ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS MinRevenueBeyond
 FROM t1
 WINDOW w1 AS (PARTITION BY department, division), w2 AS (w1 ORDER BY hire_date);
+---
+SELECT
+  SQL_NO_CACHE r.name,
+  r.time,
+  CASE WHEN r.message LIKE 'old_service %' THEN
+    -- Extract old service name from service message
+    SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(r.message,'from ',-1),' (',1),' to ',1)
+  ELSE
+    -- Extract old service name from other message
+    SUBSTRING_INDEX(SUBSTRING_INDEX(r.message,'service ',-1),' (',1)
+  END old_service,
+  CASE WHEN r.message LIKE 'service %' THEN
+    -- Extract service name from service message
+    SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(r.message,'from ',-1),' (',1),' to ',-1)
+  ELSE
+    -- Extract service name from other message
+    'Default'
+  END new_service,
+  p.name current_service
+FROM
+  (
+    SELECT
+      entries.*,
+      -- Variable to count rows by name
+      (
+        @rn := IF(
+          @id = entries.name,
+          @rn + 1,
+          IF(@id := entries.name, 1, 1)
+        )
+      ) entry_order
+    FROM
+      (
+        -- Name is second word in both cases, ordering and cancelling a service
+        SELECT
+          SUBSTRING_INDEX(SUBSTRING_INDEX(message,' ',2),' ',-1) name,
+          time,
+          message
+        FROM
+          log
+            -- Only logged messages about service ordering or cancelling
+        WHERE
+          (
+            message LIKE 'cancelled % service %'
+            OR message LIKE 'ordered % service %'
+          )
+          AND time >= ?
+          AND time < ?
+        ORDER BY
+          name,
+          time DESC
+      ) entries CROSS
+    JOIN
+      (
+        SELECT
+          @rn := 0,
+          @id := -1
+      ) params
+  ) r
+INNER JOIN serivce s ON s.name = r.name
+INNER JOIN `order` o ON o.id = d.order_id
+INNER JOIN product p ON p.id = o.product_id
+WHERE
+  -- Only keep the latest entry
+  r.entry_order = 1
+  AND o.is_active = 1
+  -- No external products
+  AND p.external = 0
+  AND (p.type = 1 OR p.id = 7)
+HAVING
+  new_service = 'Old'
+  -- Skip Old -> Old service
+  AND old_service <> 'Old'
+ORDER BY
+  old_service,
+  r.name ASC

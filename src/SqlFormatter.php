@@ -14,6 +14,7 @@ namespace Doctrine\SqlFormatter;
 use function array_pop;
 use function count;
 use function end;
+use function in_array;
 use function prev;
 use function rtrim;
 use function str_contains;
@@ -314,15 +315,6 @@ final class SqlFormatter
                 if (! $addedNewline) {
                     $return .= "\n" . str_repeat($tab, $indentLevel);
                 }
-            } elseif ($token->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
-                // Multiple boundary characters in a row should not have spaces between them (not including parentheses)
-                $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
-                if ($prevNotWhitespaceToken && $prevNotWhitespaceToken->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
-                    $prevToken = $cursor->subCursor()->previous();
-                    if ($prevToken && ! $prevToken->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
-                        $return = rtrim($return, ' ');
-                    }
-                }
             }
 
             $return .= $highlighted;
@@ -359,6 +351,15 @@ final class SqlFormatter
                 ) {
                     continue;
                 }
+            }
+
+            // Don't add whitespace between operators like != <> >= := && etc.
+            if (
+                $token->isOfType(Token::TOKEN_TYPE_BOUNDARY)
+                && $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_BOUNDARY)
+                && ! in_array($nextNotWhitespace->value(), ['(', '-'], true)
+            ) {
+                continue;
             }
 
             $return .= ' ';
