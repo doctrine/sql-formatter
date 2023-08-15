@@ -70,6 +70,18 @@ final class Token
             return $condition;
         }
 
+        if ($this->value === 'THEN') {
+            $condition->values = ['ELSE', 'END'];
+
+            return $condition;
+        }
+
+        if ($this->value === 'ELSE') {
+            $condition->values = ['END'];
+
+            return $condition;
+        }
+
         $joins = [
             'LEFT OUTER JOIN',
             'RIGHT OUTER JOIN',
@@ -105,6 +117,11 @@ final class Token
             return false;
         }
 
-        return ! $this->isOfType(self::TOKEN_TYPE_RESERVED_NEWLINE, self::TOKEN_TYPE_RESERVED_TOPLEVEL);
+        return ! $this->isOfType(
+            self::TOKEN_TYPE_RESERVED_NEWLINE,
+            self::TOKEN_TYPE_RESERVED_TOPLEVEL,
+            self::TOKEN_TYPE_COMMENT,
+            self::TOKEN_TYPE_BLOCK_COMMENT
+        );
     }
 }

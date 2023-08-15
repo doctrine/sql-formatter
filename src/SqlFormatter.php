@@ -16,6 +16,7 @@ use function count;
 use function end;
 use function prev;
 use function rtrim;
+use function str_contains;
 use function str_repeat;
 use function str_replace;
 use function strlen;
@@ -101,15 +102,30 @@ final class SqlFormatter
 
             // Display comments directly where they appear in the source
             if ($token->isOfType(Token::TOKEN_TYPE_COMMENT, Token::TOKEN_TYPE_BLOCK_COMMENT)) {
-                if ($token->isOfType(Token::TOKEN_TYPE_BLOCK_COMMENT)) {
-                    $indent      = str_repeat($tab, $indentLevel);
-                    $return      = rtrim($return, " \t");
-                    $return     .= "\n" . $indent;
-                    $highlighted = str_replace("\n", "\n" . $indent, $highlighted);
+                // Always add newline after
+                $newline        = true;
+                $isBlockComment = $token->isOfType(Token::TOKEN_TYPE_BLOCK_COMMENT);
+                $indent         = str_repeat($tab, $indentLevel);
+
+                if ($isBlockComment) {
+                    // Remove trailing indent from previous $newline
+                    $return = rtrim($return, $tab) . "\n" . $indent;
+                } else {
+                    $prev = $cursor->subCursor()->previous();
+                    // Single line comment wants to have a newline before
+                    if ($prev && str_contains($prev->value(), "\n") && ! $addedNewline) {
+                        $return .= "\n" . $indent;
+                    } elseif (! $addedNewline) {
+                        $return .= ' ';
+                    }
+                }
+
+                if ($isBlockComment) {
+                    $return .= str_replace("\n", "\n" . $indent, $highlighted);
+                    continue;
                 }
 
                 $return .= $highlighted;
-                $newline = true;
                 continue;
             }
 

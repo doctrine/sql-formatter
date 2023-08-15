@@ -359,6 +359,10 @@ final class Tokenizer
         'AND',
         'EXCLUDE',
         'ON',
+        'CASE WHEN',
+        'THEN',
+        'ELSE',
+        'END',
     ];
 
     /** @var string[] */
