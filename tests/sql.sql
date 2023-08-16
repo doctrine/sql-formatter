@@ -385,3 +385,5 @@ INSERT INTO customers (id, username)
 VALUES (1, 'Joe')
 ON DUPLICATE KEY UPDATE
 username = VALUES(username)
+---
+SELECT 1::text;
