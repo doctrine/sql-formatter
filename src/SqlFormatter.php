@@ -17,10 +17,10 @@ use function end;
 use function in_array;
 use function prev;
 use function rtrim;
-use function str_contains;
 use function str_repeat;
 use function str_replace;
 use function strlen;
+use function strpos;
 use function trim;
 
 use const PHP_SAPI;
@@ -114,7 +114,7 @@ final class SqlFormatter
                 } else {
                     $prev = $cursor->subCursor()->previous();
                     // Single line comment wants to have a newline before
-                    if ($prev && str_contains($prev->value(), "\n") && ! $addedNewline) {
+                    if ($prev && ! $addedNewline && strpos($prev->value(), "\n") !== false) {
                         $return .= "\n" . $indent;
                     } elseif (! $addedNewline) {
                         $return .= ' ';
