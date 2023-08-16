@@ -89,6 +89,7 @@ final class Token
             'RIGHT JOIN',
             'OUTER JOIN',
             'INNER JOIN',
+            'CROSS JOIN',
             'JOIN',
         ];
         if (in_array($this->value, $joins, true)) {

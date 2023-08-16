@@ -355,9 +355,8 @@ FROM
         ORDER BY
           name,
           time DESC
-      ) entries CROSS
-    JOIN
-      (
+      ) entries
+      CROSS JOIN (
         SELECT
           @rn := 0,
           @id := -1

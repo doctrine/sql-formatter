@@ -349,6 +349,7 @@ final class Tokenizer
         'RIGHT JOIN',
         'OUTER JOIN',
         'INNER JOIN',
+        'CROSS JOIN',
         'JOIN',
         'XOR',
         'OR',

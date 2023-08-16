@@ -1062,8 +1062,8 @@
         <span style="font-weight:bold;">ORDER BY</span>
           <span style="color: #333;">name</span><span >,</span>
           <span style="color: #333;">time</span> <span style="font-weight:bold;">DESC</span>
-      ) <span style="color: #333;">entries</span> <span style="font-weight:bold;">CROSS</span>
-      <span style="font-weight:bold;">JOIN</span> (
+      ) <span style="color: #333;">entries</span>
+      <span style="font-weight:bold;">CROSS JOIN</span> (
           <span style="font-weight:bold;">SELECT</span>
             <span style="color: orange;">@rn</span> <span >:</span><span >=</span> <span style="color: green;">0</span><span >,</span>
             <span style="color: orange;">@id</span> <span >:</span><span >=</span> <span >-</span><span style="color: green;">1</span>
