@@ -251,7 +251,7 @@ ALTER TABLE `test_change` CHANGE `id` `_id` BIGINT(20) UNSIGNED NULL;
 ---
 SELECT * LIMIT 1; SELECT a,b,c,d FROM e LIMIT 1, 2; SELECT 1,2,3 WHERE a in (1,2,3,4,5) and b=5;
 ---
-SELECT count - 50
+SELECT `count` - 50
 WHERE a-50 = b
 WHERE 1 and - 50
 WHERE -50 = a
@@ -273,7 +273,7 @@ SELECT a FROM b LEFT
 OUTER
 JOIN c on (d=f);
 ---
-WITH cte AS (SELECT a, b FROM table),
+WITH cte AS (SELECT a, b FROM `table`),
 RECURSIVE fibonacci (n, fib_n, next_fib_n) AS (
   SELECT 1, 0, 1
   UNION ALL

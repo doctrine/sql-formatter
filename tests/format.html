@@ -1,7 +1,7 @@
 SELECT
   customer_id,
   customer_name,
-  COUNT(order_id) as total
+  COUNT(order_id) AS total
 FROM
   customers
   INNER JOIN orders ON customers.customer_id = orders.customer_id
@@ -21,12 +21,12 @@ FROM
   (
     SELECT
       customer_id,
-      count(order_id) As total
+      COUNT(order_id) AS total
     FROM
       orders
     GROUP BY
       customer_id
-  ) As ordersummary
+  ) AS ordersummary
 WHERE
   customers.customer_id = ordersummary.customer_id
 ---
@@ -44,30 +44,30 @@ SET
   NAMES 'utf8';
 ---
 CREATE TABLE `PREFIX_address` (
-  `id_address` int(10) unsigned NOT NULL auto_increment,
-  `id_country` int(10) unsigned NOT NULL,
-  `id_state` int(10) unsigned default NULL,
-  `id_customer` int(10) unsigned NOT NULL default '0',
-  `id_manufacturer` int(10) unsigned NOT NULL default '0',
-  `id_supplier` int(10) unsigned NOT NULL default '0',
-  `id_warehouse` int(10) unsigned NOT NULL default '0',
+  `id_address` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_country` int(10) UNSIGNED NOT NULL,
+  `id_state` int(10) UNSIGNED DEFAULT NULL,
+  `id_customer` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `id_manufacturer` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `id_supplier` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `id_warehouse` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `alias` varchar(32) NOT NULL,
-  `company` varchar(64) default NULL,
+  `company` varchar(64) DEFAULT NULL,
   `lastname` varchar(32) NOT NULL,
   `firstname` varchar(32) NOT NULL,
   `address1` varchar(128) NOT NULL,
-  `address2` varchar(128) default NULL,
-  `postcode` varchar(12) default NULL,
+  `address2` varchar(128) DEFAULT NULL,
+  `postcode` varchar(12) DEFAULT NULL,
   `city` varchar(64) NOT NULL,
   `other` text,
-  `phone` varchar(16) default NULL,
-  `phone_mobile` varchar(16) default NULL,
-  `vat_number` varchar(32) default NULL,
+  `phone` varchar(16) DEFAULT NULL,
+  `phone_mobile` varchar(16) DEFAULT NULL,
+  `vat_number` varchar(32) DEFAULT NULL,
   `dni` varchar(16) DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL default '1',
-  `deleted` tinyint(1) unsigned NOT NULL default '0',
+  `active` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+  `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_address`),
   KEY `address_customer` (`id_customer`),
   KEY `id_country` (`id_country`),
@@ -78,31 +78,31 @@ CREATE TABLE `PREFIX_address` (
 ) ENGINE = ENGINE_TYPE DEFAULT CHARSET = utf8
 ---
 CREATE TABLE `PREFIX_alias` (
-  `id_alias` int(10) unsigned NOT NULL auto_increment,
+  `id_alias` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `alias` varchar(255) NOT NULL,
   `search` varchar(255) NOT NULL,
-  `active` tinyint(1) NOT NULL default '1',
+  `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_alias`),
   UNIQUE KEY `alias` (`alias`)
 ) ENGINE = ENGINE_TYPE DEFAULT CHARSET = utf8
 ---
 CREATE TABLE `PREFIX_carrier` (
-  `id_carrier` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_reference` int(10) unsigned NOT NULL,
-  `id_tax_rules_group` int(10) unsigned DEFAULT '0',
+  `id_carrier` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id_reference` int(10) UNSIGNED NOT NULL,
+  `id_tax_rules_group` int(10) UNSIGNED DEFAULT '0',
   `name` varchar(64) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `shipping_handling` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `range_behavior` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `is_module` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `is_free` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `shipping_external` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `need_range` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `active` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `shipping_handling` tinyint(1) UNSIGNED NOT NULL DEFAULT '1',
+  `range_behavior` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `is_module` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `is_free` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `shipping_external` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `need_range` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `external_module_name` varchar(64) DEFAULT NULL,
   `shipping_method` int(2) NOT NULL DEFAULT '0',
-  `position` int(10) unsigned NOT NULL default '0',
+  `position` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `max_width` int(10) DEFAULT 0,
   `max_height` int(10) DEFAULT 0,
   `max_depth` int(10) DEFAULT 0,
@@ -114,13 +114,13 @@ CREATE TABLE `PREFIX_carrier` (
 ) ENGINE = ENGINE_TYPE DEFAULT CHARSET = utf8
 ---
 CREATE TABLE IF NOT EXISTS `PREFIX_specific_price_rule` (
-  `id_specific_price_rule` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_specific_price_rule` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
-  `id_shop` int(11) unsigned NOT NULL DEFAULT '1',
-  `id_currency` int(10) unsigned NOT NULL,
-  `id_country` int(10) unsigned NOT NULL,
-  `id_group` int(10) unsigned NOT NULL,
-  `from_quantity` mediumint(8) unsigned NOT NULL,
+  `id_shop` int(11) UNSIGNED NOT NULL DEFAULT '1',
+  `id_currency` int(10) UNSIGNED NOT NULL,
+  `id_country` int(10) UNSIGNED NOT NULL,
+  `id_group` int(10) UNSIGNED NOT NULL,
+  `from_quantity` mediumint(8) UNSIGNED NOT NULL,
   `price` DECIMAL(20, 6),
   `reduction` decimal(20, 6) NOT NULL,
   `reduction_type` enum('amount', 'percentage') NOT NULL,
@@ -454,7 +454,7 @@ WHERE
 ALTER TABLE
   `PREFIX_employee`
 ADD
-  `bo_color` varchar(32) default NULL AFTER `stats_date_to`
+  `bo_color` varchar(32) DEFAULT NULL AFTER `stats_date_to`
 ---
 INSERT INTO `PREFIX_cms_category_lang`
 VALUES
@@ -777,16 +777,16 @@ SELECT
   2,
   3
 WHERE
-  a in (1, 2, 3, 4, 5)
-  and b = 5;
+  a IN (1, 2, 3, 4, 5)
+  AND b = 5;
 ---
 SELECT
-  count - 50
+  `count` - 50
 WHERE
   a - 50 = b
 WHERE
   1
-  and -50
+  AND -50
 WHERE
   -50 = a
 WHERE
@@ -797,11 +797,11 @@ WHERE
   -50
 WHERE
   1
-  and -50;
+  AND -50;
 ---
 SELECT
   @
-  and b;
+  AND b;
 ---
 SELECT
   @"weird variable name";
@@ -821,7 +821,7 @@ SELECT
   a
 FROM
   b
-  LEFT OUTER JOIN c on (d = f);
+  LEFT OUTER JOIN c ON (d = f);
 ---
 WITH
   cte AS (
@@ -829,7 +829,7 @@ WITH
       a,
       b
     FROM
-      table
+      `table`
   ),
   RECURSIVE fibonacci (n, fib_n, next_fib_n) AS (
     SELECT
