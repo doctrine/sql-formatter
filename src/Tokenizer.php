@@ -913,7 +913,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
-                    (string) preg_replace('/\s+/', ' ', substr($string, 0, strlen($matches[1])))
+                    (string) preg_replace('/\s+/', ' ', substr($upper, 0, strlen($matches[1])))
                 );
             }
 
@@ -927,7 +927,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                    (string) preg_replace('/\s+/', ' ', substr($string, 0, strlen($matches[1])))
+                    (string) preg_replace('/\s+/', ' ', substr($upper, 0, strlen($matches[1])))
                 );
             }
 
@@ -941,7 +941,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED,
-                    (string) preg_replace('/\s+/', ' ', substr($string, 0, strlen($matches[1])))
+                    (string) preg_replace('/\s+/', ' ', substr($upper, 0, strlen($matches[1])))
                 );
             }
         }
@@ -953,7 +953,7 @@ final class Tokenizer
         if (preg_match('/^(' . $this->regexFunction . '[(]|\s|[)])/', $upper, $matches)) {
             return new Token(
                 Token::TOKEN_TYPE_RESERVED,
-                substr($string, 0, strlen($matches[1]) - 1)
+                substr($upper, 0, strlen($matches[1]) - 1)
             );
         }
 

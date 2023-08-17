@@ -1,7 +1,7 @@
 [37mSELECT[0m
   customer_id[0m,[0m
   customer_name[0m,[0m
-  [37mCOUNT[0m(order_id[0m) [37mas[0m total[0m
+  [37mCOUNT[0m(order_id[0m) [37mAS[0m total[0m
 [37mFROM[0m
   customers[0m
   [37mINNER JOIN[0m orders[0m
@@ -28,12 +28,12 @@
   (
     [37mSELECT[0m
       customer_id[0m,[0m
-      [37mcount[0m(order_id[0m) [37mAs[0m total[0m
+      [37mCOUNT[0m(order_id[0m) [37mAS[0m total[0m
     [37mFROM[0m
       orders[0m
     [37mGROUP BY[0m
       customer_id[0m
-  ) [37mAs[0m ordersummary[0m
+  ) [37mAS[0m ordersummary[0m
 [37mWHERE[0m
   customers[0m.[0mcustomer_id[0m =[0m ordersummary[0m.[0mcustomer_id[0m
 ---
@@ -51,30 +51,30 @@
   [37mNAMES[0m [34;1m'utf8'[0m;[0m
 ---
 [37mCREATE[0m [37mTABLE[0m [35;1m`PREFIX_address`[0m (
-  [35;1m`id_address`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mauto_increment[0m,[0m
-  [35;1m`id_country`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`id_state`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mdefault[0m [37mNULL[0m,[0m
-  [35;1m`id_customer`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mdefault[0m [34;1m'0'[0m,[0m
-  [35;1m`id_manufacturer`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mdefault[0m [34;1m'0'[0m,[0m
-  [35;1m`id_supplier`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mdefault[0m [34;1m'0'[0m,[0m
-  [35;1m`id_warehouse`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mdefault[0m [34;1m'0'[0m,[0m
+  [35;1m`id_address`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mAUTO_INCREMENT[0m,[0m
+  [35;1m`id_country`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m,[0m
+  [35;1m`id_state`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mDEFAULT[0m [37mNULL[0m,[0m
+  [35;1m`id_customer`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`id_manufacturer`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`id_supplier`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`id_warehouse`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
   [35;1m`alias`[0m varchar[0m([32;1m32[0m) [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`company`[0m varchar[0m([32;1m64[0m) [37mdefault[0m [37mNULL[0m,[0m
+  [35;1m`company`[0m varchar[0m([32;1m64[0m) [37mDEFAULT[0m [37mNULL[0m,[0m
   [35;1m`lastname`[0m varchar[0m([32;1m32[0m) [37mNOT[0m [37mNULL[0m,[0m
   [35;1m`firstname`[0m varchar[0m([32;1m32[0m) [37mNOT[0m [37mNULL[0m,[0m
   [35;1m`address1`[0m varchar[0m([32;1m128[0m) [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`address2`[0m varchar[0m([32;1m128[0m) [37mdefault[0m [37mNULL[0m,[0m
-  [35;1m`postcode`[0m varchar[0m([32;1m12[0m) [37mdefault[0m [37mNULL[0m,[0m
+  [35;1m`address2`[0m varchar[0m([32;1m128[0m) [37mDEFAULT[0m [37mNULL[0m,[0m
+  [35;1m`postcode`[0m varchar[0m([32;1m12[0m) [37mDEFAULT[0m [37mNULL[0m,[0m
   [35;1m`city`[0m varchar[0m([32;1m64[0m) [37mNOT[0m [37mNULL[0m,[0m
   [35;1m`other`[0m text[0m,[0m
-  [35;1m`phone`[0m varchar[0m([32;1m16[0m) [37mdefault[0m [37mNULL[0m,[0m
-  [35;1m`phone_mobile`[0m varchar[0m([32;1m16[0m) [37mdefault[0m [37mNULL[0m,[0m
-  [35;1m`vat_number`[0m varchar[0m([32;1m32[0m) [37mdefault[0m [37mNULL[0m,[0m
+  [35;1m`phone`[0m varchar[0m([32;1m16[0m) [37mDEFAULT[0m [37mNULL[0m,[0m
+  [35;1m`phone_mobile`[0m varchar[0m([32;1m16[0m) [37mDEFAULT[0m [37mNULL[0m,[0m
+  [35;1m`vat_number`[0m varchar[0m([32;1m32[0m) [37mDEFAULT[0m [37mNULL[0m,[0m
   [35;1m`dni`[0m varchar[0m([32;1m16[0m) [37mDEFAULT[0m [37mNULL[0m,[0m
   [35;1m`date_add`[0m datetime[0m [37mNOT[0m [37mNULL[0m,[0m
   [35;1m`date_upd`[0m datetime[0m [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`active`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mdefault[0m [34;1m'1'[0m,[0m
-  [35;1m`deleted`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mdefault[0m [34;1m'0'[0m,[0m
+  [35;1m`active`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'1'[0m,[0m
+  [35;1m`deleted`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
   [37mPRIMARY[0m [37mKEY[0m ([35;1m`id_address`[0m),[0m
   [37mKEY[0m [35;1m`address_customer`[0m ([35;1m`id_customer`[0m),[0m
   [37mKEY[0m [35;1m`id_country`[0m ([35;1m`id_country`[0m),[0m
@@ -85,31 +85,31 @@
 ) [37mENGINE[0m =[0m [37mENGINE_TYPE[0m [37mDEFAULT[0m [37mCHARSET[0m =[0m utf8[0m
 ---
 [37mCREATE[0m [37mTABLE[0m [35;1m`PREFIX_alias`[0m (
-  [35;1m`id_alias`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mauto_increment[0m,[0m
+  [35;1m`id_alias`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mAUTO_INCREMENT[0m,[0m
   [35;1m`alias`[0m varchar[0m([32;1m255[0m) [37mNOT[0m [37mNULL[0m,[0m
   [35;1m`search`[0m varchar[0m([32;1m255[0m) [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`active`[0m tinyint[0m([32;1m1[0m) [37mNOT[0m [37mNULL[0m [37mdefault[0m [34;1m'1'[0m,[0m
+  [35;1m`active`[0m tinyint[0m([32;1m1[0m) [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'1'[0m,[0m
   [37mPRIMARY[0m [37mKEY[0m ([35;1m`id_alias`[0m),[0m
   [37mUNIQUE[0m [37mKEY[0m [35;1m`alias`[0m ([35;1m`alias`[0m)
 ) [37mENGINE[0m =[0m [37mENGINE_TYPE[0m [37mDEFAULT[0m [37mCHARSET[0m =[0m utf8[0m
 ---
 [37mCREATE[0m [37mTABLE[0m [35;1m`PREFIX_carrier`[0m (
-  [35;1m`id_carrier`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mAUTO_INCREMENT[0m,[0m
-  [35;1m`id_reference`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`id_tax_rules_group`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`id_carrier`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mAUTO_INCREMENT[0m,[0m
+  [35;1m`id_reference`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m,[0m
+  [35;1m`id_tax_rules_group`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
   [35;1m`name`[0m varchar[0m([32;1m64[0m) [37mNOT[0m [37mNULL[0m,[0m
   [35;1m`url`[0m varchar[0m([32;1m255[0m) [37mDEFAULT[0m [37mNULL[0m,[0m
-  [35;1m`active`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
-  [35;1m`deleted`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
-  [35;1m`shipping_handling`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'1'[0m,[0m
-  [35;1m`range_behavior`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
-  [35;1m`is_module`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
-  [35;1m`is_free`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
-  [35;1m`shipping_external`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
-  [35;1m`need_range`[0m tinyint[0m([32;1m1[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`active`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`deleted`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`shipping_handling`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'1'[0m,[0m
+  [35;1m`range_behavior`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`is_module`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`is_free`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`shipping_external`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
+  [35;1m`need_range`[0m tinyint[0m([32;1m1[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
   [35;1m`external_module_name`[0m varchar[0m([32;1m64[0m) [37mDEFAULT[0m [37mNULL[0m,[0m
   [35;1m`shipping_method`[0m int[0m([32;1m2[0m) [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
-  [35;1m`position`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mdefault[0m [34;1m'0'[0m,[0m
+  [35;1m`position`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'0'[0m,[0m
   [35;1m`max_width`[0m int[0m([32;1m10[0m) [37mDEFAULT[0m [32;1m0[0m,[0m
   [35;1m`max_height`[0m int[0m([32;1m10[0m) [37mDEFAULT[0m [32;1m0[0m,[0m
   [35;1m`max_depth`[0m int[0m([32;1m10[0m) [37mDEFAULT[0m [32;1m0[0m,[0m
@@ -121,13 +121,13 @@
 ) [37mENGINE[0m =[0m [37mENGINE_TYPE[0m [37mDEFAULT[0m [37mCHARSET[0m =[0m utf8[0m
 ---
 [37mCREATE[0m [37mTABLE[0m [37mIF[0m [37mNOT[0m [37mEXISTS[0m [35;1m`PREFIX_specific_price_rule`[0m (
-  [35;1m`id_specific_price_rule`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mAUTO_INCREMENT[0m,[0m
+  [35;1m`id_specific_price_rule`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mAUTO_INCREMENT[0m,[0m
   [35;1m`name`[0m VARCHAR[0m([32;1m255[0m) [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`id_shop`[0m int[0m([32;1m11[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'1'[0m,[0m
-  [35;1m`id_currency`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`id_country`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`id_group`[0m int[0m([32;1m10[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m,[0m
-  [35;1m`from_quantity`[0m mediumint[0m([32;1m8[0m) [37munsigned[0m [37mNOT[0m [37mNULL[0m,[0m
+  [35;1m`id_shop`[0m int[0m([32;1m11[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m [37mDEFAULT[0m [34;1m'1'[0m,[0m
+  [35;1m`id_currency`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m,[0m
+  [35;1m`id_country`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m,[0m
+  [35;1m`id_group`[0m int[0m([32;1m10[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m,[0m
+  [35;1m`from_quantity`[0m mediumint[0m([32;1m8[0m) [37mUNSIGNED[0m [37mNOT[0m [37mNULL[0m,[0m
   [35;1m`price`[0m DECIMAL[0m([32;1m20[0m,[0m [32;1m6[0m),[0m
   [35;1m`reduction`[0m decimal[0m([32;1m20[0m,[0m [32;1m6[0m) [37mNOT[0m [37mNULL[0m,[0m
   [35;1m`reduction_type`[0m enum[0m([34;1m'amount'[0m,[0m [34;1m'percentage'[0m) [37mNOT[0m [37mNULL[0m,[0m
@@ -461,7 +461,7 @@
 [37mALTER TABLE[0m
   [35;1m`PREFIX_employee`[0m
 [37mADD[0m
-  [35;1m`bo_color`[0m varchar[0m([32;1m32[0m) [37mdefault[0m [37mNULL[0m [37mAFTER[0m [35;1m`stats_date_to`[0m
+  [35;1m`bo_color`[0m varchar[0m([32;1m32[0m) [37mDEFAULT[0m [37mNULL[0m [37mAFTER[0m [35;1m`stats_date_to`[0m
 ---
 [37mINSERT[0m [37mINTO[0m [35;1m`PREFIX_cms_category_lang`[0m
 [37mVALUES[0m
@@ -786,16 +786,16 @@
   [32;1m2[0m,[0m
   [32;1m3[0m
 [37mWHERE[0m
-  a[0m [37min[0m ([32;1m1[0m,[0m [32;1m2[0m,[0m [32;1m3[0m,[0m [32;1m4[0m,[0m [32;1m5[0m)
-  [37mand[0m b[0m =[0m [32;1m5[0m;[0m
+  a[0m [37mIN[0m ([32;1m1[0m,[0m [32;1m2[0m,[0m [32;1m3[0m,[0m [32;1m4[0m,[0m [32;1m5[0m)
+  [37mAND[0m b[0m =[0m [32;1m5[0m;[0m
 ---
 [37mSELECT[0m
-  count[0m -[0m [32;1m50[0m
+  [35;1m`count`[0m -[0m [32;1m50[0m
 [37mWHERE[0m
   a[0m -[0m [32;1m50[0m =[0m b[0m
 [37mWHERE[0m
   [32;1m1[0m
-  [37mand[0m -[0m[32;1m50[0m
+  [37mAND[0m -[0m[32;1m50[0m
 [37mWHERE[0m
   -[0m[32;1m50[0m =[0m a[0m
 [37mWHERE[0m
@@ -806,11 +806,11 @@
   -[0m[32;1m50[0m
 [37mWHERE[0m
   [32;1m1[0m
-  [37mand[0m -[0m[32;1m50[0m;[0m
+  [37mAND[0m -[0m[32;1m50[0m;[0m
 ---
 [37mSELECT[0m
   @[0m
-  [37mand[0m b[0m;[0m
+  [37mAND[0m b[0m;[0m
 ---
 [37mSELECT[0m
   [36;1m@"weird variable name"[0m;[0m
@@ -831,7 +831,7 @@
 [37mFROM[0m
   b[0m
   [37mLEFT OUTER JOIN[0m c[0m
-    [37mon[0m (d[0m =[0m f[0m);[0m
+    [37mON[0m (d[0m =[0m f[0m);[0m
 ---
 [37mWITH[0m
   cte[0m [37mAS[0m (
@@ -839,7 +839,7 @@
       a[0m,[0m
       b[0m
     [37mFROM[0m
-      [37mtable[0m
+      [35;1m`table`[0m
   ),[0m
   [37mRECURSIVE[0m fibonacci[0m (n[0m,[0m fib_n[0m,[0m next_fib_n[0m) [37mAS[0m (
     [37mSELECT[0m

@@ -1,7 +1,7 @@
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
   <span style="color: #333;">customer_id</span><span >,</span>
   <span style="color: #333;">customer_name</span><span >,</span>
-  <span style="font-weight:bold;">COUNT</span>(<span style="color: #333;">order_id</span>) <span style="font-weight:bold;">as</span> <span style="color: #333;">total</span>
+  <span style="font-weight:bold;">COUNT</span>(<span style="color: #333;">order_id</span>) <span style="font-weight:bold;">AS</span> <span style="color: #333;">total</span>
 <span style="font-weight:bold;">FROM</span>
   <span style="color: #333;">customers</span>
   <span style="font-weight:bold;">INNER JOIN</span> <span style="color: #333;">orders</span>
@@ -28,12 +28,12 @@
   (
     <span style="font-weight:bold;">SELECT</span>
       <span style="color: #333;">customer_id</span><span >,</span>
-      <span style="font-weight:bold;">count</span>(<span style="color: #333;">order_id</span>) <span style="font-weight:bold;">As</span> <span style="color: #333;">total</span>
+      <span style="font-weight:bold;">COUNT</span>(<span style="color: #333;">order_id</span>) <span style="font-weight:bold;">AS</span> <span style="color: #333;">total</span>
     <span style="font-weight:bold;">FROM</span>
       <span style="color: #333;">orders</span>
     <span style="font-weight:bold;">GROUP BY</span>
       <span style="color: #333;">customer_id</span>
-  ) <span style="font-weight:bold;">As</span> <span style="color: #333;">ordersummary</span>
+  ) <span style="font-weight:bold;">AS</span> <span style="color: #333;">ordersummary</span>
 <span style="font-weight:bold;">WHERE</span>
   <span style="color: #333;">customers</span><span >.</span><span style="color: #333;">customer_id</span> <span >=</span> <span style="color: #333;">ordersummary</span><span >.</span><span style="color: #333;">customer_id</span></pre>
 ---
@@ -51,30 +51,30 @@
   <span style="font-weight:bold;">NAMES</span> <span style="color: blue;">'utf8'</span><span >;</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">CREATE</span> <span style="font-weight:bold;">TABLE</span> <span style="color: purple;">`PREFIX_address`</span> (
-  <span style="color: purple;">`id_address`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">auto_increment</span><span >,</span>
-  <span style="color: purple;">`id_country`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`id_state`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`id_customer`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">default</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`id_manufacturer`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">default</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`id_supplier`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">default</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`id_warehouse`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">default</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`id_address`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">AUTO_INCREMENT</span><span >,</span>
+  <span style="color: purple;">`id_country`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`id_state`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`id_customer`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`id_manufacturer`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`id_supplier`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`id_warehouse`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
   <span style="color: purple;">`alias`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">32</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`company`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">64</span>) <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`company`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">64</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`lastname`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">32</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`firstname`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">32</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`address1`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">128</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`address2`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">128</span>) <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`postcode`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">12</span>) <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`address2`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">128</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`postcode`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">12</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`city`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">64</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`other`</span> <span style="color: #333;">text</span><span >,</span>
-  <span style="color: purple;">`phone`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">16</span>) <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`phone_mobile`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">16</span>) <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`vat_number`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">32</span>) <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`phone`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">16</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`phone_mobile`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">16</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`vat_number`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">32</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`dni`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">16</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`date_add`</span> <span style="color: #333;">datetime</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`date_upd`</span> <span style="color: #333;">datetime</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`active`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">default</span> <span style="color: blue;">'1'</span><span >,</span>
-  <span style="color: purple;">`deleted`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">default</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`active`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'1'</span><span >,</span>
+  <span style="color: purple;">`deleted`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
   <span style="font-weight:bold;">PRIMARY</span> <span style="font-weight:bold;">KEY</span> (<span style="color: purple;">`id_address`</span>)<span >,</span>
   <span style="font-weight:bold;">KEY</span> <span style="color: purple;">`address_customer`</span> (<span style="color: purple;">`id_customer`</span>)<span >,</span>
   <span style="font-weight:bold;">KEY</span> <span style="color: purple;">`id_country`</span> (<span style="color: purple;">`id_country`</span>)<span >,</span>
@@ -85,31 +85,31 @@
 ) <span style="font-weight:bold;">ENGINE</span> <span >=</span> <span style="font-weight:bold;">ENGINE_TYPE</span> <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">CHARSET</span> <span >=</span> <span style="color: #333;">utf8</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">CREATE</span> <span style="font-weight:bold;">TABLE</span> <span style="color: purple;">`PREFIX_alias`</span> (
-  <span style="color: purple;">`id_alias`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">auto_increment</span><span >,</span>
+  <span style="color: purple;">`id_alias`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">AUTO_INCREMENT</span><span >,</span>
   <span style="color: purple;">`alias`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">255</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`search`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">255</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`active`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">default</span> <span style="color: blue;">'1'</span><span >,</span>
+  <span style="color: purple;">`active`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'1'</span><span >,</span>
   <span style="font-weight:bold;">PRIMARY</span> <span style="font-weight:bold;">KEY</span> (<span style="color: purple;">`id_alias`</span>)<span >,</span>
   <span style="font-weight:bold;">UNIQUE</span> <span style="font-weight:bold;">KEY</span> <span style="color: purple;">`alias`</span> (<span style="color: purple;">`alias`</span>)
 ) <span style="font-weight:bold;">ENGINE</span> <span >=</span> <span style="font-weight:bold;">ENGINE_TYPE</span> <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">CHARSET</span> <span >=</span> <span style="color: #333;">utf8</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">CREATE</span> <span style="font-weight:bold;">TABLE</span> <span style="color: purple;">`PREFIX_carrier`</span> (
-  <span style="color: purple;">`id_carrier`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">AUTO_INCREMENT</span><span >,</span>
-  <span style="color: purple;">`id_reference`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`id_tax_rules_group`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`id_carrier`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">AUTO_INCREMENT</span><span >,</span>
+  <span style="color: purple;">`id_reference`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`id_tax_rules_group`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
   <span style="color: purple;">`name`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">64</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`url`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">255</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`active`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`deleted`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`shipping_handling`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'1'</span><span >,</span>
-  <span style="color: purple;">`range_behavior`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`is_module`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`is_free`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`shipping_external`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`need_range`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`active`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`deleted`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`shipping_handling`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'1'</span><span >,</span>
+  <span style="color: purple;">`range_behavior`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`is_module`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`is_free`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`shipping_external`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`need_range`</span> <span style="color: #333;">tinyint</span>(<span style="color: green;">1</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
   <span style="color: purple;">`external_module_name`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">64</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`shipping_method`</span> <span style="color: #333;">int</span>(<span style="color: green;">2</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
-  <span style="color: purple;">`position`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">default</span> <span style="color: blue;">'0'</span><span >,</span>
+  <span style="color: purple;">`position`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'0'</span><span >,</span>
   <span style="color: purple;">`max_width`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="color: green;">0</span><span >,</span>
   <span style="color: purple;">`max_height`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="color: green;">0</span><span >,</span>
   <span style="color: purple;">`max_depth`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="color: green;">0</span><span >,</span>
@@ -121,13 +121,13 @@
 ) <span style="font-weight:bold;">ENGINE</span> <span >=</span> <span style="font-weight:bold;">ENGINE_TYPE</span> <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">CHARSET</span> <span >=</span> <span style="color: #333;">utf8</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">CREATE</span> <span style="font-weight:bold;">TABLE</span> <span style="font-weight:bold;">IF</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">EXISTS</span> <span style="color: purple;">`PREFIX_specific_price_rule`</span> (
-  <span style="color: purple;">`id_specific_price_rule`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">AUTO_INCREMENT</span><span >,</span>
+  <span style="color: purple;">`id_specific_price_rule`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">AUTO_INCREMENT</span><span >,</span>
   <span style="color: purple;">`name`</span> <span style="color: #333;">VARCHAR</span>(<span style="color: green;">255</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`id_shop`</span> <span style="color: #333;">int</span>(<span style="color: green;">11</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'1'</span><span >,</span>
-  <span style="color: purple;">`id_currency`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`id_country`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`id_group`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
-  <span style="color: purple;">`from_quantity`</span> <span style="color: #333;">mediumint</span>(<span style="color: green;">8</span>) <span style="font-weight:bold;">unsigned</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`id_shop`</span> <span style="color: #333;">int</span>(<span style="color: green;">11</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">DEFAULT</span> <span style="color: blue;">'1'</span><span >,</span>
+  <span style="color: purple;">`id_currency`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`id_country`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`id_group`</span> <span style="color: #333;">int</span>(<span style="color: green;">10</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
+  <span style="color: purple;">`from_quantity`</span> <span style="color: #333;">mediumint</span>(<span style="color: green;">8</span>) <span style="font-weight:bold;">UNSIGNED</span> <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`price`</span> <span style="color: #333;">DECIMAL</span>(<span style="color: green;">20</span><span >,</span> <span style="color: green;">6</span>)<span >,</span>
   <span style="color: purple;">`reduction`</span> <span style="color: #333;">decimal</span>(<span style="color: green;">20</span><span >,</span> <span style="color: green;">6</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
   <span style="color: purple;">`reduction_type`</span> <span style="color: #333;">enum</span>(<span style="color: blue;">'amount'</span><span >,</span> <span style="color: blue;">'percentage'</span>) <span style="font-weight:bold;">NOT</span> <span style="font-weight:bold;">NULL</span><span >,</span>
@@ -461,7 +461,7 @@
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">ALTER TABLE</span>
   <span style="color: purple;">`PREFIX_employee`</span>
 <span style="font-weight:bold;">ADD</span>
-  <span style="color: purple;">`bo_color`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">32</span>) <span style="font-weight:bold;">default</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">AFTER</span> <span style="color: purple;">`stats_date_to`</span></pre>
+  <span style="color: purple;">`bo_color`</span> <span style="color: #333;">varchar</span>(<span style="color: green;">32</span>) <span style="font-weight:bold;">DEFAULT</span> <span style="font-weight:bold;">NULL</span> <span style="font-weight:bold;">AFTER</span> <span style="color: purple;">`stats_date_to`</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">INSERT</span> <span style="font-weight:bold;">INTO</span> <span style="color: purple;">`PREFIX_cms_category_lang`</span>
 <span style="font-weight:bold;">VALUES</span>
@@ -786,16 +786,16 @@
   <span style="color: green;">2</span><span >,</span>
   <span style="color: green;">3</span>
 <span style="font-weight:bold;">WHERE</span>
-  <span style="color: #333;">a</span> <span style="font-weight:bold;">in</span> (<span style="color: green;">1</span><span >,</span> <span style="color: green;">2</span><span >,</span> <span style="color: green;">3</span><span >,</span> <span style="color: green;">4</span><span >,</span> <span style="color: green;">5</span>)
-  <span style="font-weight:bold;">and</span> <span style="color: #333;">b</span> <span >=</span> <span style="color: green;">5</span><span >;</span></pre>
+  <span style="color: #333;">a</span> <span style="font-weight:bold;">IN</span> (<span style="color: green;">1</span><span >,</span> <span style="color: green;">2</span><span >,</span> <span style="color: green;">3</span><span >,</span> <span style="color: green;">4</span><span >,</span> <span style="color: green;">5</span>)
+  <span style="font-weight:bold;">AND</span> <span style="color: #333;">b</span> <span >=</span> <span style="color: green;">5</span><span >;</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
-  <span style="color: #333;">count</span> <span >-</span> <span style="color: green;">50</span>
+  <span style="color: purple;">`count`</span> <span >-</span> <span style="color: green;">50</span>
 <span style="font-weight:bold;">WHERE</span>
   <span style="color: #333;">a</span> <span >-</span> <span style="color: green;">50</span> <span >=</span> <span style="color: #333;">b</span>
 <span style="font-weight:bold;">WHERE</span>
   <span style="color: green;">1</span>
-  <span style="font-weight:bold;">and</span> <span >-</span><span style="color: green;">50</span>
+  <span style="font-weight:bold;">AND</span> <span >-</span><span style="color: green;">50</span>
 <span style="font-weight:bold;">WHERE</span>
   <span >-</span><span style="color: green;">50</span> <span >=</span> <span style="color: #333;">a</span>
 <span style="font-weight:bold;">WHERE</span>
@@ -806,11 +806,11 @@
   <span >-</span><span style="color: green;">50</span>
 <span style="font-weight:bold;">WHERE</span>
   <span style="color: green;">1</span>
-  <span style="font-weight:bold;">and</span> <span >-</span><span style="color: green;">50</span><span >;</span></pre>
+  <span style="font-weight:bold;">AND</span> <span >-</span><span style="color: green;">50</span><span >;</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
   <span style="color: #333;">@</span>
-  <span style="font-weight:bold;">and</span> <span style="color: #333;">b</span><span >;</span></pre>
+  <span style="font-weight:bold;">AND</span> <span style="color: #333;">b</span><span >;</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
   <span style="color: orange;">@&quot;weird variable name&quot;</span><span >;</span></pre>
@@ -831,7 +831,7 @@
 <span style="font-weight:bold;">FROM</span>
   <span style="color: #333;">b</span>
   <span style="font-weight:bold;">LEFT OUTER JOIN</span> <span style="color: #333;">c</span>
-    <span style="font-weight:bold;">on</span> (<span style="color: #333;">d</span> <span >=</span> <span style="color: #333;">f</span>)<span >;</span></pre>
+    <span style="font-weight:bold;">ON</span> (<span style="color: #333;">d</span> <span >=</span> <span style="color: #333;">f</span>)<span >;</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">WITH</span>
   <span style="color: #333;">cte</span> <span style="font-weight:bold;">AS</span> (
@@ -839,7 +839,7 @@
       <span style="color: #333;">a</span><span >,</span>
       <span style="color: #333;">b</span>
     <span style="font-weight:bold;">FROM</span>
-      <span style="font-weight:bold;">table</span>
+      <span style="color: purple;">`table`</span>
   )<span >,</span>
   <span style="font-weight:bold;">RECURSIVE</span> <span style="color: #333;">fibonacci</span> (<span style="color: #333;">n</span><span >,</span> <span style="color: #333;">fib_n</span><span >,</span> <span style="color: #333;">next_fib_n</span>) <span style="font-weight:bold;">AS</span> (
     <span style="font-weight:bold;">SELECT</span>
