@@ -12,6 +12,7 @@ use function assert;
 use function implode;
 use function preg_match;
 use function preg_quote;
+use function preg_replace;
 use function str_replace;
 use function strlen;
 use function strpos;
@@ -49,7 +50,6 @@ final class Tokenizer
         'BINLOG',
         'BOTH',
         'CASCADE',
-        'CASE',
         'CHANGE',
         'CHANGED',
         'CHARACTER SET',
@@ -92,9 +92,7 @@ final class Tokenizer
         'DUMPFILE',
         'DUPLICATE',
         'DYNAMIC',
-        'ELSE',
         'ENCLOSED',
-        'END',
         'ENGINE',
         'ENGINE_TYPE',
         'ENGINES',
@@ -189,7 +187,6 @@ final class Tokenizer
         'NOW()',
         'NULL',
         'OFFSET',
-        'ON',
         'OPEN',
         'OPTIMIZE',
         'OPTION',
@@ -284,7 +281,6 @@ final class Tokenizer
         'TABLES',
         'TEMPORARY',
         'TERMINATED',
-        'THEN',
         'TIES',
         'TO',
         'TRAILING',
@@ -303,7 +299,6 @@ final class Tokenizer
         'USING',
         'VARIABLES',
         'VIEW',
-        'WHEN',
         'WITH',
         'WORK',
         'WRITE',
@@ -343,6 +338,7 @@ final class Tokenizer
         'RANGE',
         'GROUPS',
         'WINDOW',
+        'ON DUPLICATE KEY UPDATE',
     ];
 
     /** @var string[] */
@@ -353,11 +349,18 @@ final class Tokenizer
         'RIGHT JOIN',
         'OUTER JOIN',
         'INNER JOIN',
+        'CROSS JOIN',
         'JOIN',
         'XOR',
         'OR',
         'AND',
         'EXCLUDE',
+        'ON',
+        'CASE WHEN',
+        'CASE',
+        'WHEN',
+        'ELSE',
+        'END',
     ];
 
     /** @var string[] */
@@ -669,6 +672,7 @@ final class Tokenizer
         'UTC_TIME',
         'UTC_TIMESTAMP',
         'UUID',
+        'VALUES',
         'VAR',
         'VARIANCE',
         'VARP',
@@ -909,7 +913,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
-                    substr($upper, 0, strlen($matches[1]))
+                    (string) preg_replace('/\s+/', ' ', substr($upper, 0, strlen($matches[1])))
                 );
             }
 
@@ -923,7 +927,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                    substr($upper, 0, strlen($matches[1]))
+                    (string) preg_replace('/\s+/', ' ', substr($upper, 0, strlen($matches[1])))
                 );
             }
 
@@ -937,7 +941,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED,
-                    substr($upper, 0, strlen($matches[1]))
+                    (string) preg_replace('/\s+/', ' ', substr($upper, 0, strlen($matches[1])))
                 );
             }
         }

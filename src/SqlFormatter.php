@@ -11,23 +11,25 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
-use function array_search;
-use function array_shift;
-use function array_unshift;
-use function assert;
-use function current;
-use function preg_replace;
-use function reset;
+use function array_pop;
+use function count;
+use function end;
+use function in_array;
+use function prev;
 use function rtrim;
 use function str_repeat;
 use function str_replace;
 use function strlen;
+use function strpos;
 use function trim;
 
 use const PHP_SAPI;
 
 final class SqlFormatter
 {
+    private const INDENT_BLOCK   = 1;
+    private const INDENT_SPECIAL = 2;
+
     /** @var Highlighter */
     private $highlighter;
 
@@ -55,13 +57,15 @@ final class SqlFormatter
         // Use an actual tab while formatting and then switch out with $indentString at the end
         $tab = "\t";
 
+        /** @var Condition[] $expectedBlockEnds */
+        $expectedBlockEnds = [];
+
         $indentLevel           = 0;
         $newline               = false;
-        $inlineParentheses     = false;
+        $inlineBlock           = false;
         $increaseSpecialIndent = false;
         $increaseBlockIndent   = false;
         $indentTypes           = [];
-        $addedNewline          = false;
         $inlineCount           = 0;
         $inlineIndented        = false;
         $clauseLimit           = false;
@@ -80,55 +84,86 @@ final class SqlFormatter
             if ($increaseSpecialIndent) {
                 $indentLevel++;
                 $increaseSpecialIndent = false;
-                array_unshift($indentTypes, 'special');
+                $indentTypes[]         = self::INDENT_SPECIAL;
             }
 
             // If we are increasing the block indent level now
             if ($increaseBlockIndent) {
                 $indentLevel++;
                 $increaseBlockIndent = false;
-                array_unshift($indentTypes, 'block');
             }
 
             // If we need a new line before the token
+            $addedNewline = false;
             if ($newline) {
-                $return       = rtrim($return, ' ');
                 $return      .= "\n" . str_repeat($tab, $indentLevel);
                 $newline      = false;
                 $addedNewline = true;
-            } else {
-                $addedNewline = false;
             }
 
             // Display comments directly where they appear in the source
             if ($token->isOfType(Token::TOKEN_TYPE_COMMENT, Token::TOKEN_TYPE_BLOCK_COMMENT)) {
-                if ($token->isOfType(Token::TOKEN_TYPE_BLOCK_COMMENT)) {
-                    $indent      = str_repeat($tab, $indentLevel);
-                    $return      = rtrim($return, " \t");
-                    $return     .= "\n" . $indent;
-                    $highlighted = str_replace("\n", "\n" . $indent, $highlighted);
+                // Always add newline after
+                $newline        = true;
+                $isBlockComment = $token->isOfType(Token::TOKEN_TYPE_BLOCK_COMMENT);
+                $indent         = str_repeat($tab, $indentLevel);
+
+                if ($isBlockComment) {
+                    // Remove trailing indent from previous $newline
+                    $return = rtrim($return, $tab) . "\n" . $indent;
+                } else {
+                    $prev = $cursor->subCursor()->previous();
+                    // Single line comment wants to have a newline before
+                    if ($prev && ! $addedNewline && strpos($prev->value(), "\n") !== false) {
+                        $return .= "\n" . $indent;
+                    } elseif (! $addedNewline) {
+                        $return .= ' ';
+                    }
+                }
+
+                if ($isBlockComment) {
+                    $return .= str_replace("\n", "\n" . $indent, $highlighted);
+                    continue;
                 }
 
                 $return .= $highlighted;
-                $newline = true;
                 continue;
             }
 
-            if ($inlineParentheses) {
-                // End of inline parentheses
-                if ($token->value() === ')') {
-                    $return = rtrim($return, ' ');
+            // Allow another block to finish an EOF type block
+            if (count($expectedBlockEnds) > 1) {
+                $last = end($expectedBlockEnds);
+                $prev = prev($expectedBlockEnds);
+
+                if ($prev && $last->eof && ! $prev->eof && $token->isBlockEnd($prev)) {
+                    array_pop($expectedBlockEnds);
+                    array_pop($indentTypes);
+                    $indentLevel--;
+                }
+            }
+
+            $blockEndCondition = end($expectedBlockEnds);
+
+            if ($inlineBlock) {
+                // End of inline block
+                if ($blockEndCondition && $token->isBlockEnd($blockEndCondition)) {
+                    array_pop($expectedBlockEnds);
 
                     if ($inlineIndented) {
-                        array_shift($indentTypes);
+                        array_pop($indentTypes);
                         $indentLevel--;
-                        $return  = rtrim($return, ' ');
                         $return .= "\n" . str_repeat($tab, $indentLevel);
                     }
 
-                    $inlineParentheses = false;
+                    $inlineBlock = false;
 
-                    $return .= $highlighted . ' ';
+                    $return .= $highlighted;
+
+                    $nextNotWhitespace = $cursor->subCursor()->next(Token::TOKEN_TYPE_WHITESPACE);
+                    if ($nextNotWhitespace && $nextNotWhitespace->wantsSpaceBefore()) {
+                        $return .= ' ';
+                    }
+
                     continue;
                 }
 
@@ -142,11 +177,13 @@ final class SqlFormatter
                 $inlineCount += strlen($token->value());
             }
 
-            // Opening parentheses increase the block indent level and start a new line
-            if ($token->value() === '(') {
-                // First check if this should be an inline parentheses block
+            $newBlockEndCondition = $token->isBlockStart();
+
+            // Start of new block, increase the indent level and start a new line
+            if ($newBlockEndCondition !== null) {
+                // First check if this should be an inline block
                 // Examples are "NOW()", "COUNT(*)", "int(10)", key(`somecolumn`), DECIMAL(7,2)
-                // Allow up to 3 non-whitespace tokens inside inline parentheses
+                // Allow up to 3 non-whitespace tokens inside inline block
                 $length    = 0;
                 $subCursor = $cursor->subCursor();
                 for ($j = 1; $j <= 250; $j++) {
@@ -156,20 +193,12 @@ final class SqlFormatter
                         break;
                     }
 
-                    // Reached closing parentheses, able to inline it
-                    if ($next->value() === ')') {
-                        $inlineParentheses = true;
-                        $inlineCount       = 0;
-                        $inlineIndented    = false;
-                        break;
-                    }
-
-                    // Reached an invalid token for inline parentheses
+                    // Reached an invalid token for inline block
                     if ($next->value() === ';' || $next->value() === '(') {
                         break;
                     }
 
-                    // Reached an invalid token type for inline parentheses
+                    // Reached an invalid token type for inline block
                     if (
                         $next->isOfType(
                             Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
@@ -181,10 +210,18 @@ final class SqlFormatter
                         break;
                     }
 
+                    // Reached closing condition, able to inline it
+                    if ($next->isBlockEnd($newBlockEndCondition)) {
+                        $inlineBlock    = true;
+                        $inlineCount    = 0;
+                        $inlineIndented = false;
+                        break;
+                    }
+
                     $length += strlen($next->value());
                 }
 
-                if ($inlineParentheses && $length > 30) {
+                if ($inlineBlock && $length > 30) {
                     $increaseBlockIndent = true;
                     $inlineIndented      = true;
                     $newline             = true;
@@ -196,67 +233,72 @@ final class SqlFormatter
                     $return = rtrim($return, ' ');
                 }
 
-                if (! $inlineParentheses) {
+                if (! $inlineBlock) {
                     $increaseBlockIndent = true;
-                    // Add a newline after the parentheses
-                    $newline = true;
+                    // Add a newline after the block
+                    if ($newBlockEndCondition->addNewline) {
+                        $newline = true;
+                    }
                 }
-            } elseif ($token->value() === ')') {
-                // Closing parentheses decrease the block indent level
-                // Remove whitespace before the closing parentheses
-                $return = rtrim($return, ' ');
 
+                if ($increaseBlockIndent) {
+                    $indentTypes[] = self::INDENT_BLOCK;
+                }
+
+                $expectedBlockEnds[] = $newBlockEndCondition;
+            }
+
+            if ($blockEndCondition && $token->isBlockEnd($blockEndCondition)) {
+                // Closing block decrease the block indent level
+                array_pop($expectedBlockEnds);
                 $indentLevel--;
 
                 // Reset indent level
-                while ($j = array_shift($indentTypes)) {
-                    if ($j !== 'special') {
+                while ($lastIndentType = array_pop($indentTypes)) {
+                    if ($lastIndentType !== self::INDENT_SPECIAL) {
                         break;
                     }
 
                     $indentLevel--;
                 }
 
-                if ($indentLevel < 0) {
-                    // This is an error
-                    $indentLevel = 0;
-
-                    $return .= $this->highlighter->highlightError($token->value());
-                    continue;
-                }
-
-                // Add a newline before the closing parentheses (if not already added)
-                if (! $addedNewline) {
+                // Add a newline before the closing block (if not already added)
+                if (! $addedNewline && $blockEndCondition->addNewline) {
                     $return .= "\n" . str_repeat($tab, $indentLevel);
                 }
-            } elseif ($token->isOfType(Token::TOKEN_TYPE_RESERVED_TOPLEVEL)) {
+            }
+
+            if ($token->isOfType(Token::TOKEN_TYPE_RESERVED_TOPLEVEL)) {
+                // VALUES() is also a function
+                if ($token->value() === 'VALUES') {
+                    $prevNotWhitespace = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
+                    if ($prevNotWhitespace && $prevNotWhitespace->value() === '=') {
+                        $return .= ' ' . $highlighted;
+                        continue;
+                    }
+                }
+
                 // Top level reserved words start a new line and increase the special indent level
                 $increaseSpecialIndent = true;
 
                 // If the last indent type was 'special', decrease the special indent for this round
-                reset($indentTypes);
-                if (current($indentTypes) === 'special') {
+                if (end($indentTypes) === self::INDENT_SPECIAL) {
                     $indentLevel--;
-                    array_shift($indentTypes);
+                    array_pop($indentTypes);
                 }
 
                 // Add a newline after the top level reserved word
                 $newline = true;
                 // Add a newline before the top level reserved word (if not already added)
                 if (! $addedNewline) {
-                    $return  = rtrim($return, ' ');
                     $return .= "\n" . str_repeat($tab, $indentLevel);
                 } else {
                     // If we already added a newline, redo the indentation since it may be different now
                     $return = rtrim($return, $tab) . str_repeat($tab, $indentLevel);
                 }
 
-                if ($token->hasExtraWhitespace()) {
-                    $highlighted = preg_replace('/\s+/', ' ', $highlighted);
-                }
-
-                //if SQL 'LIMIT' clause, start variable to reset newline
-                if ($token->value() === 'LIMIT' && ! $inlineParentheses) {
+                // if SQL 'LIMIT' clause, start variable to reset newline
+                if ($token->value() === 'LIMIT' && ! $inlineBlock) {
                     $clauseLimit = true;
                 }
             } elseif (
@@ -266,9 +308,9 @@ final class SqlFormatter
             ) {
                 // Checks if we are out of the limit clause
                 $clauseLimit = false;
-            } elseif ($token->value() === ',' && ! $inlineParentheses) {
-                // Commas start a new line (unless within inline parentheses or SQL 'LIMIT' clause)
-                //If the previous TOKEN_VALUE is 'LIMIT', resets new line
+            } elseif ($token->value() === ',' && ! $inlineBlock) {
+                // Commas start a new line (unless within inline block or SQL 'LIMIT' clause)
+                // If the previous TOKEN_VALUE is 'LIMIT', resets new line
                 if ($clauseLimit === true) {
                     $newline     = false;
                     $clauseLimit = false;
@@ -277,77 +319,71 @@ final class SqlFormatter
                     $newline = true;
                 }
             } elseif ($token->isOfType(Token::TOKEN_TYPE_RESERVED_NEWLINE)) {
-            // Newline reserved words start a new line
+                // Newline reserved words start a new line
                 // Add a newline before the reserved word (if not already added)
                 if (! $addedNewline) {
-                    $return  = rtrim($return, ' ');
                     $return .= "\n" . str_repeat($tab, $indentLevel);
                 }
-
-                if ($token->hasExtraWhitespace()) {
-                    $highlighted = preg_replace('/\s+/', ' ', $highlighted);
-                }
-            } elseif ($token->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
-                // Multiple boundary characters in a row should not have spaces between them (not including parentheses)
-                $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
-                if ($prevNotWhitespaceToken && $prevNotWhitespaceToken->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
-                    $prevToken = $cursor->subCursor()->previous();
-                    if ($prevToken && ! $prevToken->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
-                        $return = rtrim($return, ' ');
-                    }
-                }
             }
 
-            // If the token shouldn't have a space before it
-            if (
-                $token->value() === '.' ||
-                $token->value() === ',' ||
-                $token->value() === ';'
-            ) {
-                $return = rtrim($return, ' ');
-            }
-
-            $return .= $highlighted . ' ';
+            $return .= $highlighted;
 
             // If the token shouldn't have a space after it
-            if ($token->value() === '(' || $token->value() === '.') {
-                $return = rtrim($return, ' ');
-            }
-
-            // If this is the "-" of a negative number, it shouldn't have a space after it
-            if ($token->value() !== '-') {
+            if ($newline || $token->value() === '(' || $token->value() === '.') {
                 continue;
             }
 
             $nextNotWhitespace = $cursor->subCursor()->next(Token::TOKEN_TYPE_WHITESPACE);
-            if (! $nextNotWhitespace || ! $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_NUMBER)) {
+            if (! $nextNotWhitespace) {
                 continue;
             }
 
-            $prev = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
-            if (! $prev) {
+            if (! $nextNotWhitespace->wantsSpaceBefore()) {
                 continue;
             }
 
+            // If this is the "-" of a negative number, it shouldn't have a space after it
+            if ($token->value() === '-') {
+                $prevNotWhitespace = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
+                if (! $prevNotWhitespace) {
+                    continue;
+                }
+
+                if (
+                    $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_NUMBER)
+                    && ! $prevNotWhitespace->isOfType(
+                        Token::TOKEN_TYPE_QUOTE,
+                        Token::TOKEN_TYPE_BACKTICK_QUOTE,
+                        Token::TOKEN_TYPE_WORD,
+                        Token::TOKEN_TYPE_NUMBER
+                    )
+                ) {
+                    continue;
+                }
+            }
+
+            // Don't add whitespace between operators like != <> >= := && etc.
             if (
-                $prev->isOfType(
-                    Token::TOKEN_TYPE_QUOTE,
-                    Token::TOKEN_TYPE_BACKTICK_QUOTE,
-                    Token::TOKEN_TYPE_WORD,
-                    Token::TOKEN_TYPE_NUMBER
-                )
+                $token->isOfType(Token::TOKEN_TYPE_BOUNDARY)
+                && $token->value() !== ')'
+                && $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_BOUNDARY)
+                && ! in_array($nextNotWhitespace->value(), ['(', '-'], true)
             ) {
                 continue;
             }
 
-            $return = rtrim($return, ' ');
+            $return .= ' ';
         }
 
-        // If there are unmatched parentheses
-        if (array_search('block', $indentTypes) !== false) {
-            $return  = rtrim($return, ' ');
+        $blockEndCondition = end($expectedBlockEnds);
+        if ($blockEndCondition && $blockEndCondition->eof) {
+            array_pop($expectedBlockEnds);
+        }
+
+        // If there are unmatched blocks
+        if (count($expectedBlockEnds)) {
             $return .= $this->highlighter->highlightErrorMessage(
-                'WARNING: unclosed parentheses or section'
+                'WARNING: unclosed block'
             );
         }
 
@@ -397,20 +433,6 @@ final class SqlFormatter
             // Skip comment tokens
             if ($token->isOfType(Token::TOKEN_TYPE_COMMENT, Token::TOKEN_TYPE_BLOCK_COMMENT)) {
                 continue;
-            }
-
-            // Remove extra whitespace in reserved words (e.g "OUTER     JOIN" becomes "OUTER JOIN")
-
-            if (
-                $token->isOfType(
-                    Token::TOKEN_TYPE_RESERVED,
-                    Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                    Token::TOKEN_TYPE_RESERVED_TOPLEVEL
-                )
-            ) {
-                $newValue = preg_replace('/\s+/', ' ', $token->value());
-                assert($newValue !== null);
-                $token = $token->withValue($newValue);
             }
 
             if ($token->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {

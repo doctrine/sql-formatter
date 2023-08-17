@@ -4,7 +4,14 @@
   [37mCOUNT[0m(order_id[0m) [37mAS[0m total[0m
 [37mFROM[0m
   customers[0m
-  [37mINNER JOIN[0m orders[0m [37mON[0m customers[0m.[0mcustomer_id[0m =[0m orders[0m.[0mcustomer_id[0m
+  [37mINNER JOIN[0m orders[0m
+    [37mON[0m customers[0m.[0mcustomer_id[0m =[0m orders[0m.[0mcustomer_id[0m
+    [37mAND[0m orders[0m.[0mtype[0m =[0m [32;1m1[0m
+    [37mOR[0m orders[0m.[0mtype[0m =[0m [32;1m2[0m
+  [37mINNER JOIN[0m orders2[0m
+    [37mON[0m customers[0m.[0mcustomer_id2[0m =[0m orders2[0m.[0mcustomer_id[0m
+    [37mAND[0m orders2[0m.[0mtype[0m =[0m [32;1m1[0m
+    [37mOR[0m orders2[0m.[0mtype[0m =[0m [32;1m2[0m
 [37mGROUP BY[0m
   customer_id[0m,[0m
   customer_name[0m
@@ -509,7 +516,8 @@
     [34;1m'0000-00-00 00:00:00'[0m
   [37mFROM[0m
     [35;1m`PREFIX_discount_quantity`[0m dq[0m
-    [37mINNER JOIN[0m [35;1m`PREFIX_product`[0m p[0m [37mON[0m (p[0m.[0m[35;1m`id_product`[0m =[0m dq[0m.[0m[35;1m`id_product`[0m)
+    [37mINNER JOIN[0m [35;1m`PREFIX_product`[0m p[0m
+      [37mON[0m (p[0m.[0m[35;1m`id_product`[0m =[0m dq[0m.[0m[35;1m`id_product`[0m)
 )
 ---
 [37mDROP[0m
@@ -744,12 +752,11 @@
 [37mFROM[0m
   Test[0m
 [37mWHERE[0m
-  (MyColumn[0m =[0m [32;1m1[0m)
-[31;1;7m)[0m
-[37mAND[0m (
-  (
-    (SomeOtherColumn[0m =[0m [32;1m2[0m);[0m
-[31;1;7mWARNING: unclosed parentheses or section[0m
+  (MyColumn[0m =[0m [32;1m1[0m))
+  [37mAND[0m (
+    (
+      (SomeOtherColumn[0m =[0m [32;1m2[0m);[0m
+[31;1;7mWARNING: unclosed block[0m
 ---
 [37mALTER TABLE[0m
   [35;1m`test_modify`[0m
@@ -823,7 +830,8 @@
   a[0m
 [37mFROM[0m
   b[0m
-  [37mLEFT OUTER JOIN[0m c[0m [37mON[0m (d[0m =[0m f[0m);[0m
+  [37mLEFT OUTER JOIN[0m c[0m
+    [37mON[0m (d[0m =[0m f[0m);[0m
 ---
 [37mWITH[0m
   cte[0m [37mAS[0m (
@@ -975,6 +983,124 @@
     [37mORDER BY[0m
       hire_date[0m
   );[0m
+---
+[37mSELECT[0m
+  [37mSQL_NO_CACHE[0m r[0m.[0mname[0m,[0m
+  r[0m.[0mtime[0m,[0m
+  [37mCASE WHEN[0m r[0m.[0mmessage[0m [37mLIKE[0m [34;1m'old_service %'[0m THEN[0m
+    [30;1m-- Extract old service name from service message[0m
+    [37mSUBSTRING_INDEX[0m(
+      [37mSUBSTRING_INDEX[0m(
+        [37mSUBSTRING_INDEX[0m(r[0m.[0mmessage[0m,[0m [34;1m'from '[0m,[0m -[0m[32;1m1[0m),[0m
+        [34;1m' ('[0m,[0m
+        [32;1m1[0m
+      ),[0m
+      [34;1m' to '[0m,[0m
+      [32;1m1[0m
+    )
+  [37mELSE[0m
+    [30;1m-- Extract old service name from other message[0m
+    [37mSUBSTRING_INDEX[0m(
+      [37mSUBSTRING_INDEX[0m(r[0m.[0mmessage[0m,[0m [34;1m'service '[0m,[0m -[0m[32;1m1[0m),[0m
+      [34;1m' ('[0m,[0m
+      [32;1m1[0m
+    )
+  [37mEND[0m old_service[0m,[0m
+  [37mCASE WHEN[0m r[0m.[0mmessage[0m [37mLIKE[0m [34;1m'service %'[0m THEN[0m
+    [30;1m-- Extract service name from service message[0m
+    [37mSUBSTRING_INDEX[0m(
+      [37mSUBSTRING_INDEX[0m(
+        [37mSUBSTRING_INDEX[0m(r[0m.[0mmessage[0m,[0m [34;1m'from '[0m,[0m -[0m[32;1m1[0m),[0m
+        [34;1m' ('[0m,[0m
+        [32;1m1[0m
+      ),[0m
+      [34;1m' to '[0m,[0m
+      -[0m[32;1m1[0m
+    )
+  [37mELSE[0m
+    [30;1m-- Extract service name from other message[0m
+    [34;1m'Default'[0m
+  [37mEND[0m new_service[0m,[0m
+  p[0m.[0mname[0m current_service[0m,[0m
+  [37mCASE[0m r[0m.[0mname[0m
+    [37mWHEN[0m [34;1m'pre-fix'[0m THEN[0m [34;1m'pre'[0m
+    [37mWHEN[0m [34;1m'post-fix'[0m THEN[0m [34;1m'post'[0m
+  [37mEND[0m [37mAS[0m fix[0m
+[37mFROM[0m
+  (
+    [37mSELECT[0m
+      entries[0m.[0m*[0m,[0m
+      [30;1m-- Variable to count rows by name[0m
+      (
+        [36;1m@rn[0m :[0m=[0m [37mIF[0m(
+          [36;1m@id[0m =[0m entries[0m.[0mname[0m,[0m
+          [36;1m@rn[0m +[0m [32;1m1[0m,[0m
+          [37mIF[0m([36;1m@id[0m :[0m=[0m entries[0m.[0mname[0m,[0m [32;1m1[0m,[0m [32;1m1[0m)
+        )
+      ) entry_order[0m
+    [37mFROM[0m
+      (
+        [30;1m-- Name is second word in both cases, ordering and cancelling a service[0m
+        [37mSELECT[0m
+          [37mSUBSTRING_INDEX[0m(
+            [37mSUBSTRING_INDEX[0m(message[0m,[0m [34;1m' '[0m,[0m [32;1m2[0m),[0m
+            [34;1m' '[0m,[0m
+            -[0m[32;1m1[0m
+          ) name[0m,[0m
+          time[0m,[0m
+          message[0m
+        [37mFROM[0m
+          log[0m
+          [30;1m-- Only logged messages about service ordering or cancelling[0m
+        [37mWHERE[0m
+          (
+            message[0m [37mLIKE[0m [34;1m'cancelled % service %'[0m
+            [37mOR[0m message[0m [37mLIKE[0m [34;1m'ordered % service %'[0m
+          )
+          [37mAND[0m time[0m >[0m=[0m ?[0m
+          [37mAND[0m time[0m <[0m ?[0m
+        [37mORDER BY[0m
+          name[0m,[0m
+          time[0m [37mDESC[0m
+      ) entries[0m
+      [37mCROSS JOIN[0m (
+          [37mSELECT[0m
+            [36;1m@rn[0m :[0m=[0m [32;1m0[0m,[0m
+            [36;1m@id[0m :[0m=[0m -[0m[32;1m1[0m
+        ) params[0m
+  ) r[0m
+  [37mINNER JOIN[0m serivce[0m s[0m
+    [37mON[0m s[0m.[0mname[0m =[0m r[0m.[0mname[0m
+  [37mINNER JOIN[0m [35;1m`order`[0m o[0m
+    [37mON[0m o[0m.[0mid[0m =[0m d[0m.[0morder_id[0m
+  [37mINNER JOIN[0m product[0m p[0m
+    [37mON[0m p[0m.[0mid[0m =[0m o[0m.[0mproduct_id[0m
+[37mWHERE[0m
+  [30;1m-- Only keep the latest entry[0m
+  r[0m.[0mentry_order[0m =[0m [32;1m1[0m
+  [37mAND[0m o[0m.[0mis_active[0m =[0m [32;1m1[0m
+  [30;1m-- No external products[0m
+  [37mAND[0m p[0m.[0mexternal[0m =[0m [32;1m0[0m
+  [37mAND[0m (
+    p[0m.[0mtype[0m =[0m [32;1m1[0m
+    [37mOR[0m p[0m.[0mid[0m =[0m [32;1m7[0m
+  )
+  [37mAND[0m [37mMD5[0m(
+    [37mCONCAT[0m(p[0m.[0mtype[0m,[0m ?[0m)
+  ) =[0m [34;1m'11'[0m
+[37mHAVING[0m
+  new_service[0m =[0m [34;1m'Old'[0m
+  [30;1m-- Skip Old -> Old service[0m
+  [37mAND[0m old_service[0m <[0m>[0m [34;1m'Old'[0m
+[37mORDER BY[0m
+  old_service[0m,[0m
+  r[0m.[0mname[0m [37mASC[0m
+---
+[37mINSERT[0m [37mINTO[0m customers[0m (id[0m,[0m username[0m)
+[37mVALUES[0m
+  ([32;1m1[0m,[0m [34;1m'Joe'[0m)
+[37mON DUPLICATE KEY UPDATE[0m
+  username[0m =[0m [37mVALUES[0m(username[0m)
 ---
 [37mSELECT[0m
   [32;1m1[0m ::[0m text[0m;[0m
