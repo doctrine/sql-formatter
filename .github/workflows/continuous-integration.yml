@@ -21,7 +21,6 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "7.1"
           - "7.2"
           - "7.3"
           - "7.4"
@@ -40,12 +39,9 @@ jobs:
           tools: "cs2pr"
 
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v1"
+        uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: "highest"
-
-      - name: "Install phpunit with composer"
-        run: "composer bin phpunit install --no-interaction --no-progress --no-suggest"
 
       - name: "Test fixes"
         run: "vendor/bin/phpunit --coverage-text"
@@ -72,15 +68,9 @@ jobs:
           tools: "cs2pr"
 
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v1"
+        uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: "highest"
-
-      - name: "Install phpunit with composer"
-        run: "composer bin phpunit install --no-interaction --no-progress --no-suggest"
-
-      - name: "Install phpstan with composer"
-        run: "composer bin phpstan install --no-interaction --no-progress --no-suggest"
 
       - name: "Run a static analysis with phpstan/phpstan"
         run: "vendor/bin/phpstan analyse --error-format=checkstyle | cs2pr"
@@ -106,15 +96,9 @@ jobs:
           php-version: "${{ matrix.php-version }}"
 
       - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v1"
+        uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: "highest"
-
-      - name: "Install phpunit with composer"
-        run: "composer bin phpunit install --no-interaction --no-progress --no-suggest"
-
-      - name: "Install psalm with composer"
-        run: "composer bin all install --no-interaction --no-progress --no-suggest"
 
       - name: "Run a static analysis with vimeo/psalm"
         run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=4"
@@ -139,18 +123,10 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           tools: "cs2pr"
 
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v3"
         with:
-          path: "~/.composer/cache"
-          key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}-${{ hashFiles('vendor-bin/*/composer.lock') }}"
-          restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
-
-      - name: "Install dependencies with composer"
-        run: "composer install --no-interaction --no-progress --no-suggest"
-
-      - name: "Install phpcs with composer"
-        run: "composer bin all install --no-interaction --no-progress --no-suggest"
+          dependency-versions: "highest"
 
       # Remove -q when updating to phpcs v4
       - name: "Run squizlabs/php_codesniffer"

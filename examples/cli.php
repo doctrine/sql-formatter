@@ -28,4 +28,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Doctrine\SqlFormatter\SqlFormatter;
 use Doctrine\SqlFormatter\Tokenizer;
 
+assert($sql !== false);
+
 echo (new SqlFormatter())->format($sql);
