@@ -154,7 +154,7 @@ SQL,
             Usage:
             <pre>
             <?php highlight_string(
-                '<?php' . "\n" . '$formatted = (new SqlFormatter())->format($sql);' . "\n" . '?>'
+                '<?php' . "\n" . '$formatted = (new SqlFormatter())->format($sql);' . "\n" . '?>',
             ); ?>
             </pre>
         </div>
@@ -195,7 +195,7 @@ SQL,
                     <pre><?= $sql; ?></pre>
                 </td>
                 <td><pre><?= htmlentities((new SqlFormatter(
-                    new NullHighlighter()
+                    new NullHighlighter(),
                 ))->format($sql)); ?></pre></td>
             </tr>
             <?php endforeach ?>
@@ -208,7 +208,7 @@ SQL,
             Usage:
             <pre>
             <?php highlight_string(
-                '<?php' . "\n" . '$highlighted = (new SqlFormatter())->highlight($sql);' . "\n" . '?>'
+                '<?php' . "\n" . '$highlighted = (new SqlFormatter())->highlight($sql);' . "\n" . '?>',
             ); ?>
             </pre>
         </div>
@@ -234,7 +234,7 @@ SQL,
             Usage:
             <pre>
             <?php highlight_string(
-                '<?php' . "\n" . '$compressed = (new SqlFormatter())->compress($sql);' . "\n" . '?>'
+                '<?php' . "\n" . '$compressed = (new SqlFormatter())->compress($sql);' . "\n" . '?>',
             ); ?>
             </pre>
         </div>

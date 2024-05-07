@@ -7,24 +7,20 @@
 
     <arg name="basepath" value="."/>
     <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
     <arg name="cache" value=".phpcs-cache"/>
     <arg name="colors" />
 
-    <!-- Show progress of the run -->
-    <arg value="p"/>
+    <!-- Ignore warnings, show progress of the run and show sniff names -->
+    <arg value="nps"/>
+
+    <config name="php_version" value="80100"/>
 
     <rule ref="Doctrine"/>
 
     <file>examples</file>
     <file>src</file>
     <file>tests</file>
-
-    <!-- Disable the rules that will require PHP 7.4 -->
-    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
-        <properties>
-            <property name="enableNativeTypeHint" value="false"/>
-        </properties>
-    </rule>
 
     <rule ref="Generic.Files.InlineHTML">
         <exclude-pattern>examples/*.php</exclude-pattern>
