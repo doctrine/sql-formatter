@@ -9,6 +9,8 @@ use Doctrine\SqlFormatter\HtmlHighlighter;
 use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
 use Generator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
 
@@ -21,48 +23,33 @@ use function pack;
 use function sprintf;
 use function trim;
 
-/**
- * @covers \Doctrine\SqlFormatter\SqlFormatter
- */
+#[CoversClass(SqlFormatter::class)]
 final class SqlFormatterTest extends TestCase
 {
-    /** @var string[] */
-    private $sqlData;
-
-    /** @var SqlFormatter */
-    private $formatter;
-
-    /** @var HtmlHighlighter */
-    private $highlighter;
+    private SqlFormatter $formatter;
 
     protected function setUp(): void
     {
         // Force SqlFormatter to run in non-CLI mode for tests
-        $this->highlighter = new HtmlHighlighter();
+        $highlighter = new HtmlHighlighter();
 
-        $this->formatter = new SqlFormatter($this->highlighter);
+        $this->formatter = new SqlFormatter($highlighter);
     }
 
-    /**
-     * @dataProvider formatHighlightData
-     */
+    #[DataProvider('formatHighlightData')]
     public function testFormatHighlight(string $sql, string $html): void
     {
         $this->assertEquals(trim($html), trim($this->formatter->format($sql)));
     }
 
-    /**
-     * @dataProvider formatData
-     */
+    #[DataProvider('formatData')]
     public function testFormat(string $sql, string $html): void
     {
         $formatter = new SqlFormatter(new NullHighlighter());
         $this->assertEquals(trim($html), trim($formatter->format($sql)));
     }
 
-    /**
-     * @dataProvider highlightData
-     */
+    #[DataProvider('highlightData')]
     public function testHighlight(string $sql, string $html): void
     {
         $this->assertEquals(trim($html), trim($this->formatter->highlight($sql)));
@@ -87,18 +74,14 @@ final class SqlFormatterTest extends TestCase
         $this->assertEquals(trim($html), trim($this->formatter->highlight($sql)));
     }
 
-    /**
-     * @dataProvider highlightCliData
-     */
+    #[DataProvider('highlightCliData')]
     public function testCliHighlight(string $sql, string $html): void
     {
         $formatter = new SqlFormatter(new CliHighlighter());
         $this->assertEquals(trim($html), trim($formatter->format($sql)));
     }
 
-    /**
-     * @dataProvider compressData
-     */
+    #[DataProvider('compressData')]
     public function testCompress(string $sql, string $html): void
     {
         $this->assertEquals(trim($html), trim($this->formatter->compress($sql)));
@@ -118,21 +101,19 @@ final class SqlFormatterTest extends TestCase
         $this->assertEquals($actual, $expected);
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
-    private function fileDataProvider(string $file): Generator
+    /** @return Generator<mixed[]> */
+    private static function fileDataProvider(string $file): Generator
     {
         $contents = file_get_contents(__DIR__ . '/' . $file);
         assert($contents !== false);
         $formatHighlightData = explode("\n---\n", $contents);
-        $sqlData             = $this->sqlData();
+        $sqlData             = self::sqlData();
         if (count($formatHighlightData) !== count($sqlData)) {
             throw new UnexpectedValueException(sprintf(
                 '"%s" (%d sections) and sql.sql (%d sections) should have the same number of sections',
                 $file,
                 count($formatHighlightData),
-                count($sqlData)
+                count($sqlData),
             ));
         }
 
@@ -141,57 +122,42 @@ final class SqlFormatterTest extends TestCase
         }
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
-    public function formatHighlightData(): Generator
+    /** @return Generator<mixed[]> */
+    public static function formatHighlightData(): Generator
     {
-        return $this->fileDataProvider('format-highlight.html');
+        return self::fileDataProvider('format-highlight.html');
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
-    public function highlightCliData(): Generator
+    /** @return Generator<mixed[]> */
+    public static function highlightCliData(): Generator
     {
-        return $this->fileDataProvider('clihighlight.html');
+        return self::fileDataProvider('clihighlight.html');
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
-    public function formatData(): Generator
+    /** @return Generator<mixed[]> */
+    public static function formatData(): Generator
     {
-        return $this->fileDataProvider('format.html');
+        return self::fileDataProvider('format.html');
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
-    public function compressData(): Generator
+    /** @return Generator<mixed[]> */
+    public static function compressData(): Generator
     {
-        return $this->fileDataProvider('compress.html');
+        return self::fileDataProvider('compress.html');
     }
 
-    /**
-     * @return Generator<mixed[]>
-     */
-    public function highlightData(): Generator
+    /** @return Generator<mixed[]> */
+    public static function highlightData(): Generator
     {
-        return $this->fileDataProvider('highlight.html');
+        return self::fileDataProvider('highlight.html');
     }
 
-    /**
-     * @return mixed[]
-     */
-    public function sqlData(): array
+    /** @return mixed[] */
+    private static function sqlData(): array
     {
-        if (! $this->sqlData) {
-            $contents = file_get_contents(__DIR__ . '/sql.sql');
-            assert($contents !== false);
-            $this->sqlData = explode("\n---\n", $contents);
-        }
+        $contents = file_get_contents(__DIR__ . '/sql.sql');
+        assert($contents !== false);
 
-        return $this->sqlData;
+        return explode("\n---\n", $contents);
     }
 }

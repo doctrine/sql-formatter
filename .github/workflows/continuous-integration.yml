@@ -1,4 +1,3 @@
-
 name: "Continuous Integration"
 
 on:
@@ -9,125 +8,11 @@ on:
     branches:
       - "*.x"
 
-env:
-  fail-fast: true
-
 jobs:
-
-  unit-tests:
-    name: "Unit tests"
-    runs-on: "ubuntu-20.04"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.2"
-          - "7.3"
-          - "7.4"
-          - "8.0"
-          - "8.1"
-
-    steps:
-      - name: "Checkout code"
-        uses: "actions/checkout@v4"
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          coverage: "none"
-          php-version: "${{ matrix.php-version }}"
-          tools: "cs2pr"
-
-      - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v3"
-        with:
-          dependency-versions: "highest"
-
-      - name: "Test fixes"
-        run: "vendor/bin/phpunit --coverage-text"
-
-  static-analysis-phpstan:
-    name: "Static Analysis with PHPStan"
-    runs-on: "ubuntu-20.04"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-
-    steps:
-      - name: "Checkout code"
-        uses: "actions/checkout@v4"
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          coverage: "none"
-          php-version: "${{ matrix.php-version }}"
-          extensions: "mbstring"
-          tools: "cs2pr"
-
-      - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v3"
-        with:
-          dependency-versions: "highest"
-
-      - name: "Run a static analysis with phpstan/phpstan"
-        run: "vendor/bin/phpstan analyse --error-format=checkstyle | cs2pr"
-
-
-  static-analysis-psalm:
-    name: "Static Analysis with Psalm"
-    runs-on: "ubuntu-20.04"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-
-    steps:
-      - name: "Checkout code"
-        uses: "actions/checkout@v4"
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          coverage: "none"
-          php-version: "${{ matrix.php-version }}"
-
-      - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v3"
-        with:
-          dependency-versions: "highest"
-
-      - name: "Run a static analysis with vimeo/psalm"
-        run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=4"
-
-  coding-standards:
-    name: "Coding Standards"
-    runs-on: "ubuntu-20.04"
-
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          coverage: "none"
-          php-version: "${{ matrix.php-version }}"
-          tools: "cs2pr"
-
-      - name: "Install dependencies with Composer"
-        uses: "ramsey/composer-install@v3"
-        with:
-          dependency-versions: "highest"
-
-      # Remove -q when updating to phpcs v4
-      - name: "Run squizlabs/php_codesniffer"
-        run: "vendor/bin/phpcs -q --no-colors --report=checkstyle | cs2pr"
+  phpunit:
+    name: "PHPUnit"
+    uses: "doctrine/.github/.github/workflows/continuous-integration.yml@5.0.1"
+    with:
+      php-versions: '["8.1", "8.2", "8.3"]'
+    secrets:
+      CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}"
