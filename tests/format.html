@@ -465,7 +465,15 @@ VALUES
 ---
 INSERT INTO `PREFIX_cms_category`
 VALUES
-  (1, 0, 0, 1, NOW(), NOW(), 0)
+  (
+    1,
+    0,
+    0,
+    1,
+    NOW(),
+    NOW(),
+    0
+  )
 ---
 UPDATE
   `PREFIX_cms_category`
@@ -571,38 +579,61 @@ VALUES
   (
     'PS_SPECIFIC_PRICE_PRIORITIES',
     'id_shop;id_currency;id_country;id_group',
-    NOW(), NOW()
-  ),
-  ('PS_TAX_DISPLAY', 0, NOW(), NOW()),
-  (
-    'PS_SMARTY_FORCE_COMPILE', 1, NOW(),
+    NOW(),
     NOW()
   ),
   (
-    'PS_DISTANCE_UNIT', 'km', NOW(), NOW()
-  ),
-  (
-    'PS_STORES_DISPLAY_CMS', 0, NOW(),
+    'PS_TAX_DISPLAY',
+    0,
+    NOW(),
     NOW()
   ),
   (
-    'PS_STORES_DISPLAY_FOOTER', 0, NOW(),
+    'PS_SMARTY_FORCE_COMPILE',
+    1,
+    NOW(),
     NOW()
   ),
   (
-    'PS_STORES_SIMPLIFIED', 0, NOW(),
+    'PS_DISTANCE_UNIT',
+    'km',
+    NOW(),
+    NOW()
+  ),
+  (
+    'PS_STORES_DISPLAY_CMS',
+    0,
+    NOW(),
+    NOW()
+  ),
+  (
+    'PS_STORES_DISPLAY_FOOTER',
+    0,
+    NOW(),
+    NOW()
+  ),
+  (
+    'PS_STORES_SIMPLIFIED',
+    0,
+    NOW(),
     NOW()
   ),
   (
     'PS_STATSDATA_CUSTOMER_PAGESVIEWS',
-    1, NOW(), NOW()
-  ),
-  (
-    'PS_STATSDATA_PAGESVIEWS', 1, NOW(),
+    1,
+    NOW(),
     NOW()
   ),
   (
-    'PS_STATSDATA_PLUGINS', 1, NOW(),
+    'PS_STATSDATA_PAGESVIEWS',
+    1,
+    NOW(),
+    NOW()
+  ),
+  (
+    'PS_STATSDATA_PLUGINS',
+    1,
+    NOW(),
     NOW()
   )
 ---

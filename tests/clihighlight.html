@@ -465,7 +465,15 @@
 ---
 [37mINSERT[0m [37mINTO[0m [35;1m`PREFIX_cms_category`[0m
 [37mVALUES[0m
-  ([32;1m1[0m,[0m [32;1m0[0m,[0m [32;1m0[0m,[0m [32;1m1[0m,[0m [37mNOW()[0m,[0m [37mNOW()[0m,[0m [32;1m0[0m)
+  (
+    [32;1m1[0m,[0m
+    [32;1m0[0m,[0m
+    [32;1m0[0m,[0m
+    [32;1m1[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m(),[0m
+    [32;1m0[0m
+  )
 ---
 [37mUPDATE[0m
   [35;1m`PREFIX_cms_category`[0m
@@ -571,39 +579,62 @@
   (
     [34;1m'PS_SPECIFIC_PRICE_PRIORITIES'[0m,[0m
     [34;1m'id_shop;id_currency;id_country;id_group'[0m,[0m
-    [37mNOW()[0m,[0m [37mNOW()[0m
-  ),[0m
-  ([34;1m'PS_TAX_DISPLAY'[0m,[0m [32;1m0[0m,[0m [37mNOW()[0m,[0m [37mNOW()[0m),[0m
-  (
-    [34;1m'PS_SMARTY_FORCE_COMPILE'[0m,[0m [32;1m1[0m,[0m [37mNOW()[0m,[0m
-    [37mNOW()[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
   ),[0m
   (
-    [34;1m'PS_DISTANCE_UNIT'[0m,[0m [34;1m'km'[0m,[0m [37mNOW()[0m,[0m [37mNOW()[0m
+    [34;1m'PS_TAX_DISPLAY'[0m,[0m
+    [32;1m0[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
   ),[0m
   (
-    [34;1m'PS_STORES_DISPLAY_CMS'[0m,[0m [32;1m0[0m,[0m [37mNOW()[0m,[0m
-    [37mNOW()[0m
+    [34;1m'PS_SMARTY_FORCE_COMPILE'[0m,[0m
+    [32;1m1[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
   ),[0m
   (
-    [34;1m'PS_STORES_DISPLAY_FOOTER'[0m,[0m [32;1m0[0m,[0m [37mNOW()[0m,[0m
-    [37mNOW()[0m
+    [34;1m'PS_DISTANCE_UNIT'[0m,[0m
+    [34;1m'km'[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
   ),[0m
   (
-    [34;1m'PS_STORES_SIMPLIFIED'[0m,[0m [32;1m0[0m,[0m [37mNOW()[0m,[0m
-    [37mNOW()[0m
+    [34;1m'PS_STORES_DISPLAY_CMS'[0m,[0m
+    [32;1m0[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
+  ),[0m
+  (
+    [34;1m'PS_STORES_DISPLAY_FOOTER'[0m,[0m
+    [32;1m0[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
+  ),[0m
+  (
+    [34;1m'PS_STORES_SIMPLIFIED'[0m,[0m
+    [32;1m0[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
   ),[0m
   (
     [34;1m'PS_STATSDATA_CUSTOMER_PAGESVIEWS'[0m,[0m
-    [32;1m1[0m,[0m [37mNOW()[0m,[0m [37mNOW()[0m
+    [32;1m1[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
   ),[0m
   (
-    [34;1m'PS_STATSDATA_PAGESVIEWS'[0m,[0m [32;1m1[0m,[0m [37mNOW()[0m,[0m
-    [37mNOW()[0m
+    [34;1m'PS_STATSDATA_PAGESVIEWS'[0m,[0m
+    [32;1m1[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
   ),[0m
   (
-    [34;1m'PS_STATSDATA_PLUGINS'[0m,[0m [32;1m1[0m,[0m [37mNOW()[0m,[0m
-    [37mNOW()[0m
+    [34;1m'PS_STATSDATA_PLUGINS'[0m,[0m
+    [32;1m1[0m,[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
   )
 ---
 [37mINSERT[0m [37mINTO[0m [35;1m`PREFIX_configuration`[0m (
@@ -623,8 +654,8 @@
       ),[0m
       [32;1m0[0m
     ),[0m
-    [37mNOW()[0m,[0m
-    [37mNOW()[0m
+    [37mNOW[0m(),[0m
+    [37mNOW[0m()
   )
 ---
 [37mCREATE[0m [37mTEMPORARY[0m [37mTABLE[0m [35;1m`PREFIX_configuration_tmp`[0m ([35;1m`value`[0m text[0m)
