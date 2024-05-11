@@ -16,6 +16,7 @@ use function array_shift;
 use function array_unshift;
 use function assert;
 use function current;
+use function in_array;
 use function preg_replace;
 use function reset;
 use function rtrim;
@@ -255,6 +256,24 @@ final class SqlFormatter
                 //if SQL 'LIMIT' clause, start variable to reset newline
                 if ($token->value() === 'LIMIT' && ! $inlineParentheses) {
                     $clauseLimit = true;
+                }
+            } elseif ($token->value() === 'CASE') {
+                $increaseBlockIndent = true;
+            } elseif (in_array($token->value(), ['WHEN', 'THEN', 'ELSE', 'END'], true)) {
+                if ($token->value() !== 'THEN') {
+                    array_shift($indentTypes);
+                    $indentLevel--;
+
+                    $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
+                    if ($prevNotWhitespaceToken !== null && $prevNotWhitespaceToken->value() !== 'CASE') {
+                        $return  = rtrim($return, ' ');
+                        $return .= "\n" . str_repeat($tab, $indentLevel);
+                    }
+                }
+
+                if ($token->value() === 'THEN' || $token->value() === 'ELSE') {
+                    $newline             = true;
+                    $increaseBlockIndent = true;
                 }
             } elseif (
                 $clauseLimit &&

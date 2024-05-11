@@ -1007,3 +1007,35 @@ WINDOW
 ---
 SELECT
   1 :: text;
+---
+SELECT
+  CASE WHEN name = 1 THEN
+    10
+  WHEN name = 2 THEN
+    20
+  WHEN name = 3 THEN
+    CASE WHEN age > 10 THEN
+      30
+    ELSE
+      31
+    END
+  ELSE
+    40
+  END;
+---
+SELECT
+  CASE name
+  WHEN 1 THEN
+    10
+  WHEN 2 THEN
+    20
+  WHEN 3 THEN
+    CASE age
+    WHEN 10 THEN
+      30
+    ELSE
+      31
+    END
+  ELSE
+    40
+  END;

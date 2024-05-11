@@ -304,3 +304,35 @@ FROM t1
 WINDOW w1 AS (PARTITION BY department, division), w2 AS (w1 ORDER BY hire_date);
 ---
 SELECT 1::text;
+---
+SELECT
+  case when name = 1 then
+    10
+  when name = 2 then
+    20
+  when name = 3 then
+    case when age > 10 then
+      30
+    else
+      31
+    end
+  else
+    40
+  end;
+---
+SELECT
+  case name
+    when 1 then
+      10
+    when 2 then
+      20
+    when 3 then
+      case age
+        when 10 then
+          30
+        else
+          31
+      end
+    else
+      40
+  end;
