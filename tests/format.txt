@@ -1021,21 +1021,25 @@ SELECT
     END
   ELSE
     40
-  END;
----
-SELECT
-  CASE name
-  WHEN 1 THEN
-    10
-  WHEN 2 THEN
-    20
-  WHEN 3 THEN
-    CASE age
-    WHEN 10 THEN
-      30
-    ELSE
-      31
-    END
-  ELSE
-    40
-  END;
+  END AS case1,
+  (
+    SELECT
+      CASE name
+      WHEN 1 THEN
+        10
+      WHEN 2 THEN
+        20
+      WHEN 3 THEN
+        CASE age
+        WHEN 10 THEN
+          30
+        ELSE
+          31
+        END
+      ELSE
+        40
+      END
+  ) case2,
+  name
+FROM
+  user

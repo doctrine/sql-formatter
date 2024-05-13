@@ -1023,21 +1023,25 @@
     [37mEND[0m
   [37mELSE[0m
     [32;1m40[0m
-  [37mEND[0m;[0m
----
-[37mSELECT[0m
-  [37mCASE[0m name[0m
-  [37mWHEN[0m [32;1m1[0m [37mTHEN[0m
-    [32;1m10[0m
-  [37mWHEN[0m [32;1m2[0m [37mTHEN[0m
-    [32;1m20[0m
-  [37mWHEN[0m [32;1m3[0m [37mTHEN[0m
-    [37mCASE[0m age[0m
-    [37mWHEN[0m [32;1m10[0m [37mTHEN[0m
-      [32;1m30[0m
-    [37mELSE[0m
-      [32;1m31[0m
-    [37mEND[0m
-  [37mELSE[0m
-    [32;1m40[0m
-  [37mEND[0m;[0m
+  [37mEND[0m [37mAS[0m case1[0m,[0m
+  (
+    [37mSELECT[0m
+      [37mCASE[0m name[0m
+      [37mWHEN[0m [32;1m1[0m [37mTHEN[0m
+        [32;1m10[0m
+      [37mWHEN[0m [32;1m2[0m [37mTHEN[0m
+        [32;1m20[0m
+      [37mWHEN[0m [32;1m3[0m [37mTHEN[0m
+        [37mCASE[0m age[0m
+        [37mWHEN[0m [32;1m10[0m [37mTHEN[0m
+          [32;1m30[0m
+        [37mELSE[0m
+          [32;1m31[0m
+        [37mEND[0m
+      [37mELSE[0m
+        [32;1m40[0m
+      [37mEND[0m
+  ) case2[0m,[0m
+  name[0m
+[37mFROM[0m
+  user[0m
