@@ -9,7 +9,6 @@ use Doctrine\SqlFormatter\HtmlHighlighter;
 use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
 use Generator;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
@@ -23,7 +22,6 @@ use function pack;
 use function sprintf;
 use function trim;
 
-#[CoversClass(SqlFormatter::class)]
 final class SqlFormatterTest extends TestCase
 {
     private SqlFormatter $formatter;

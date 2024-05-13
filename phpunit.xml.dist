@@ -7,8 +7,6 @@
          beStrictAboutOutputDuringTests="true"
          colors="true"
          cacheDirectory=".phpunit.cache"
-         requireCoverageMetadata="true"
-         beStrictAboutCoverageMetadata="true"
 >
     <testsuites>
         <testsuite name="default">
