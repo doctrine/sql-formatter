@@ -306,35 +306,35 @@ JOIN</span> <span style="color: #333;">c</span> <span style="font-weight:bold;">
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span> <span style="color: green;">1</span><span >::</span><span style="color: #333;">text</span><span >;</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
-  <span style="font-weight:bold;">CASE</span> <span style="font-weight:bold;">WHEN</span> <span style="color: #333;">name</span> <span >=</span> <span style="color: green;">1</span> <span style="font-weight:bold;">THEN</span>
+  <span style="font-weight:bold;">case</span> <span style="font-weight:bold;">when</span> <span style="color: #333;">name</span> <span >=</span> <span style="color: green;">1</span> <span style="font-weight:bold;">then</span>
     <span style="color: green;">10</span>
-  <span style="font-weight:bold;">WHEN</span> <span style="color: #333;">name</span> <span >=</span> <span style="color: green;">2</span> <span style="font-weight:bold;">THEN</span>
+  <span style="font-weight:bold;">when</span> <span style="color: #333;">name</span> <span >=</span> <span style="color: green;">2</span> <span style="font-weight:bold;">then</span>
     <span style="color: green;">20</span>
-  <span style="font-weight:bold;">WHEN</span> <span style="color: #333;">name</span> <span >=</span> <span style="color: green;">3</span> <span style="font-weight:bold;">THEN</span>
-    <span style="font-weight:bold;">CASE</span> <span style="font-weight:bold;">WHEN</span> <span style="color: #333;">age</span> <span >&gt;</span> <span style="color: green;">10</span> <span style="font-weight:bold;">THEN</span>
+  <span style="font-weight:bold;">when</span> <span style="color: #333;">name</span> <span >=</span> <span style="color: green;">3</span> <span style="font-weight:bold;">then</span>
+    <span style="font-weight:bold;">case</span> <span style="font-weight:bold;">when</span> <span style="color: #333;">age</span> <span >&gt;</span> <span style="color: green;">10</span> <span style="font-weight:bold;">then</span>
       <span style="color: green;">30</span>
-    <span style="font-weight:bold;">ELSE</span>
+    <span style="font-weight:bold;">else</span>
       <span style="color: green;">31</span>
-    <span style="font-weight:bold;">END</span>
-  <span style="font-weight:bold;">ELSE</span>
+    <span style="font-weight:bold;">end</span>
+  <span style="font-weight:bold;">else</span>
     <span style="color: green;">40</span>
-  <span style="font-weight:bold;">END</span> <span style="font-weight:bold;">AS</span> <span style="color: #333;">case1</span><span >,</span>
+  <span style="font-weight:bold;">end</span> <span style="font-weight:bold;">AS</span> <span style="color: #333;">case1</span><span >,</span>
   (<span style="font-weight:bold;">SELECT</span>
-    <span style="font-weight:bold;">CASE</span> <span style="color: #333;">name</span>
-      <span style="font-weight:bold;">WHEN</span> <span style="color: green;">1</span> <span style="font-weight:bold;">THEN</span>
+    <span style="font-weight:bold;">case</span> <span style="color: #333;">name</span>
+      <span style="font-weight:bold;">when</span> <span style="color: green;">1</span> <span style="font-weight:bold;">then</span>
         <span style="color: green;">10</span>
-      <span style="font-weight:bold;">WHEN</span> <span style="color: green;">2</span> <span style="font-weight:bold;">THEN</span>
+      <span style="font-weight:bold;">when</span> <span style="color: green;">2</span> <span style="font-weight:bold;">then</span>
         <span style="color: green;">20</span>
-      <span style="font-weight:bold;">WHEN</span> <span style="color: green;">3</span> <span style="font-weight:bold;">THEN</span>
-        <span style="font-weight:bold;">CASE</span> <span style="color: #333;">age</span>
-          <span style="font-weight:bold;">WHEN</span> <span style="color: green;">10</span> <span style="font-weight:bold;">THEN</span>
+      <span style="font-weight:bold;">when</span> <span style="color: green;">3</span> <span style="font-weight:bold;">then</span>
+        <span style="font-weight:bold;">case</span> <span style="color: #333;">age</span>
+          <span style="font-weight:bold;">when</span> <span style="color: green;">10</span> <span style="font-weight:bold;">then</span>
             <span style="color: green;">30</span>
-          <span style="font-weight:bold;">ELSE</span>
+          <span style="font-weight:bold;">else</span>
             <span style="color: green;">31</span>
-        <span style="font-weight:bold;">END</span>
-      <span style="font-weight:bold;">ELSE</span>
+        <span style="font-weight:bold;">end</span>
+      <span style="font-weight:bold;">else</span>
         <span style="color: green;">40</span>
-  <span style="font-weight:bold;">END</span>) <span style="color: #333;">case2</span><span >,</span>
+  <span style="font-weight:bold;">end</span>) <span style="color: #333;">case2</span><span >,</span>
   <span style="color: #333;">name</span>
 <span style="font-weight:bold;">FROM</span>
   <span style="color: #333;">user</span></pre>

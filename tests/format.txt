@@ -1009,36 +1009,36 @@ SELECT
   1 :: text;
 ---
 SELECT
-  CASE WHEN name = 1 THEN
+  case when name = 1 then
     10
-  WHEN name = 2 THEN
+  when name = 2 then
     20
-  WHEN name = 3 THEN
-    CASE WHEN age > 10 THEN
+  when name = 3 then
+    case when age > 10 then
       30
-    ELSE
+    else
       31
-    END
-  ELSE
+    end
+  else
     40
-  END AS case1,
+  end AS case1,
   (
     SELECT
-      CASE name
-      WHEN 1 THEN
+      case name
+      when 1 then
         10
-      WHEN 2 THEN
+      when 2 then
         20
-      WHEN 3 THEN
-        CASE age
-        WHEN 10 THEN
+      when 3 then
+        case age
+        when 10 then
           30
-        ELSE
+        else
           31
-        END
-      ELSE
+        end
+      else
         40
-      END
+      end
   ) case2,
   name
 FROM

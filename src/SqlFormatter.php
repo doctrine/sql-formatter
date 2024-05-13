@@ -23,6 +23,7 @@ use function rtrim;
 use function str_repeat;
 use function str_replace;
 use function strlen;
+use function strtoupper;
 use function trim;
 
 use const PHP_SAPI;
@@ -253,25 +254,25 @@ final class SqlFormatter
                     $highlighted = preg_replace('/\s+/', ' ', $highlighted);
                 }
 
-                //if SQL 'LIMIT' clause, start variable to reset newline
-                if ($token->value() === 'LIMIT' && ! $inlineParentheses) {
+                // if SQL 'LIMIT' clause, start variable to reset newline
+                if (strtoupper($token->value()) === 'LIMIT' && ! $inlineParentheses) {
                     $clauseLimit = true;
                 }
-            } elseif ($token->value() === 'CASE') {
+            } elseif (strtoupper($token->value()) === 'CASE') {
                 $increaseBlockIndent = true;
-            } elseif (in_array($token->value(), ['WHEN', 'THEN', 'ELSE', 'END'], true)) {
-                if ($token->value() !== 'THEN') {
+            } elseif (in_array(strtoupper($token->value()), ['WHEN', 'THEN', 'ELSE', 'END'], true)) {
+                if (strtoupper($token->value()) !== 'THEN') {
                     array_shift($indentTypes);
                     $indentLevel--;
 
                     $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
-                    if ($prevNotWhitespaceToken !== null && $prevNotWhitespaceToken->value() !== 'CASE') {
+                    if ($prevNotWhitespaceToken !== null && strtoupper($prevNotWhitespaceToken->value()) !== 'CASE') {
                         $return  = rtrim($return, ' ');
                         $return .= "\n" . str_repeat($tab, $indentLevel);
                     }
                 }
 
-                if ($token->value() === 'THEN' || $token->value() === 'ELSE') {
+                if (strtoupper($token->value()) === 'THEN' || strtoupper($token->value()) === 'ELSE') {
                     $newline             = true;
                     $increaseBlockIndent = true;
                 }
@@ -284,7 +285,7 @@ final class SqlFormatter
                 $clauseLimit = false;
             } elseif ($token->value() === ',' && ! $inlineParentheses) {
                 // Commas start a new line (unless within inline parentheses or SQL 'LIMIT' clause)
-                //If the previous TOKEN_VALUE is 'LIMIT', resets new line
+                // If the previous TOKEN_VALUE is 'LIMIT', resets new line
                 if ($clauseLimit === true) {
                     $newline     = false;
                     $clauseLimit = false;

@@ -8,23 +8,23 @@ use Doctrine\SqlFormatter\SqlFormatter;
 
 $formatter = new SqlFormatter();
 
-//the sample query file is filled with install scripts for PrestaShop
-//and some sample catalog data from Magento
+// the sample query file is filled with install scripts for PrestaShop
+// and some sample catalog data from Magento
 $contents = file_get_contents(__DIR__ . '/sql.sql');
 
 assert($contents !== false);
 $queries = explode("\n---\n", $contents);
 
-//track time and memory usage
+// track time and memory usage
 $start  = microtime(true);
 $ustart = memory_get_usage(true);
 
-//track number of queries and size of queries
+// track number of queries and size of queries
 $num   = 0;
 $chars = 0;
 
 foreach ($queries as $query) {
-    //do formatting and highlighting
+    // do formatting and highlighting
     $formatter->format($query);
 
     $num++;
