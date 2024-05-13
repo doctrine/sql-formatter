@@ -131,19 +131,19 @@ final class SqlFormatterTest extends TestCase
     /** @return Generator<mixed[]> */
     public static function highlightCliData(): Generator
     {
-        return self::fileDataProvider('clihighlight.html');
+        return self::fileDataProvider('clihighlight.txt');
     }
 
     /** @return Generator<mixed[]> */
     public static function formatData(): Generator
     {
-        return self::fileDataProvider('format.html');
+        return self::fileDataProvider('format.txt');
     }
 
     /** @return Generator<mixed[]> */
     public static function compressData(): Generator
     {
-        return self::fileDataProvider('compress.html');
+        return self::fileDataProvider('compress.txt');
     }
 
     /** @return Generator<mixed[]> */
