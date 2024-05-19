@@ -256,6 +256,15 @@ final class SqlFormatter
                 if ($token->value() === 'LIMIT' && ! $inlineParentheses) {
                     $clauseLimit = true;
                 }
+            } elseif ($token->value() === ';') {
+                // If the last indent type was 'special', decrease the special indent for this round
+                reset($indentTypes);
+                if (current($indentTypes) === 'special') {
+                    $indentLevel--;
+                    array_shift($indentTypes);
+                }
+
+                $newline = true;
             } elseif (
                 $clauseLimit &&
                 $token->value() !== ',' &&
