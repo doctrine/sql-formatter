@@ -33,6 +33,9 @@ final class SqlFormatter
     private readonly Highlighter $highlighter;
     private readonly Tokenizer $tokenizer;
 
+    private const INDENT_TYPE_BLOCK   = 'block';
+    private const INDENT_TYPE_SPECIAL = 'special';
+
     public function __construct(Highlighter|null $highlighter = null)
     {
         $this->tokenizer   = new Tokenizer();
@@ -79,14 +82,14 @@ final class SqlFormatter
             if ($increaseSpecialIndent) {
                 $indentLevel++;
                 $increaseSpecialIndent = false;
-                array_unshift($indentTypes, 'special');
+                array_unshift($indentTypes, self::INDENT_TYPE_SPECIAL);
             }
 
             // If we are increasing the block indent level now
             if ($increaseBlockIndent) {
                 $indentLevel++;
                 $increaseBlockIndent = false;
-                array_unshift($indentTypes, 'block');
+                array_unshift($indentTypes, self::INDENT_TYPE_BLOCK);
             }
 
             // If we need a new line before the token
@@ -209,7 +212,7 @@ final class SqlFormatter
 
                 // Reset indent level
                 while ($j = array_shift($indentTypes)) {
-                    if ($j !== 'special') {
+                    if ($j !== self::INDENT_TYPE_SPECIAL) {
                         break;
                     }
 
@@ -232,9 +235,9 @@ final class SqlFormatter
                 // Top level reserved words start a new line and increase the special indent level
                 $increaseSpecialIndent = true;
 
-                // If the last indent type was 'special', decrease the special indent for this round
+                // If the last indent type was special, decrease the special indent for this round
                 reset($indentTypes);
-                if (current($indentTypes) === 'special') {
+                if (current($indentTypes) === self::INDENT_TYPE_SPECIAL) {
                     $indentLevel--;
                     array_shift($indentTypes);
                 }
@@ -361,7 +364,7 @@ final class SqlFormatter
         }
 
         // If there are unmatched parentheses
-        if (array_search('block', $indentTypes) !== false) {
+        if (array_search(self::INDENT_TYPE_BLOCK, $indentTypes) !== false) {
             $return  = rtrim($return, ' ');
             $return .= $this->highlighter->highlightErrorMessage(
                 'WARNING: unclosed parentheses or section',
