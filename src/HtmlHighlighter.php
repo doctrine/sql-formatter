@@ -10,7 +10,6 @@ use function trim;
 
 use const ENT_COMPAT;
 use const ENT_IGNORE;
-use const PHP_EOL;
 
 final class HtmlHighlighter implements Highlighter
 {
@@ -70,7 +69,7 @@ final class HtmlHighlighter implements Highlighter
     {
         return sprintf(
             '%s<span %s>%s</span>',
-            PHP_EOL,
+            "\n",
             $this->htmlAttributes[self::HIGHLIGHT_ERROR],
             $value,
         );

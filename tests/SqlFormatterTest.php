@@ -19,8 +19,8 @@ use function defined;
 use function explode;
 use function file_get_contents;
 use function pack;
+use function rtrim;
 use function sprintf;
-use function trim;
 
 final class SqlFormatterTest extends TestCase
 {
@@ -37,20 +37,20 @@ final class SqlFormatterTest extends TestCase
     #[DataProvider('formatHighlightData')]
     public function testFormatHighlight(string $sql, string $html): void
     {
-        $this->assertEquals(trim($html), trim($this->formatter->format($sql)));
+        $this->assertSame($html, $this->formatter->format($sql));
     }
 
     #[DataProvider('formatData')]
     public function testFormat(string $sql, string $html): void
     {
         $formatter = new SqlFormatter(new NullHighlighter());
-        $this->assertEquals(trim($html), trim($formatter->format($sql)));
+        $this->assertSame($html, $formatter->format($sql));
     }
 
     #[DataProvider('highlightData')]
     public function testHighlight(string $sql, string $html): void
     {
-        $this->assertEquals(trim($html), trim($this->formatter->highlight($sql)));
+        $this->assertSame($html, $this->formatter->highlight($sql));
     }
 
     public function testHighlightBinary(): void
@@ -69,20 +69,20 @@ final class SqlFormatterTest extends TestCase
             $binaryData .
             '</span> <span style="font-weight:bold;">AS</span> <span style="color: #333;">BINARY</span></pre>';
 
-        $this->assertEquals(trim($html), trim($this->formatter->highlight($sql)));
+        $this->assertSame($html, $this->formatter->highlight($sql));
     }
 
     #[DataProvider('highlightCliData')]
     public function testCliHighlight(string $sql, string $html): void
     {
         $formatter = new SqlFormatter(new CliHighlighter());
-        $this->assertEquals(trim($html), trim($formatter->format($sql)));
+        $this->assertSame($html . "\n", $formatter->format($sql));
     }
 
     #[DataProvider('compressData')]
     public function testCompress(string $sql, string $html): void
     {
-        $this->assertEquals(trim($html), trim($this->formatter->compress($sql)));
+        $this->assertSame($html, $this->formatter->compress($sql));
     }
 
     public function testUsePre(): void
@@ -90,13 +90,13 @@ final class SqlFormatterTest extends TestCase
         $formatter = new SqlFormatter(new HtmlHighlighter([], false));
         $actual    = $formatter->highlight('test');
         $expected  = '<span style="color: #333;">test</span>';
-        $this->assertEquals($actual, $expected);
+        $this->assertSame($actual, $expected);
 
         $formatter = new SqlFormatter(new HtmlHighlighter([], true));
         $actual    = $formatter->highlight('test');
         $expected  = '<pre style="color: black; background-color: white;">' .
             '<span style="color: #333;">test</span></pre>';
-        $this->assertEquals($actual, $expected);
+        $this->assertSame($actual, $expected);
     }
 
     /** @return Generator<mixed[]> */
@@ -104,7 +104,7 @@ final class SqlFormatterTest extends TestCase
     {
         $contents = file_get_contents(__DIR__ . '/' . $file);
         assert($contents !== false);
-        $formatHighlightData = explode("\n---\n", $contents);
+        $formatHighlightData = explode("\n---\n", rtrim($contents, "\n"));
         $sqlData             = self::sqlData();
         if (count($formatHighlightData) !== count($sqlData)) {
             throw new UnexpectedValueException(sprintf(
@@ -156,6 +156,6 @@ final class SqlFormatterTest extends TestCase
         $contents = file_get_contents(__DIR__ . '/sql.sql');
         assert($contents !== false);
 
-        return explode("\n---\n", $contents);
+        return explode("\n---\n", rtrim($contents, "\n"));
     }
 }

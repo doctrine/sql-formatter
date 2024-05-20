@@ -6,8 +6,6 @@ namespace Doctrine\SqlFormatter;
 
 use function sprintf;
 
-use const PHP_EOL;
-
 final class CliHighlighter implements Highlighter
 {
     public const HIGHLIGHT_FUNCTIONS = 'functions';
@@ -59,7 +57,7 @@ final class CliHighlighter implements Highlighter
     {
         return sprintf(
             '%s%s%s%s',
-            PHP_EOL,
+            "\n",
             $this->escapeSequences[self::HIGHLIGHT_ERROR],
             $value,
             "\x1b[0m",
