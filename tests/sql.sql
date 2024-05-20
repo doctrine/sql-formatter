@@ -305,6 +305,24 @@ WINDOW w1 AS (PARTITION BY department, division), w2 AS (w1 ORDER BY hire_date);
 ---
 SELECT 1::text;
 ---
+-- semicolon must decrease special indentation level
+MY_NON_TOP_LEVEL_KEYWORD_FX_1();
+MY_NON_TOP_LEVEL_KEYWORD_FX_2();
+SELECT x
+FROM
+  (SELECT 1 as x);
+MY_NON_TOP_LEVEL_KEYWORD_FX_3();
+BEGIN
+    MY_NON_TOP_LEVEL_KEYWORD_FX_4();
+    MY_NON_TOP_LEVEL_KEYWORD_FX_5();
+END;
+BEGIN
+  SELECT x
+  FROM
+    (SELECT 1 as x);
+  MY_NON_TOP_LEVEL_KEYWORD_FX_6();
+END;
+---
 SELECT
   case when name = 1 then
     10

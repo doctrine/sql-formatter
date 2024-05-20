@@ -1010,6 +1010,31 @@
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
   <span style="color: green;">1</span> <span >::</span> <span style="color: #333;">text</span><span >;</span></pre>
 ---
+<pre style="color: black; background-color: white;"><span style="color: #aaa;">-- semicolon must decrease special indentation level</span>
+<span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_1</span>()<span >;</span>
+<span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_2</span>()<span >;</span>
+<span style="font-weight:bold;">SELECT</span>
+  <span style="color: #333;">x</span>
+<span style="font-weight:bold;">FROM</span>
+  (
+    <span style="font-weight:bold;">SELECT</span>
+      <span style="color: green;">1</span> <span style="font-weight:bold;">as</span> <span style="color: #333;">x</span>
+  )<span >;</span>
+<span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_3</span>()<span >;</span>
+<span style="font-weight:bold;">BEGIN</span> <span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_4</span>()<span >;</span>
+<span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_5</span>()<span >;</span>
+<span style="font-weight:bold;">END</span><span >;</span>
+<span style="font-weight:bold;">BEGIN</span>
+<span style="font-weight:bold;">SELECT</span>
+  <span style="color: #333;">x</span>
+<span style="font-weight:bold;">FROM</span>
+  (
+    <span style="font-weight:bold;">SELECT</span>
+      <span style="color: green;">1</span> <span style="font-weight:bold;">as</span> <span style="color: #333;">x</span>
+  )<span >;</span>
+<span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_6</span>()<span >;</span>
+<span style="font-weight:bold;">END</span><span >;</span></pre>
+---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
   <span style="font-weight:bold;">case</span> <span style="font-weight:bold;">when</span> <span style="color: #333;">name</span> <span >=</span> <span style="color: green;">1</span> <span style="font-weight:bold;">then</span>
     <span style="color: green;">10</span>
