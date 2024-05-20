@@ -233,7 +233,7 @@ final class SqlFormatter
                 // Top level reserved words start a new line and increase the special indent level
                 $increaseSpecialIndent = true;
 
-                // If the last indent type was self::INDENT_TYPE_SPECIAL, decrease the special indent for this round
+                // If the last indent type was special, decrease the special indent for this round
                 reset($indentTypes);
                 if (current($indentTypes) === self::INDENT_TYPE_SPECIAL) {
                     $indentLevel--;
