@@ -1021,18 +1021,19 @@
       <span style="color: green;">1</span> <span style="font-weight:bold;">as</span> <span style="color: #333;">x</span>
   )<span >;</span>
 <span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_3</span>()<span >;</span>
-<span style="font-weight:bold;">BEGIN</span> <span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_4</span>()<span >;</span>
-<span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_5</span>()<span >;</span>
+<span style="font-weight:bold;">BEGIN</span>
+  <span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_4</span>()<span >;</span>
+  <span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_5</span>()<span >;</span>
 <span style="font-weight:bold;">END</span><span >;</span>
 <span style="font-weight:bold;">BEGIN</span>
-<span style="font-weight:bold;">SELECT</span>
-  <span style="color: #333;">x</span>
-<span style="font-weight:bold;">FROM</span>
-  (
-    <span style="font-weight:bold;">SELECT</span>
-      <span style="color: green;">1</span> <span style="font-weight:bold;">as</span> <span style="color: #333;">x</span>
-  )<span >;</span>
-<span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_6</span>()<span >;</span>
+  <span style="font-weight:bold;">SELECT</span>
+    <span style="color: #333;">x</span>
+  <span style="font-weight:bold;">FROM</span>
+    (
+      <span style="font-weight:bold;">SELECT</span>
+        <span style="color: green;">1</span> <span style="font-weight:bold;">as</span> <span style="color: #333;">x</span>
+    )<span >;</span>
+  <span style="color: #333;">MY_NON_TOP_LEVEL_KEYWORD_FX_6</span>()<span >;</span>
 <span style="font-weight:bold;">END</span><span >;</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
@@ -1070,3 +1071,30 @@
   <span style="color: #333;">name</span>
 <span style="font-weight:bold;">FROM</span>
   <span style="color: #333;">user</span></pre>
+---
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">begin</span>
+  <span style="color: #333;">try</span> <span style="font-weight:bold;">insert</span> <span style="font-weight:bold;">into</span> <span style="color: purple;">[t]</span> (<span style="color: purple;">[name]</span><span >,</span> <span style="color: purple;">[int]</span><span >,</span> <span style="color: purple;">[float]</span><span >,</span> <span style="color: purple;">[null]</span>)
+  <span style="font-weight:bold;">values</span>
+    (<span style="color: #333;">N</span> <span style="color: blue;">'Ewa'</span><span >,</span> <span style="color: green;">1</span><span >,</span> <span style="color: green;">1.0</span><span >,</span> <span style="font-weight:bold;">null</span>)<span >;</span>
+<span style="font-weight:bold;">end</span> <span style="color: #333;">try</span> <span style="font-weight:bold;">begin</span>
+  <span style="color: #333;">catch</span> <span style="font-weight:bold;">if</span> <span style="color: #333;">ERROR_NUMBER</span>() <span >=</span> <span style="color: green;">544</span> <span style="font-weight:bold;">begin</span>
+    <span style="font-weight:bold;">set</span>
+      <span style="color: #333;">IDENTITY_INSERT</span> <span style="color: purple;">[t]</span> <span style="font-weight:bold;">on</span><span >;</span>
+    <span style="font-weight:bold;">begin</span>
+      <span style="color: #333;">try</span> <span style="font-weight:bold;">insert</span> <span style="font-weight:bold;">into</span> <span style="color: purple;">[t]</span> (<span style="color: purple;">[name]</span><span >,</span> <span style="color: purple;">[int]</span><span >,</span> <span style="color: purple;">[float]</span><span >,</span> <span style="color: purple;">[null]</span>)
+      <span style="font-weight:bold;">values</span>
+        (<span style="color: #333;">N</span> <span style="color: blue;">'Ewa'</span><span >,</span> <span style="color: green;">1</span><span >,</span> <span style="color: green;">1.0</span><span >,</span> <span style="font-weight:bold;">null</span>)<span >;</span>
+      <span style="font-weight:bold;">set</span>
+        <span style="color: #333;">IDENTITY_INSERT</span> <span style="color: purple;">[t]</span> <span style="color: #333;">off</span><span >;</span>
+    <span style="font-weight:bold;">end</span> <span style="color: #333;">try</span> <span style="font-weight:bold;">begin</span>
+      <span style="color: #333;">catch</span>
+      <span style="font-weight:bold;">set</span>
+        <span style="color: #333;">IDENTITY_INSERT</span> <span style="color: purple;">[t]</span> <span style="color: #333;">off</span><span >;</span>
+      <span style="color: #333;">throw</span><span >;</span>
+    <span style="font-weight:bold;">end</span> <span style="color: #333;">catch</span>
+  <span style="font-weight:bold;">end</span>
+<span style="font-weight:bold;">else</span>
+  <span style="font-weight:bold;">begin</span>
+    <span style="color: #333;">throw</span><span >;</span>
+  <span style="font-weight:bold;">end</span>
+<span style="font-weight:bold;">end</span> <span style="color: #333;">catch</span></pre>

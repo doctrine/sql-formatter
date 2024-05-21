@@ -1021,18 +1021,19 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_2[0m();[0m
       [32;1m1[0m [37mas[0m x[0m
   );[0m
 MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
-[37mBEGIN[0m MY_NON_TOP_LEVEL_KEYWORD_FX_4[0m();[0m
-MY_NON_TOP_LEVEL_KEYWORD_FX_5[0m();[0m
+[37mBEGIN[0m
+  MY_NON_TOP_LEVEL_KEYWORD_FX_4[0m();[0m
+  MY_NON_TOP_LEVEL_KEYWORD_FX_5[0m();[0m
 [37mEND[0m;[0m
 [37mBEGIN[0m
-[37mSELECT[0m
-  x[0m
-[37mFROM[0m
-  (
-    [37mSELECT[0m
-      [32;1m1[0m [37mas[0m x[0m
-  );[0m
-MY_NON_TOP_LEVEL_KEYWORD_FX_6[0m();[0m
+  [37mSELECT[0m
+    x[0m
+  [37mFROM[0m
+    (
+      [37mSELECT[0m
+        [32;1m1[0m [37mas[0m x[0m
+    );[0m
+  MY_NON_TOP_LEVEL_KEYWORD_FX_6[0m();[0m
 [37mEND[0m;[0m
 ---
 [37mSELECT[0m
@@ -1070,3 +1071,30 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_6[0m();[0m
   name[0m
 [37mFROM[0m
   user[0m
+---
+[37mbegin[0m
+  try[0m [37minsert[0m [37minto[0m [35;1m[t][0m ([35;1m[name][0m,[0m [35;1m[int][0m,[0m [35;1m[float][0m,[0m [35;1m[null][0m)
+  [37mvalues[0m
+    (N[0m [34;1m'Ewa'[0m,[0m [32;1m1[0m,[0m [32;1m1.0[0m,[0m [37mnull[0m);[0m
+[37mend[0m try[0m [37mbegin[0m
+  catch[0m [37mif[0m ERROR_NUMBER[0m() =[0m [32;1m544[0m [37mbegin[0m
+    [37mset[0m
+      IDENTITY_INSERT[0m [35;1m[t][0m [37mon[0m;[0m
+    [37mbegin[0m
+      try[0m [37minsert[0m [37minto[0m [35;1m[t][0m ([35;1m[name][0m,[0m [35;1m[int][0m,[0m [35;1m[float][0m,[0m [35;1m[null][0m)
+      [37mvalues[0m
+        (N[0m [34;1m'Ewa'[0m,[0m [32;1m1[0m,[0m [32;1m1.0[0m,[0m [37mnull[0m);[0m
+      [37mset[0m
+        IDENTITY_INSERT[0m [35;1m[t][0m off[0m;[0m
+    [37mend[0m try[0m [37mbegin[0m
+      catch[0m
+      [37mset[0m
+        IDENTITY_INSERT[0m [35;1m[t][0m off[0m;[0m
+      throw[0m;[0m
+    [37mend[0m catch[0m
+  [37mend[0m
+[37melse[0m
+  [37mbegin[0m
+    throw[0m;[0m
+  [37mend[0m
+[37mend[0m catch[0m
