@@ -356,3 +356,27 @@ SELECT
   name
 FROM
   user
+---
+begin try
+  insert into [t] ([name], [int], [float], [null])
+  values (N'Ewa', 1, 1.0, null);
+end try
+begin catch
+  if ERROR_NUMBER() = 544
+    begin
+      set IDENTITY_INSERT [t] on;
+      begin try
+        insert into [t] ([name], [int], [float], [null])
+          values (N'Ewa', 1, 1.0, null);
+        set IDENTITY_INSERT [t] off;
+      end try
+      begin catch
+        set IDENTITY_INSERT [t] off;
+        throw;
+      end catch
+    end
+  else
+    begin
+      throw;
+    end
+end catch

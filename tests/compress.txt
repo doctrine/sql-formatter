@@ -97,3 +97,5 @@ SELECT 1::text;
 MY_NON_TOP_LEVEL_KEYWORD_FX_1(); MY_NON_TOP_LEVEL_KEYWORD_FX_2(); SELECT x FROM (SELECT 1 as x); MY_NON_TOP_LEVEL_KEYWORD_FX_3(); BEGIN MY_NON_TOP_LEVEL_KEYWORD_FX_4(); MY_NON_TOP_LEVEL_KEYWORD_FX_5(); END; BEGIN SELECT x FROM (SELECT 1 as x); MY_NON_TOP_LEVEL_KEYWORD_FX_6(); END;
 ---
 SELECT case when name = 1 then 10 when name = 2 then 20 when name = 3 then case when age > 10 then 30 else 31 end else 40 end AS case1, (SELECT case name when 1 then 10 when 2 then 20 when 3 then case age when 10 then 30 else 31 end else 40 end) case2, name FROM user
+---
+begin try insert into [t] ([name], [int], [float], [null]) values (N'Ewa', 1, 1.0, null); end try begin catch if ERROR_NUMBER() = 544 begin set IDENTITY_INSERT [t] on; begin try insert into [t] ([name], [int], [float], [null]) values (N'Ewa', 1, 1.0, null); set IDENTITY_INSERT [t] off; end try begin catch set IDENTITY_INSERT [t] off; throw; end catch end else begin throw; end end catch
