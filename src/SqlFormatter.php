@@ -261,6 +261,15 @@ final class SqlFormatter
                 if (strtoupper($token->value()) === 'LIMIT' && ! $inlineParentheses) {
                     $clauseLimit = true;
                 }
+            } elseif ($token->value() === ';') {
+                // If the last indent type was special, decrease the special indent for this round
+                reset($indentTypes);
+                if (current($indentTypes) === self::INDENT_TYPE_SPECIAL) {
+                    $indentLevel--;
+                    array_shift($indentTypes);
+                }
+
+                $newline = true;
             } elseif (strtoupper($token->value()) === 'CASE') {
                 $increaseBlockIndent = true;
             } elseif (in_array(strtoupper($token->value()), ['WHEN', 'THEN', 'ELSE', 'END'], true)) {

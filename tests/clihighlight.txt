@@ -1010,6 +1010,31 @@
 [37mSELECT[0m
   [32;1m1[0m ::[0m text[0m;[0m
 ---
+[30;1m-- semicolon must decrease special indentation level[0m
+MY_NON_TOP_LEVEL_KEYWORD_FX_1[0m();[0m
+MY_NON_TOP_LEVEL_KEYWORD_FX_2[0m();[0m
+[37mSELECT[0m
+  x[0m
+[37mFROM[0m
+  (
+    [37mSELECT[0m
+      [32;1m1[0m [37mas[0m x[0m
+  );[0m
+MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
+[37mBEGIN[0m MY_NON_TOP_LEVEL_KEYWORD_FX_4[0m();[0m
+MY_NON_TOP_LEVEL_KEYWORD_FX_5[0m();[0m
+[37mEND[0m;[0m
+[37mBEGIN[0m
+[37mSELECT[0m
+  x[0m
+[37mFROM[0m
+  (
+    [37mSELECT[0m
+      [32;1m1[0m [37mas[0m x[0m
+  );[0m
+MY_NON_TOP_LEVEL_KEYWORD_FX_6[0m();[0m
+[37mEND[0m;[0m
+---
 [37mSELECT[0m
   [37mcase[0m [37mwhen[0m name[0m =[0m [32;1m1[0m [37mthen[0m
     [32;1m10[0m
