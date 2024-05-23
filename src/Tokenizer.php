@@ -725,11 +725,14 @@ final class Tokenizer
      */
     public function __construct()
     {
-        // Sort reserved word list from longest word to shortest, 3x faster than usort
-        $reservedMap = array_combine($this->reserved, array_map(strlen(...), $this->reserved));
-        assert($reservedMap !== false);
-        arsort($reservedMap);
-        $this->reserved = array_keys($reservedMap);
+        // Sort list from longest word to shortest, 3x faster than usort
+        $sortByLengthFx = static function ($values) {
+            $valuesMap = array_combine($values, array_map(strlen(...), $values));
+            assert($valuesMap !== false);
+            arsort($valuesMap);
+
+            return array_keys($valuesMap);
+        };
 
         // Set up regular expressions
         $this->regexBoundaries       = '(' . implode(
@@ -738,18 +741,18 @@ final class Tokenizer
         ) . ')';
         $this->regexReserved         = '(' . implode(
             '|',
-            $this->quoteRegex($this->reserved),
+            $this->quoteRegex($sortByLengthFx($this->reserved)),
         ) . ')';
         $this->regexReservedToplevel = str_replace(' ', '\\s+', '(' . implode(
             '|',
-            $this->quoteRegex($this->reservedToplevel),
+            $this->quoteRegex($sortByLengthFx($this->reservedToplevel)),
         ) . ')');
         $this->regexReservedNewline  = str_replace(' ', '\\s+', '(' . implode(
             '|',
-            $this->quoteRegex($this->reservedNewline),
+            $this->quoteRegex($sortByLengthFx($this->reservedNewline)),
         ) . ')');
 
-        $this->regexFunction = '(' . implode('|', $this->quoteRegex($this->functions)) . ')';
+        $this->regexFunction = '(' . implode('|', $this->quoteRegex($sortByLengthFx($this->functions))) . ')';
     }
 
     /**
