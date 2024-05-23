@@ -11,13 +11,12 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
+use function array_pop;
 use function array_search;
-use function array_shift;
-use function array_unshift;
 use function assert;
+use function end;
 use function in_array;
 use function preg_replace;
-use function reset;
 use function rtrim;
 use function str_repeat;
 use function str_replace;
@@ -68,7 +67,7 @@ final class SqlFormatter
         $inlineIndented        = false;
         $clauseLimit           = false;
 
-        $appendNewLineIfNotAddedFx = static function () use (&$addedNewline, &$return, $tab, &$indentLevel): void {
+        $appendNewLineIfNotAddedFx  = static function () use (&$addedNewline, &$return, $tab, &$indentLevel): void {
             // Add a newline if not already added
             if ($addedNewline) { // @phpstan-ignore if.alwaysFalse
                 return;
@@ -77,7 +76,10 @@ final class SqlFormatter
             $return  = rtrim($return, ' ' . $tab);
             $return .= "\n" . str_repeat($tab, $indentLevel);
         };
-        $redoIndentationFx         = static function () use (&$return, $tab, &$indentLevel): void {
+        $decreaseIndentationLevelFx = static function () use (&$return, &$indentTypes, $tab, &$indentLevel): void {
+            array_pop($indentTypes);
+            $indentLevel--;
+
             // Redo the indentation since it may be different now
             $lastPossiblyIndentLine = substr($return, -($indentLevel + 2));
             if (rtrim($lastPossiblyIndentLine, $tab) !== "\n") {
@@ -101,14 +103,14 @@ final class SqlFormatter
             if ($increaseSpecialIndent) {
                 $indentLevel++;
                 $increaseSpecialIndent = false;
-                array_unshift($indentTypes, self::INDENT_TYPE_SPECIAL);
+                $indentTypes[]         = self::INDENT_TYPE_SPECIAL;
             }
 
             // If we are increasing the block indent level now
             if ($increaseBlockIndent) {
                 $indentLevel++;
                 $increaseBlockIndent = false;
-                array_unshift($indentTypes, self::INDENT_TYPE_BLOCK);
+                $indentTypes[]       = self::INDENT_TYPE_BLOCK;
             }
 
             // If we need a new line before the token
@@ -141,8 +143,8 @@ final class SqlFormatter
                     $return = rtrim($return, ' ');
 
                     if ($inlineIndented) {
-                        array_shift($indentTypes);
-                        $indentLevel--;
+                        $decreaseIndentationLevelFx();
+
                         $return  = rtrim($return, ' ');
                         $return .= "\n" . str_repeat($tab, $indentLevel);
                     }
@@ -227,16 +229,11 @@ final class SqlFormatter
                 // Remove whitespace before the closing parentheses
                 $return = rtrim($return, ' ');
 
-                $indentLevel--;
-
-                // Reset indent level
-                while ($j = array_shift($indentTypes)) {
-                    if ($j !== self::INDENT_TYPE_SPECIAL) {
-                        break;
-                    }
-
-                    $indentLevel--;
+                while (end($indentTypes) === self::INDENT_TYPE_SPECIAL) {
+                    $decreaseIndentationLevelFx();
                 }
+
+                $decreaseIndentationLevelFx();
 
                 if ($indentLevel < 0) {
                     // This is an error
@@ -252,10 +249,8 @@ final class SqlFormatter
                 $increaseSpecialIndent = true;
 
                 // If the last indent type was special, decrease the special indent for this round
-                if (reset($indentTypes) === self::INDENT_TYPE_SPECIAL) {
-                    $indentLevel--;
-                    array_shift($indentTypes);
-                    $redoIndentationFx();
+                if (end($indentTypes) === self::INDENT_TYPE_SPECIAL) {
+                    $decreaseIndentationLevelFx();
                 }
 
                 // Add a newline after the top level reserved word
@@ -273,10 +268,8 @@ final class SqlFormatter
                 }
             } elseif ($token->value() === ';') {
                 // If the last indent type was special, decrease the special indent for this round
-                if (reset($indentTypes) === self::INDENT_TYPE_SPECIAL) {
-                    $indentLevel--;
-                    array_shift($indentTypes);
-                    $redoIndentationFx();
+                if (end($indentTypes) === self::INDENT_TYPE_SPECIAL) {
+                    $decreaseIndentationLevelFx();
                 }
 
                 $newline = true;
@@ -287,9 +280,7 @@ final class SqlFormatter
                 $increaseBlockIndent = true;
             } elseif (in_array(strtoupper($token->value()), ['WHEN', 'THEN', 'ELSE', 'END'], true)) {
                 if (strtoupper($token->value()) !== 'THEN') {
-                    array_shift($indentTypes);
-                    $indentLevel--;
-                    $redoIndentationFx();
+                    $decreaseIndentationLevelFx();
 
                     $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
                     if ($prevNotWhitespaceToken !== null && strtoupper($prevNotWhitespaceToken->value()) !== 'CASE') {
