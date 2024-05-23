@@ -1098,3 +1098,9 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
     throw[0m;[0m
   [37mend[0m
 [37mend[0m catch[0m
+---
+[37mBEGIN[0m
+  [37mFOR[0m i[0m [37mIN[0m [32;1m1[0m.[0m.[0m[32;1m5[0m LOOP[0m
+    DBMS_OUTPUT[0m.[0mPUT_LINE[0m(i[0m);[0m
+  [37mEND[0m LOOP[0m;[0m
+[37mEND[0m;[0m
