@@ -1072,6 +1072,67 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
 [37mFROM[0m
   user[0m
 ---
+[37mSELECT[0m
+  (
+    [37mSELECT[0m
+      *[0m
+    [37mFROM[0m
+      T[0m
+    [37mLIMIT[0m
+      [32;1m5[0m
+    [37mOFFSET[0m
+      [32;1m10[0m
+  ) PostgreSQL_offset_10_limit_5[0m,[0m
+  (
+    [37mSELECT[0m
+      *[0m
+    [37mFROM[0m
+      T[0m
+    [37mLIMIT[0m
+      [32;1m5[0m
+    [37mOFFSET[0m
+      [32;1m10[0m
+    [37mROWS[0m
+    [37mFETCH[0m
+      NEXT[0m [32;1m5[0m
+    [37mROWS[0m
+      ONLY[0m
+  ) MSSQL_offset_10_limit_5[0m,[0m
+  (
+    [37mSELECT[0m
+      *[0m
+    [37mFROM[0m
+      T[0m
+    [37mFETCH[0m
+      [37mFIRST[0m [37mROW[0m ONLY[0m
+  ) oracle_limit_1[0m,[0m
+  (
+    [37mSELECT[0m
+      *[0m
+    [37mFROM[0m
+      T[0m
+    [37mOFFSET[0m
+      [32;1m10[0m
+    [37mROWS[0m
+  ) oracle_offset_10[0m,[0m
+  (
+    [37mSELECT[0m
+      *[0m
+    [37mFROM[0m
+      T[0m
+    [37mORDER BY[0m
+      I[0m
+    [37mOFFSET[0m
+      [32;1m10[0m
+    [37mROWS[0m
+    [37mFETCH[0m
+      NEXT[0m [32;1m5[0m
+    [37mROWS[0m
+      ONLY[0m
+  ) oracle_offset_10_limit_5[0m,[0m
+[37mFROM[0m
+  dual[0m;[0m
+---
 [37mbegin[0m
   try[0m [37minsert[0m [37minto[0m [35;1m[t][0m ([35;1m[name][0m,[0m [35;1m[int][0m,[0m [35;1m[float][0m,[0m [35;1m[null][0m)
   [37mvalues[0m

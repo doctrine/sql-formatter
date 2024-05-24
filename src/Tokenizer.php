@@ -105,6 +105,7 @@ final class Tokenizer
         'EXPLAIN',
         'EXTENDED',
         'FAST',
+        'FETCH',
         'FIELDS',
         'FILE',
         'FILTER',
@@ -340,6 +341,8 @@ final class Tokenizer
         'RANGE',
         'GROUPS',
         'WINDOW',
+        'OFFSET',
+        'FETCH',
     ];
 
     /** @var list<string> */
