@@ -357,6 +357,24 @@ SELECT
 FROM
   user
 ---
+SELECT
+  (
+    SELECT * FROM T LIMIT 5 OFFSET 10
+  ) PostgreSQL_offset_10_limit_5,
+  (
+    SELECT * FROM T LIMIT 5 OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY
+  ) MSSQL_offset_10_limit_5,
+  (
+    SELECT * FROM T FETCH FIRST ROW ONLY
+  ) oracle_limit_1,
+  (
+    SELECT * FROM T OFFSET 10 ROWS
+  ) oracle_offset_10,
+  (
+    SELECT * FROM T ORDER BY I OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY
+  ) oracle_offset_10_limit_5,
+FROM dual;
+---
 begin try
   insert into [t] ([name], [int], [float], [null])
   values (N'Ewa', 1, 1.0, null);
