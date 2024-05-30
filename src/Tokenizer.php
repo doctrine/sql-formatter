@@ -182,7 +182,6 @@ final class Tokenizer
         'MYISAM',
         'NAMES',
         'NATURAL',
-        'NO OTHERS',
         'NOT',
         'NULL',
         'OFFSET',
