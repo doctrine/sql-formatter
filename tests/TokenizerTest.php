@@ -9,7 +9,10 @@ use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
+use function array_filter;
+use function preg_match;
 use function sort;
+use function strtoupper;
 
 final class TokenizerTest extends TestCase
 {
@@ -42,6 +45,17 @@ final class TokenizerTest extends TestCase
 
             self::assertSame($listSorted, $list);
         }
+    }
+
+    public function testKeywordsReservedAreSingleUpperWord(): void
+    {
+        $tokenizerReserved = $this->getTokenizerList('reserved');
+
+        $kwsDiff = array_filter($tokenizerReserved, static function ($v) {
+            return $v !== strtoupper($v) || preg_match('~^\w+$~', $v) !== 1;
+        });
+
+        self::assertSame([], $kwsDiff);
     }
 
     #[DoesNotPerformAssertions]

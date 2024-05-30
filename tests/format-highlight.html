@@ -915,23 +915,23 @@
       <span style="color: #333;">c</span>
     <span style="font-weight:bold;">GROUPS</span>
       <span style="font-weight:bold;">BETWEEN</span> <span style="font-weight:bold;">UNBOUNDED</span> <span style="font-weight:bold;">PRECEDING</span>
-      <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">CURRENT ROW</span>
-      <span style="font-weight:bold;">EXCLUDE</span> <span style="font-weight:bold;">NO OTHERS</span>
+      <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">CURRENT</span> <span style="font-weight:bold;">ROW</span>
+      <span style="font-weight:bold;">EXCLUDE</span> <span style="color: #333;">NO</span> <span style="color: #333;">OTHERS</span>
   ) <span style="font-weight:bold;">AS</span> <span style="color: #333;">no_others</span><span >,</span>
   <span style="font-weight:bold;">GROUP_CONCAT</span>(<span style="color: #333;">b</span><span >,</span> <span style="color: blue;">'.'</span>) <span style="font-weight:bold;">OVER</span> (
     <span style="font-weight:bold;">ORDER BY</span>
       <span style="color: #333;">c</span>
     <span style="font-weight:bold;">GROUPS</span>
       <span style="font-weight:bold;">BETWEEN</span> <span style="font-weight:bold;">UNBOUNDED</span> <span style="font-weight:bold;">PRECEDING</span>
-      <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">CURRENT ROW</span>
-      <span style="font-weight:bold;">EXCLUDE</span> <span style="font-weight:bold;">CURRENT ROW</span>
+      <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">CURRENT</span> <span style="font-weight:bold;">ROW</span>
+      <span style="font-weight:bold;">EXCLUDE</span> <span style="font-weight:bold;">CURRENT</span> <span style="font-weight:bold;">ROW</span>
   ) <span style="font-weight:bold;">AS</span> <span style="color: #333;">current_row</span><span >,</span>
   <span style="font-weight:bold;">GROUP_CONCAT</span>(<span style="color: #333;">b</span><span >,</span> <span style="color: blue;">'.'</span>) <span style="font-weight:bold;">OVER</span> (
     <span style="font-weight:bold;">ORDER BY</span>
       <span style="color: #333;">c</span>
     <span style="font-weight:bold;">GROUPS</span>
       <span style="font-weight:bold;">BETWEEN</span> <span style="font-weight:bold;">UNBOUNDED</span> <span style="font-weight:bold;">PRECEDING</span>
-      <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">CURRENT ROW</span>
+      <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">CURRENT</span> <span style="font-weight:bold;">ROW</span>
       <span style="font-weight:bold;">EXCLUDE</span> <span style="font-weight:bold;">GROUP</span>
   ) <span style="font-weight:bold;">AS</span> <span style="color: #333;">grp</span><span >,</span>
   <span style="font-weight:bold;">GROUP_CONCAT</span>(<span style="color: #333;">b</span><span >,</span> <span style="color: blue;">'.'</span>) <span style="font-weight:bold;">OVER</span> (
@@ -939,7 +939,7 @@
       <span style="color: #333;">c</span>
     <span style="font-weight:bold;">GROUPS</span>
       <span style="font-weight:bold;">BETWEEN</span> <span style="font-weight:bold;">UNBOUNDED</span> <span style="font-weight:bold;">PRECEDING</span>
-      <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">CURRENT ROW</span>
+      <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">CURRENT</span> <span style="font-weight:bold;">ROW</span>
       <span style="font-weight:bold;">EXCLUDE</span> <span style="font-weight:bold;">TIES</span>
   ) <span style="font-weight:bold;">AS</span> <span style="color: #333;">tie</span><span >,</span>
   <span style="font-weight:bold;">GROUP_CONCAT</span>(<span style="color: #333;">b</span><span >,</span> <span style="color: blue;">'.'</span>) <span style="font-weight:bold;">FILTER</span> (
@@ -990,7 +990,7 @@
     <span style="font-weight:bold;">ORDER BY</span>
       <span style="color: #333;">RevenueYear</span>
     <span style="font-weight:bold;">ROWS</span>
-      <span style="font-weight:bold;">BETWEEN</span> <span style="font-weight:bold;">CURRENT ROW</span>
+      <span style="font-weight:bold;">BETWEEN</span> <span style="font-weight:bold;">CURRENT</span> <span style="font-weight:bold;">ROW</span>
       <span style="font-weight:bold;">AND</span> <span style="font-weight:bold;">UNBOUNDED</span> <span style="font-weight:bold;">FOLLOWING</span>
   ) <span style="font-weight:bold;">AS</span> <span style="color: #333;">MinRevenueBeyond</span>
 <span style="font-weight:bold;">FROM</span>
