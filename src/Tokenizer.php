@@ -912,13 +912,14 @@ final class Tokenizer
         // A reserved word cannot be preceded by a '.'
         // this makes it so in "mytable.from", "from" is not considered a reserved word
         if ($previous === null || $previous->value() !== '.') {
-            $upper = strtoupper($stringSlow);
             // Top Level Reserved Word
             if (
                 preg_match(
                     '/\G(' . $this->regexReservedToplevel . ')($|\s|' . $this->regexBoundaries . ')/',
                     $upper,
                     $matches,
+                    0,
+                    $offset,
                 )
             ) {
                 return new Token(
@@ -933,6 +934,8 @@ final class Tokenizer
                     '/\G(' . $this->regexReservedNewline . ')($|\s|' . $this->regexBoundaries . ')/',
                     $upper,
                     $matches,
+                    0,
+                    $offset,
                 )
             ) {
                 return new Token(
@@ -947,6 +950,8 @@ final class Tokenizer
                     '/\G(' . $this->regexReserved . ')($|\s|' . $this->regexBoundaries . ')/',
                     $upper,
                     $matches,
+                    0,
+                    $offset,
                 )
             ) {
                 return new Token(
@@ -958,9 +963,8 @@ final class Tokenizer
 
         // A function must be succeeded by '('
         // this makes it so "count(" is considered a function, but "count" alone is not
-        $upper = strtoupper($stringSlow);
         // function
-        if (preg_match('/\G(' . $this->regexFunction . '[(]|\s|[)])/', $upper, $matches)) {
+        if (preg_match('/\G(' . $this->regexFunction . '[(]|\s|[)])/', $upper, $matches, 0, $offset)) {
             return new Token(
                 Token::TOKEN_TYPE_RESERVED,
                 substr($stringSlow, 0, strlen($matches[1]) - 1),
