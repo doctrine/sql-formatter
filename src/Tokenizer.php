@@ -770,24 +770,24 @@ final class Tokenizer
         };
 
         // Set up regular expressions
-        $this->regexBoundaries       = '(' . implode(
+        $this->regexBoundaries       = '(?>' . implode(
             '|',
             $this->quoteRegex($this->boundaries),
         ) . ')';
-        $this->regexReserved         = '(' . implode(
+        $this->regexReserved         = '(?>' . implode(
             '|',
             $this->quoteRegex($sortByLengthFx($this->reserved)),
         ) . ')';
-        $this->regexReservedToplevel = str_replace(' ', '\s+', '(' . implode(
+        $this->regexReservedToplevel = str_replace(' ', '\s+', '(?>' . implode(
             '|',
             $this->quoteRegex($sortByLengthFx($this->reservedToplevel)),
         ) . ')');
-        $this->regexReservedNewline  = str_replace(' ', '\s+', '(' . implode(
+        $this->regexReservedNewline  = str_replace(' ', '\s+', '(?>' . implode(
             '|',
             $this->quoteRegex($sortByLengthFx($this->reservedNewline)),
         ) . ')');
 
-        $this->regexFunction = '(' . implode('|', $this->quoteRegex($sortByLengthFx($this->functions))) . ')';
+        $this->regexFunction = '(?>' . implode('|', $this->quoteRegex($sortByLengthFx($this->functions))) . ')';
     }
 
     /**
