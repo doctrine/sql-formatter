@@ -14,6 +14,10 @@
         </testsuite>
     </testsuites>
 
+    <extensions>
+        <bootstrap class="Ergebnis\PHPUnit\SlowTestDetector\Extension"/>
+    </extensions>
+
     <source>
         <include>
             <directory suffix=".php">src</directory>
