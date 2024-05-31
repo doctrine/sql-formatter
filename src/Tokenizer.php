@@ -891,7 +891,7 @@ final class Tokenizer
 
         // A reserved word cannot be preceded by a '.'
         // this makes it so in "mytable.from", "from" is not considered a reserved word
-        if (! $previous || $previous->value() !== '.') {
+        if ($previous === null || $previous->value() !== '.') {
             $upper = strtoupper($string);
             // Top Level Reserved Word
             if (
