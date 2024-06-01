@@ -18,6 +18,7 @@ use function count;
 use function defined;
 use function explode;
 use function file_get_contents;
+use function implode;
 use function pack;
 use function rtrim;
 use function sprintf;
@@ -41,6 +42,7 @@ final class SqlFormatterTest extends TestCase
     }
 
     #[DataProvider('formatData')]
+    #[DataProvider('formatLongConcatData')]
     public function testFormat(string $sql, string $html): void
     {
         $formatter = new SqlFormatter(new NullHighlighter());
@@ -99,13 +101,22 @@ final class SqlFormatterTest extends TestCase
         $this->assertSame($actual, $expected);
     }
 
+    /** @return string[] */
+    private static function fileSqlData(): array
+    {
+        $contents = file_get_contents(__DIR__ . '/sql.sql');
+        assert($contents !== false);
+
+        return explode("\n---\n", rtrim($contents, "\n"));
+    }
+
     /** @return Generator<mixed[]> */
     private static function fileDataProvider(string $file): Generator
     {
         $contents = file_get_contents(__DIR__ . '/' . $file);
         assert($contents !== false);
         $formatHighlightData = explode("\n---\n", rtrim($contents, "\n"));
-        $sqlData             = self::sqlData();
+        $sqlData             = self::fileSqlData();
         if (count($formatHighlightData) !== count($sqlData)) {
             throw new UnexpectedValueException(sprintf(
                 '"%s" (%d sections) and sql.sql (%d sections) should have the same number of sections',
@@ -139,6 +150,23 @@ final class SqlFormatterTest extends TestCase
     }
 
     /** @return Generator<mixed[]> */
+    public static function formatLongConcatData(): Generator
+    {
+        $sqlParts = [];
+        for ($i = 0; $i < 2_000; $i++) {
+            $sqlParts[] = 'cast(\'foo' . $i . '\' as blob)';
+        }
+
+        $inConcat  = 'concat(' . implode(', ', $sqlParts) . ')';
+        $outConcat = "concat(\n      " . implode(",\n      ", $sqlParts) . "\n    )";
+
+        yield 'long concat' => [
+            'select iif(' . $inConcat . ' = ' . $inConcat . ', 10, 20) x',
+            "select\n  iif(\n    " . $outConcat . ' = ' . $outConcat . ",\n    10,\n    20\n  ) x",
+        ];
+    }
+
+    /** @return Generator<mixed[]> */
     public static function compressData(): Generator
     {
         return self::fileDataProvider('compress.txt');
@@ -148,14 +176,5 @@ final class SqlFormatterTest extends TestCase
     public static function highlightData(): Generator
     {
         return self::fileDataProvider('highlight.html');
-    }
-
-    /** @return mixed[] */
-    private static function sqlData(): array
-    {
-        $contents = file_get_contents(__DIR__ . '/sql.sql');
-        assert($contents !== false);
-
-        return explode("\n---\n", rtrim($contents, "\n"));
     }
 }

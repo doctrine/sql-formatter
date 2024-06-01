@@ -13,6 +13,8 @@ HAVING
 ORDER BY
   COUNT(order_id) DESC;
 ---
+
+---
 UPDATE
   customers
 SET
