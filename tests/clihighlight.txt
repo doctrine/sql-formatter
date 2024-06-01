@@ -13,6 +13,8 @@
 [37mORDER BY[0m
   [37mCOUNT[0m(order_id[0m) [37mDESC[0m;[0m
 ---
+
+---
 [37mUPDATE[0m
   customers[0m
 [37mSET[0m
@@ -915,23 +917,23 @@
       c[0m
     [37mGROUPS[0m
       [37mBETWEEN[0m [37mUNBOUNDED[0m [37mPRECEDING[0m
-      [37mAND[0m [37mCURRENT ROW[0m
-      [37mEXCLUDE[0m [37mNO OTHERS[0m
+      [37mAND[0m [37mCURRENT[0m [37mROW[0m
+      [37mEXCLUDE[0m NO[0m OTHERS[0m
   ) [37mAS[0m no_others[0m,[0m
   [37mGROUP_CONCAT[0m(b[0m,[0m [34;1m'.'[0m) [37mOVER[0m (
     [37mORDER BY[0m
       c[0m
     [37mGROUPS[0m
       [37mBETWEEN[0m [37mUNBOUNDED[0m [37mPRECEDING[0m
-      [37mAND[0m [37mCURRENT ROW[0m
-      [37mEXCLUDE[0m [37mCURRENT ROW[0m
+      [37mAND[0m [37mCURRENT[0m [37mROW[0m
+      [37mEXCLUDE[0m [37mCURRENT[0m [37mROW[0m
   ) [37mAS[0m current_row[0m,[0m
   [37mGROUP_CONCAT[0m(b[0m,[0m [34;1m'.'[0m) [37mOVER[0m (
     [37mORDER BY[0m
       c[0m
     [37mGROUPS[0m
       [37mBETWEEN[0m [37mUNBOUNDED[0m [37mPRECEDING[0m
-      [37mAND[0m [37mCURRENT ROW[0m
+      [37mAND[0m [37mCURRENT[0m [37mROW[0m
       [37mEXCLUDE[0m [37mGROUP[0m
   ) [37mAS[0m grp[0m,[0m
   [37mGROUP_CONCAT[0m(b[0m,[0m [34;1m'.'[0m) [37mOVER[0m (
@@ -939,7 +941,7 @@
       c[0m
     [37mGROUPS[0m
       [37mBETWEEN[0m [37mUNBOUNDED[0m [37mPRECEDING[0m
-      [37mAND[0m [37mCURRENT ROW[0m
+      [37mAND[0m [37mCURRENT[0m [37mROW[0m
       [37mEXCLUDE[0m [37mTIES[0m
   ) [37mAS[0m tie[0m,[0m
   [37mGROUP_CONCAT[0m(b[0m,[0m [34;1m'.'[0m) [37mFILTER[0m (
@@ -990,7 +992,7 @@
     [37mORDER BY[0m
       RevenueYear[0m
     [37mROWS[0m
-      [37mBETWEEN[0m [37mCURRENT ROW[0m
+      [37mBETWEEN[0m [37mCURRENT[0m [37mROW[0m
       [37mAND[0m [37mUNBOUNDED[0m [37mFOLLOWING[0m
   ) [37mAS[0m MinRevenueBeyond[0m
 [37mFROM[0m

@@ -4,6 +4,8 @@ GROUP BY customer_id, customer_name
 HAVING COUNT(order_id) > 5
 ORDER BY COUNT(order_id) DESC;
 ---
+
+---
 UPDATE customers
         SET totalorders = ordersummary.total
         FROM (SELECT customer_id, count(order_id) As total

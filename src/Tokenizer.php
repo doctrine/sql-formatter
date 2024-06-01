@@ -50,7 +50,7 @@ final class Tokenizer
         'CASE',
         'CHANGE',
         'CHANGED',
-        'CHARACTER SET',
+        'CHARACTER',
         'CHARSET',
         'CHECK',
         'CHECKSUM',
@@ -68,7 +68,7 @@ final class Tokenizer
         'CONVERT',
         'CREATE',
         'CROSS',
-        'CURRENT ROW',
+        'CURRENT',
         'CURRENT_TIMESTAMP',
         'DATABASE',
         'DATABASES',
@@ -94,8 +94,8 @@ final class Tokenizer
         'ENCLOSED',
         'END',
         'ENGINE',
-        'ENGINE_TYPE',
         'ENGINES',
+        'ENGINE_TYPE',
         'ESCAPE',
         'ESCAPED',
         'EVENTS',
@@ -112,9 +112,9 @@ final class Tokenizer
         'FIRST',
         'FIXED',
         'FLUSH',
+        'FOLLOWING',
         'FOR',
         'FORCE',
-        'FOLLOWING',
         'FOREIGN',
         'FULL',
         'FULLTEXT',
@@ -183,7 +183,6 @@ final class Tokenizer
         'MYISAM',
         'NAMES',
         'NATURAL',
-        'NO OTHERS',
         'NOT',
         'NULL',
         'OFFSET',
@@ -192,8 +191,6 @@ final class Tokenizer
         'OPTIMIZE',
         'OPTION',
         'OPTIONALLY',
-        'ON UPDATE',
-        'ON DELETE',
         'OUTFILE',
         'OVER',
         'PACK_KEYS',
@@ -210,11 +207,11 @@ final class Tokenizer
         'PROCESSLIST',
         'PURGE',
         'QUICK',
-        'RANGE',
         'RAID0',
         'RAID_CHUNKS',
         'RAID_CHUNKSIZE',
         'RAID_TYPE',
+        'RANGE',
         'READ',
         'READ_ONLY',
         'READ_WRITE',
@@ -243,6 +240,7 @@ final class Tokenizer
         'SEPARATOR',
         'SERIALIZABLE',
         'SESSION',
+        'SET',
         'SHARE',
         'SHOW',
         'SHUTDOWN',
@@ -255,20 +253,20 @@ final class Tokenizer
         'SQL_BIG_SELECTS',
         'SQL_BIG_TABLES',
         'SQL_BUFFER_RESULT',
+        'SQL_CACHE',
         'SQL_CALC_FOUND_ROWS',
         'SQL_LOG_BIN',
         'SQL_LOG_OFF',
         'SQL_LOG_UPDATE',
         'SQL_LOW_PRIORITY_UPDATES',
         'SQL_MAX_JOIN_SIZE',
+        'SQL_NO_CACHE',
         'SQL_QUOTE_SHOW_CREATE',
         'SQL_SAFE_UPDATES',
         'SQL_SELECT_LIMIT',
         'SQL_SLAVE_SKIP_COUNTER',
         'SQL_SMALL_RESULT',
         'SQL_WARNINGS',
-        'SQL_CACHE',
-        'SQL_NO_CACHE',
         'START',
         'STARTING',
         'STATUS',
@@ -315,49 +313,49 @@ final class Tokenizer
      * @var list<string>
      */
     private array $reservedToplevel = [
-        'WITH',
-        'SELECT',
-        'FROM',
-        'WHERE',
-        'SET',
-        'ORDER BY',
-        'GROUP BY',
-        'LIMIT',
-        'DROP',
-        'VALUES',
-        'UPDATE',
-        'HAVING',
         'ADD',
-        'CHANGE',
-        'MODIFY',
         'ALTER TABLE',
+        'CHANGE',
         'DELETE FROM',
-        'UNION ALL',
-        'UNION',
+        'DROP',
         'EXCEPT',
-        'INTERSECT',
-        'PARTITION BY',
-        'ROWS',
-        'RANGE',
-        'GROUPS',
-        'WINDOW',
-        'OFFSET',
         'FETCH',
+        'FROM',
+        'GROUP BY',
+        'GROUPS',
+        'HAVING',
+        'INTERSECT',
+        'LIMIT',
+        'MODIFY',
+        'OFFSET',
+        'ORDER BY',
+        'PARTITION BY',
+        'RANGE',
+        'ROWS',
+        'SELECT',
+        'SET',
+        'UNION',
+        'UNION ALL',
+        'UPDATE',
+        'VALUES',
+        'WHERE',
+        'WINDOW',
+        'WITH',
     ];
 
     /** @var list<string> */
     private array $reservedNewline = [
-        'LEFT OUTER JOIN',
-        'RIGHT OUTER JOIN',
-        'LEFT JOIN',
-        'RIGHT JOIN',
-        'OUTER JOIN',
-        'INNER JOIN',
-        'JOIN',
-        'XOR',
-        'OR',
         'AND',
         'EXCLUDE',
+        'INNER JOIN',
+        'JOIN',
+        'LEFT JOIN',
+        'LEFT OUTER JOIN',
+        'OR',
+        'OUTER JOIN',
+        'RIGHT JOIN',
+        'RIGHT OUTER JOIN',
+        'XOR',
     ];
 
     /** @var list<string> */
@@ -578,9 +576,9 @@ final class Tokenizer
         'ORD',
         'OVERLAPS',
         'PASSWORD',
-        'PERCENT_RANK',
         'PERCENTILE_CONT',
         'PERCENTILE_DISC',
+        'PERCENT_RANK',
         'PERIOD_ADD',
         'PERIOD_DIFF',
         'PI',
@@ -628,13 +626,13 @@ final class Tokenizer
         'SRID',
         'STARTPOINT',
         'STD',
-        'STDEV',
-        'STDEVP',
         'STDDEV',
         'STDDEV_POP',
         'STDDEV_SAMP',
-        'STRING_AGG',
+        'STDEV',
+        'STDEVP',
         'STRCMP',
+        'STRING_AGG',
         'STR_TO_DATE',
         'SUBDATE',
         'SUBSTR',
@@ -728,11 +726,14 @@ final class Tokenizer
      */
     public function __construct()
     {
-        // Sort reserved word list from longest word to shortest, 3x faster than usort
-        $reservedMap = array_combine($this->reserved, array_map(strlen(...), $this->reserved));
-        assert($reservedMap !== false);
-        arsort($reservedMap);
-        $this->reserved = array_keys($reservedMap);
+        // Sort list from longest word to shortest, 3x faster than usort
+        $sortByLengthFx = static function ($values) {
+            $valuesMap = array_combine($values, array_map(strlen(...), $values));
+            assert($valuesMap !== false);
+            arsort($valuesMap);
+
+            return array_keys($valuesMap);
+        };
 
         // Set up regular expressions
         $this->regexBoundaries       = '(' . implode(
@@ -741,18 +742,18 @@ final class Tokenizer
         ) . ')';
         $this->regexReserved         = '(' . implode(
             '|',
-            $this->quoteRegex($this->reserved),
+            $this->quoteRegex($sortByLengthFx($this->reserved)),
         ) . ')';
         $this->regexReservedToplevel = str_replace(' ', '\\s+', '(' . implode(
             '|',
-            $this->quoteRegex($this->reservedToplevel),
+            $this->quoteRegex($sortByLengthFx($this->reservedToplevel)),
         ) . ')');
         $this->regexReservedNewline  = str_replace(' ', '\\s+', '(' . implode(
             '|',
-            $this->quoteRegex($this->reservedNewline),
+            $this->quoteRegex($sortByLengthFx($this->reservedNewline)),
         ) . ')');
 
-        $this->regexFunction = '(' . implode('|', $this->quoteRegex($this->functions)) . ')';
+        $this->regexFunction = '(' . implode('|', $this->quoteRegex($sortByLengthFx($this->functions))) . ')';
     }
 
     /**
@@ -827,9 +828,10 @@ final class Tokenizer
                 $last = strpos($string, "\n");
                 $type = Token::TOKEN_TYPE_COMMENT;
             } else { // Comment until closing comment tag
-                $pos = strpos($string, '*/', 2);
-                assert($pos !== false);
-                $last = $pos + 2;
+                $pos  = strpos($string, '*/', 2);
+                $last = $pos !== false
+                    ? $pos + 2
+                    : false;
                 $type = Token::TOKEN_TYPE_BLOCK_COMMENT;
             }
 
