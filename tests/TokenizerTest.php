@@ -120,6 +120,13 @@ final class TokenizerTest extends TestCase
             ],
             '\'foo...',
         ];
+
+        yield 'unclosed block comment' => [
+            [
+                new Token(Token::TOKEN_TYPE_BLOCK_COMMENT, '/* foo...'),
+            ],
+            '/* foo...',
+        ];
     }
 
     /** @return Generator<mixed[]> */
