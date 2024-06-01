@@ -4,6 +4,8 @@
 <span style="font-weight:bold;">HAVING</span> <span style="font-weight:bold;">COUNT</span>(<span style="color: #333;">order_id</span>) <span >&gt;</span> <span style="color: green;">5</span>
 <span style="font-weight:bold;">ORDER BY</span> <span style="font-weight:bold;">COUNT</span>(<span style="color: #333;">order_id</span>) <span style="font-weight:bold;">DESC</span><span >;</span></pre>
 ---
+<pre style="color: black; background-color: white;"></pre>
+---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">UPDATE</span> <span style="color: #333;">customers</span>
         <span style="font-weight:bold;">SET</span> <span style="color: #333;">totalorders</span> <span >=</span> <span style="color: #333;">ordersummary</span><span >.</span><span style="color: #333;">total</span>
         <span style="font-weight:bold;">FROM</span> (<span style="font-weight:bold;">SELECT</span> <span style="color: #333;">customer_id</span><span >,</span> <span style="font-weight:bold;">count</span>(<span style="color: #333;">order_id</span>) <span style="font-weight:bold;">As</span> <span style="color: #333;">total</span>

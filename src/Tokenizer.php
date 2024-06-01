@@ -825,9 +825,10 @@ final class Tokenizer
                 $last = strpos($string, "\n");
                 $type = Token::TOKEN_TYPE_COMMENT;
             } else { // Comment until closing comment tag
-                $pos = strpos($string, '*/', 2);
-                assert($pos !== false);
-                $last = $pos + 2;
+                $pos  = strpos($string, '*/', 2);
+                $last = $pos !== false
+                    ? $pos + 2
+                    : false;
                 $type = Token::TOKEN_TYPE_BLOCK_COMMENT;
             }
 
