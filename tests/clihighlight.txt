@@ -13,6 +13,8 @@
 [37mORDER BY[0m
   [37mCOUNT[0m(order_id[0m) [37mDESC[0m;[0m
 ---
+
+---
 [37mUPDATE[0m
   customers[0m
 [37mSET[0m
