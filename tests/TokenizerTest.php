@@ -83,7 +83,6 @@ final class TokenizerTest extends TestCase
 
     /** @param list<Token> $expectedTokens */
     #[DataProvider('tokenizeData')]
-    #[DataProvider('tokenizeLongConcatData')]
     public function testTokenize(array $expectedTokens, string $sql): void
     {
         self::assertEqualsTokens($expectedTokens, (new Tokenizer())->tokenize($sql));
@@ -129,10 +128,9 @@ final class TokenizerTest extends TestCase
         ];
     }
 
-    /** @return Generator<mixed[]> */
-    public static function tokenizeLongConcatData(): Generator
+    public function testTokenizeLongConcat(): void
     {
-        $count = 2_000;
+        $count = 20_000;
 
         $sqlParts = [];
         for ($i = 0; $i < $count; $i++) {
@@ -188,6 +186,6 @@ final class TokenizerTest extends TestCase
         $expectedTokens[] = new Token(Token::TOKEN_TYPE_WHITESPACE, ' ');
         $expectedTokens[] = new Token(Token::TOKEN_TYPE_WORD, 'x');
 
-        yield 'long concat' => [$expectedTokens, $sql];
+        $this->testTokenize($expectedTokens, $sql);
     }
 }
