@@ -771,24 +771,22 @@ final class Tokenizer
             return array_keys($valuesMap);
         };
 
+        $buildRegexFromListFx = static function ($values) use ($sortByLengthFx) {
+            return '(?>' . implode(
+                '|',
+                array_map(
+                    static fn ($v) => preg_quote($v, '/'),
+                    $sortByLengthFx($values),
+                ),
+            ) . ')';
+        };
+
         // Set up regular expressions
-        $regexBoundaries       = '(?>' . implode(
-            '|',
-            $this->quoteRegex($this->boundaries),
-        ) . ')';
-        $regexReserved         = '(?>' . implode(
-            '|',
-            $this->quoteRegex($sortByLengthFx($this->reserved)),
-        ) . ')';
-        $regexReservedToplevel = '(?>' . str_replace(' ', '\s+', implode(
-            '|',
-            $this->quoteRegex($sortByLengthFx($this->reservedToplevel)),
-        )) . ')';
-        $regexReservedNewline  = '(?>' . str_replace(' ', '\s+', implode(
-            '|',
-            $this->quoteRegex($sortByLengthFx($this->reservedNewline)),
-        )) . ')';
-        $regexFunction         = '(?>' . implode('|', $this->quoteRegex($sortByLengthFx($this->functions))) . ')';
+        $regexBoundaries       = $buildRegexFromListFx($this->boundaries);
+        $regexReserved         = $buildRegexFromListFx($this->reserved);
+        $regexReservedToplevel = str_replace(' ', '\s+', $buildRegexFromListFx($this->reservedToplevel));
+        $regexReservedNewline  = str_replace(' ', '\s+', $buildRegexFromListFx($this->reservedNewline));
+        $regexFunction         = $buildRegexFromListFx($this->functions);
 
         $this->nextTokenRegexNumber            = '/\G(?:\d+(?:\.\d+)?|0x[\da-fA-F]+|0b[01]+)(?=$|\s|"\'`|' . $regexBoundaries . ')/';
         $this->nextTokenRegexBoundaryCharacter = '/\G' . $regexBoundaries . '/';
@@ -985,21 +983,6 @@ final class Tokenizer
         preg_match($this->nextTokenRegexNonReserved, $string, $matches, 0, $offset);
 
         return new Token(Token::TOKEN_TYPE_WORD, $matches[0]);
-    }
-
-    /**
-     * Helper function for building regular expressions for reserved words and boundary characters
-     *
-     * @param string[] $strings The strings to be quoted
-     *
-     * @return string[] The quoted strings
-     */
-    private function quoteRegex(array $strings): array
-    {
-        return array_map(
-            static fn (string $string): string => preg_quote($string, '/'),
-            $strings,
-        );
     }
 
     private function getNextQuotedString(string $string, int $offset): string
