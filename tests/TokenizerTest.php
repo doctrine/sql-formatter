@@ -12,6 +12,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
+use function array_diff_key;
 use function array_filter;
 use function array_merge;
 use function array_unique;
@@ -66,6 +67,19 @@ final class TokenizerTest extends TestCase
         });
 
         self::assertSame([], $kwsDiff);
+    }
+
+    public function testKeywordsAreDisjunctive(): void
+    {
+        $tokenizerKeywords = array_merge(
+            $this->getTokenizerList('reserved'),
+            $this->getTokenizerList('functions'),
+        );
+
+        self::assertSame(
+            [],
+            array_diff_key($tokenizerKeywords, array_unique($tokenizerKeywords)),
+        );
     }
 
     /** @param list<Token> $expectedTokens */
