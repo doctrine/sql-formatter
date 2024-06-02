@@ -190,7 +190,7 @@ final class TokenizerTest extends TestCase
                 $expectedTokens[] = new Token(Token::TOKEN_TYPE_WHITESPACE, ' ');
                 $expectedTokens[] = new Token(Token::TOKEN_TYPE_RESERVED, 'as');
                 $expectedTokens[] = new Token(Token::TOKEN_TYPE_WHITESPACE, ' ');
-                $expectedTokens[] = new Token(Token::TOKEN_TYPE_WORD, 'blob');
+                $expectedTokens[] = new Token(Token::TOKEN_TYPE_RESERVED, 'blob');
                 $expectedTokens[] = new Token(Token::TOKEN_TYPE_BOUNDARY, ')');
             }
 
