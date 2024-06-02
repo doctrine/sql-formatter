@@ -13,6 +13,8 @@ use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
 use function array_filter;
+use function array_merge;
+use function array_unique;
 use function implode;
 use function preg_match;
 use function serialize;
@@ -52,11 +54,14 @@ final class TokenizerTest extends TestCase
         }
     }
 
-    public function testKeywordsReservedAreSingleUpperWord(): void
+    public function testKeywordsAreSingleUpperWord(): void
     {
-        $tokenizerReserved = $this->getTokenizerList('reserved');
+        $tokenizerKeywords = array_unique(array_merge(
+            $this->getTokenizerList('reserved'),
+            $this->getTokenizerList('functions'),
+        ));
 
-        $kwsDiff = array_filter($tokenizerReserved, static function ($v) {
+        $kwsDiff = array_filter($tokenizerKeywords, static function ($v) {
             return $v !== strtoupper($v) || preg_match('~^\w+$~', $v) !== 1;
         });
 
