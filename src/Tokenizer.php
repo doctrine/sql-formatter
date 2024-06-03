@@ -719,14 +719,13 @@ final class Tokenizer
     ];
 
     // Regular expressions for tokenizing
-
-    private readonly string $nextTokenRegexNumber;
-    private readonly string $nextTokenRegexBoundaryCharacter;
-    private readonly string $nextTokenRegexReservedToplevel;
-    private readonly string $nextTokenRegexReservedNewline;
-    private readonly string $nextTokenRegexReserved;
-    private readonly string $nextTokenRegexFunction;
-    private readonly string $nextTokenRegexNonReserved;
+    private static string $nextTokenRegexNumber;
+    private static string $nextTokenRegexBoundaryCharacter;
+    private static string $nextTokenRegexReservedToplevel;
+    private static string $nextTokenRegexReservedNewline;
+    private static string $nextTokenRegexReserved;
+    private static string $nextTokenRegexFunction;
+    private static string $nextTokenRegexNonReserved;
 
     /**
      * Punctuation that can be used as a boundary between other tokens
@@ -762,6 +761,10 @@ final class Tokenizer
      */
     public function __construct()
     {
+        if (isset(self::$nextTokenRegexNumber)) {
+            return;
+        }
+
         // Set up regular expressions
         $regexBoundaries       = $this->makeRegexFromList($this->boundaries);
         $regexReserved         = $this->makeRegexFromList($this->reserved);
@@ -769,13 +772,13 @@ final class Tokenizer
         $regexReservedNewline  = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedNewline));
         $regexFunction         = $this->makeRegexFromList($this->functions);
 
-        $this->nextTokenRegexNumber            = '/\G(?:\d+(?:\.\d+)?|0x[\da-fA-F]+|0b[01]+)(?=$|\s|"\'`|' . $regexBoundaries . ')/';
-        $this->nextTokenRegexBoundaryCharacter = '/\G' . $regexBoundaries . '/';
-        $this->nextTokenRegexReservedToplevel  = '/\G' . $regexReservedToplevel . '(?=$|\s|' . $regexBoundaries . ')/';
-        $this->nextTokenRegexReservedNewline   = '/\G' . $regexReservedNewline . '(?=$|\s|' . $regexBoundaries . ')/';
-        $this->nextTokenRegexReserved          = '/\G' . $regexReserved . '(?=$|\s|' . $regexBoundaries . ')/';
-        $this->nextTokenRegexFunction          = '/\G' . $regexFunction . '(?=\s*\()/';
-        $this->nextTokenRegexNonReserved       = '/\G.*?(?=$|\s|["\'`]|' . $regexBoundaries . ')/';
+        self::$nextTokenRegexNumber            = '/\G(?:\d+(?:\.\d+)?|0x[\da-fA-F]+|0b[01]+)(?=$|\s|"\'`|' . $regexBoundaries . ')/';
+        self::$nextTokenRegexBoundaryCharacter = '/\G' . $regexBoundaries . '/';
+        self::$nextTokenRegexReservedToplevel  = '/\G' . $regexReservedToplevel . '(?=$|\s|' . $regexBoundaries . ')/';
+        self::$nextTokenRegexReservedNewline   = '/\G' . $regexReservedNewline . '(?=$|\s|' . $regexBoundaries . ')/';
+        self::$nextTokenRegexReserved          = '/\G' . $regexReserved . '(?=$|\s|' . $regexBoundaries . ')/';
+        self::$nextTokenRegexFunction          = '/\G' . $regexFunction . '(?=\s*\()/';
+        self::$nextTokenRegexNonReserved       = '/\G.*?(?=$|\s|["\'`]|' . $regexBoundaries . ')/';
     }
 
     /**
@@ -953,7 +956,7 @@ final class Tokenizer
         // Number (decimal, binary, or hex)
         if (
             preg_match(
-                $this->nextTokenRegexNumber,
+                self::$nextTokenRegexNumber,
                 $string,
                 $matches,
                 0,
@@ -964,7 +967,7 @@ final class Tokenizer
         }
 
         // Boundary Character (punctuation and symbols)
-        if (preg_match($this->nextTokenRegexBoundaryCharacter, $string, $matches, 0, $offset)) {
+        if (preg_match(self::$nextTokenRegexBoundaryCharacter, $string, $matches, 0, $offset)) {
             return new Token(Token::TOKEN_TYPE_BOUNDARY, $matches[0]);
         }
 
@@ -974,7 +977,7 @@ final class Tokenizer
             // Top Level Reserved Word
             if (
                 preg_match(
-                    $this->nextTokenRegexReservedToplevel,
+                    self::$nextTokenRegexReservedToplevel,
                     $upper,
                     $matches,
                     0,
@@ -990,7 +993,7 @@ final class Tokenizer
             // Newline Reserved Word
             if (
                 preg_match(
-                    $this->nextTokenRegexReservedNewline,
+                    self::$nextTokenRegexReservedNewline,
                     $upper,
                     $matches,
                     0,
@@ -1006,7 +1009,7 @@ final class Tokenizer
             // Other Reserved Word
             if (
                 preg_match(
-                    $this->nextTokenRegexReserved,
+                    self::$nextTokenRegexReserved,
                     $upper,
                     $matches,
                     0,
@@ -1022,7 +1025,7 @@ final class Tokenizer
 
         // A function must be succeeded by '('
         // this makes it so "count(" is considered a function, but "count" alone is not function
-        if (preg_match($this->nextTokenRegexFunction, $upper, $matches, 0, $offset)) {
+        if (preg_match(self::$nextTokenRegexFunction, $upper, $matches, 0, $offset)) {
             return new Token(
                 Token::TOKEN_TYPE_RESERVED,
                 substr($string, $offset, strlen($matches[0])),
@@ -1030,7 +1033,7 @@ final class Tokenizer
         }
 
         // Non reserved word
-        preg_match($this->nextTokenRegexNonReserved, $string, $matches, 0, $offset);
+        preg_match(self::$nextTokenRegexNonReserved, $string, $matches, 0, $offset);
 
         return new Token(Token::TOKEN_TYPE_WORD, $matches[0]);
     }
