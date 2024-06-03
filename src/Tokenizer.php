@@ -766,34 +766,17 @@ final class Tokenizer
     {
         $tokens = [];
 
-        // Used to make sure the string keeps shrinking on each iteration
-        $oldStringLen = strlen($string) + 1;
-
         $token = null;
 
-        $currentLength = strlen($string);
-
         // Keep processing the string until it is empty
-        while ($currentLength) {
-            // If the string stopped shrinking, there was a problem
-            if ($oldStringLen <= $currentLength) {
-                $tokens[] = new Token(Token::TOKEN_TYPE_ERROR, $string);
-
-                return new Cursor($tokens);
-            }
-
-            $oldStringLen =  $currentLength;
-
+        while ($string !== '') {
             // Get the next token and the token type
-            $token       = $this->createNextToken($string, $token);
-            $tokenLength = strlen($token->value());
+            $token = $this->createNextToken($string, $token);
 
             $tokens[] = $token;
 
             // Advance the string
-            $string = substr($string, $tokenLength);
-
-            $currentLength -= $tokenLength;
+            $string = substr($string, strlen($token->value()));
         }
 
         return new Cursor($tokens);
