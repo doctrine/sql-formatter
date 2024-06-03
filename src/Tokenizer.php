@@ -862,7 +862,7 @@ final class Tokenizer
                 $value = $string[0] . $this->getNextQuotedString(substr($string, 1));
             } else {
                 // Non-quoted variable name
-                preg_match('/^(' . $string[0] . '[a-zA-Z0-9\._\$]+)/', $string, $matches);
+                preg_match('/^(' . $string[0] . '[\w.$]+)/', $string, $matches);
                 if ($matches) {
                     $value = $matches[1];
                 }
@@ -876,7 +876,7 @@ final class Tokenizer
         // Number (decimal, binary, or hex)
         if (
             preg_match(
-                '/^([0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)($|\s|"\'`|' . $this->regexBoundaries . ')/',
+                '/^(\d+(\.\d+)?|0x[\da-fA-F]+|0b[01]+)($|\s|"\'`|' . $this->regexBoundaries . ')/',
                 $string,
                 $matches,
             )
