@@ -69,7 +69,7 @@ final class SqlFormatterTest extends TestCase
         $html = '<pre style="color: black; background-color: white;">' .
             '<span style="font-weight:bold;">SELECT</span> <span style="color: blue;">' .
             $binaryData .
-            '</span> <span style="font-weight:bold;">AS</span> <span style="color: #333;">BINARY</span></pre>';
+            '</span> <span style="font-weight:bold;">AS</span> <span style="font-weight:bold;">BINARY</span></pre>';
 
         $this->assertSame($html, $this->formatter->highlight($sql));
     }
