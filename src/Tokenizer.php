@@ -744,11 +744,11 @@ final class Tokenizer
             '|',
             $this->quoteRegex($sortByLengthFx($this->reserved)),
         ) . ')';
-        $this->regexReservedToplevel = str_replace(' ', '\\s+', '(' . implode(
+        $this->regexReservedToplevel = str_replace(' ', '\s+', '(' . implode(
             '|',
             $this->quoteRegex($sortByLengthFx($this->reservedToplevel)),
         ) . ')');
-        $this->regexReservedNewline  = str_replace(' ', '\\s+', '(' . implode(
+        $this->regexReservedNewline  = str_replace(' ', '\s+', '(' . implode(
             '|',
             $this->quoteRegex($sortByLengthFx($this->reservedNewline)),
         ) . ')');
