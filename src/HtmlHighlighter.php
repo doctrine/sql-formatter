@@ -56,6 +56,7 @@ final class HtmlHighlighter implements Highlighter
         return '<span ' . $attributes . '>' . $value . '</span>';
     }
 
+    /** @param Token::TOKEN_TYPE_* $type */
     public function attributes(int $type): string|null
     {
         if (! isset(self::TOKEN_TYPE_TO_HIGHLIGHT[$type])) {

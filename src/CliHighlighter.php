@@ -44,6 +44,7 @@ final class CliHighlighter implements Highlighter
         return $prefix . $value . "\x1b[0m";
     }
 
+    /** @param Token::TOKEN_TYPE_* $type */
     private function prefix(int $type): string|null
     {
         if (! isset(self::TOKEN_TYPE_TO_HIGHLIGHT[$type])) {

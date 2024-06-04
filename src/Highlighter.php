@@ -32,6 +32,8 @@ interface Highlighter
 
     /**
      * Highlights a token depending on its type.
+     *
+     * @param Token::TOKEN_TYPE_* $type
      */
     public function highlightToken(int $type, string $value): string;
 

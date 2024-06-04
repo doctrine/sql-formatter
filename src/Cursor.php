@@ -14,6 +14,7 @@ final class Cursor
     ) {
     }
 
+    /** @param Token::TOKEN_TYPE_* $exceptTokenType */
     public function next(int|null $exceptTokenType = null): Token|null
     {
         while ($token = $this->tokens[++$this->position] ?? null) {
@@ -27,6 +28,7 @@ final class Cursor
         return null;
     }
 
+    /** @param Token::TOKEN_TYPE_* $exceptTokenType */
     public function previous(int|null $exceptTokenType = null): Token|null
     {
         while ($token = $this->tokens[--$this->position] ?? null) {
