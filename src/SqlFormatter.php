@@ -86,7 +86,12 @@ final class SqlFormatter
                 return;
             }
 
-            $return = substr($return, 0, -($indentLevel + 1)) . str_repeat($tab, $indentLevel);
+            $rtrimLength = $indentLevel + 1;
+            while (substr($return, -($rtrimLength + 2), 1) === "\n") {
+                $rtrimLength++;
+            }
+
+            $return = substr($return, 0, -$rtrimLength) . str_repeat($tab, $indentLevel);
         };
 
         // Tokenize String
@@ -117,11 +122,9 @@ final class SqlFormatter
             if ($newline) {
                 $return = rtrim($return, ' ');
 
-                if ($indentLevel === 0) {
-                    $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
-                    if ($prevNotWhitespaceToken !== null && $prevNotWhitespaceToken->value() === ';') {
-                        $return .= "\n";
-                    }
+                $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
+                if ($prevNotWhitespaceToken !== null && $prevNotWhitespaceToken->value() === ';') {
+                    $return .= "\n";
                 }
 
                 $return      .= "\n" . str_repeat($tab, $indentLevel);
