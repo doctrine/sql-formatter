@@ -115,7 +115,15 @@ final class SqlFormatter
 
             // If we need a new line before the token
             if ($newline) {
-                $return       = rtrim($return, ' ');
+                $return = rtrim($return, ' ');
+
+                if ($indentLevel === 0) {
+                    $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
+                    if ($prevNotWhitespaceToken !== null && $prevNotWhitespaceToken->value() === ';') {
+                        $return .= "\n";
+                    }
+                }
+
                 $return      .= "\n" . str_repeat($tab, $indentLevel);
                 $newline      = false;
                 $addedNewline = true;
