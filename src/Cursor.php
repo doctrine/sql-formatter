@@ -8,7 +8,7 @@ final class Cursor
 {
     private int $position = -1;
 
-    /** @param Token[] $tokens */
+    /** @param list<Token> $tokens */
     public function __construct(
         private readonly array $tokens,
     ) {

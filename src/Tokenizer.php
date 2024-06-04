@@ -744,11 +744,11 @@ final class Tokenizer
             '|',
             $this->quoteRegex($sortByLengthFx($this->reserved)),
         ) . ')';
-        $this->regexReservedToplevel = str_replace(' ', '\\s+', '(' . implode(
+        $this->regexReservedToplevel = str_replace(' ', '\s+', '(' . implode(
             '|',
             $this->quoteRegex($sortByLengthFx($this->reservedToplevel)),
         ) . ')');
-        $this->regexReservedNewline  = str_replace(' ', '\\s+', '(' . implode(
+        $this->regexReservedNewline  = str_replace(' ', '\s+', '(' . implode(
             '|',
             $this->quoteRegex($sortByLengthFx($this->reservedNewline)),
         ) . ')');
@@ -766,34 +766,17 @@ final class Tokenizer
     {
         $tokens = [];
 
-        // Used to make sure the string keeps shrinking on each iteration
-        $oldStringLen = strlen($string) + 1;
-
         $token = null;
 
-        $currentLength = strlen($string);
-
         // Keep processing the string until it is empty
-        while ($currentLength) {
-            // If the string stopped shrinking, there was a problem
-            if ($oldStringLen <= $currentLength) {
-                $tokens[] = new Token(Token::TOKEN_TYPE_ERROR, $string);
-
-                return new Cursor($tokens);
-            }
-
-            $oldStringLen =  $currentLength;
-
+        while ($string !== '') {
             // Get the next token and the token type
-            $token       = $this->createNextToken($string, $token);
-            $tokenLength = strlen($token->value());
+            $token = $this->createNextToken($string, $token);
 
             $tokens[] = $token;
 
             // Advance the string
-            $string = substr($string, $tokenLength);
-
-            $currentLength -= $tokenLength;
+            $string = substr($string, strlen($token->value()));
         }
 
         return new Cursor($tokens);
@@ -848,7 +831,7 @@ final class Tokenizer
                 ($string[0] === '`' || $string[0] === '['
                     ? Token::TOKEN_TYPE_BACKTICK_QUOTE
                     : Token::TOKEN_TYPE_QUOTE),
-                $this->getQuotedString($string),
+                $this->getNextQuotedString($string),
             );
         }
 
@@ -859,10 +842,10 @@ final class Tokenizer
 
             // If the variable name is quoted
             if ($string[1] === '"' || $string[1] === '\'' || $string[1] === '`') {
-                $value = $string[0] . $this->getQuotedString(substr($string, 1));
+                $value = $string[0] . $this->getNextQuotedString(substr($string, 1));
             } else {
                 // Non-quoted variable name
-                preg_match('/^(' . $string[0] . '[a-zA-Z0-9\._\$]+)/', $string, $matches);
+                preg_match('/^(' . $string[0] . '[\w.$]+)/', $string, $matches);
                 if ($matches) {
                     $value = $matches[1];
                 }
@@ -876,7 +859,7 @@ final class Tokenizer
         // Number (decimal, binary, or hex)
         if (
             preg_match(
-                '/^([0-9]+(\.[0-9]+)?|0x[0-9a-fA-F]+|0b[01]+)($|\s|"\'`|' . $this->regexBoundaries . ')/',
+                '/^(\d+(\.\d+)?|0x[\da-fA-F]+|0b[01]+)($|\s|"\'`|' . $this->regexBoundaries . ')/',
                 $string,
                 $matches,
             )
@@ -891,7 +874,7 @@ final class Tokenizer
 
         // A reserved word cannot be preceded by a '.'
         // this makes it so in "mytable.from", "from" is not considered a reserved word
-        if (! $previous || $previous->value() !== '.') {
+        if ($previous === null || $previous->value() !== '.') {
             $upper = strtoupper($string);
             // Top Level Reserved Word
             if (
@@ -968,7 +951,7 @@ final class Tokenizer
         );
     }
 
-    private function getQuotedString(string $string): string
+    private function getNextQuotedString(string $string): string
     {
         $ret = '';
 
@@ -979,15 +962,19 @@ final class Tokenizer
         // 4. single quoted string using '' or \' to escape
         if (
             preg_match(
-                '/^(((`[^`]*($|`))+)|
-            ((\[[^\]]*($|\]))(\][^\]]*($|\]))*)|
-            (("[^"\\\\]*(?:\\\\.[^"\\\\]*)*("|$))+)|
-            ((\'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*(\'|$))+))/sx',
+                <<<'EOD'
+                    ~^(?>(?sx)
+                        (?:`[^`]*(?:$|`))+
+                        |(?:\[[^\]]*($|\]))(?:\][^\]]*(?:$|\]))*
+                        |(?:"[^"\\]*(?:\\.[^"\\]*)*(?:"|$))+
+                        |(?:'[^'\\]*(?:\\.[^'\\]*)*(?:'|$))+
+                    )~
+                    EOD,
                 $string,
                 $matches,
             )
         ) {
-            $ret = $matches[1];
+            $ret = $matches[0];
         }
 
         return $ret;

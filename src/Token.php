@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
+use function assert;
 use function in_array;
 use function str_contains;
 
@@ -21,17 +22,14 @@ final class Token
     public const TOKEN_TYPE_COMMENT           = 8;
     public const TOKEN_TYPE_BLOCK_COMMENT     = 9;
     public const TOKEN_TYPE_NUMBER            = 10;
-    public const TOKEN_TYPE_ERROR             = 11;
-    public const TOKEN_TYPE_VARIABLE          = 12;
+    public const TOKEN_TYPE_VARIABLE          = 11;
 
-    // Constants for different components of a token
-    public const TOKEN_TYPE  = 0;
-    public const TOKEN_VALUE = 1;
-
+    /** @param self::TOKEN_TYPE_* $type */
     public function __construct(
         private readonly int $type,
         private readonly string $value,
     ) {
+        assert($value !== '');
     }
 
     public function value(): string
@@ -39,6 +37,7 @@ final class Token
         return $this->value;
     }
 
+    /** @return self::TOKEN_TYPE_* */
     public function type(): int
     {
         return $this->type;
