@@ -43,6 +43,7 @@ final class Token
         return $this->type;
     }
 
+    /** @param self::TOKEN_TYPE_* ...$types */
     public function isOfType(int ...$types): bool
     {
         return in_array($this->type, $types, true);

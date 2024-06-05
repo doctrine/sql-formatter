@@ -175,7 +175,7 @@ final class SqlFormatter
                 for ($j = 1; $j <= 250; $j++) {
                     // Reached end of string
                     $next = $subCursor->next(Token::TOKEN_TYPE_WHITESPACE);
-                    if (! $next) {
+                    if ($next === null) {
                         break;
                     }
 
@@ -215,7 +215,7 @@ final class SqlFormatter
 
                 // Take out the preceding space unless there was whitespace there in the original query
                 $prevToken = $cursor->subCursor()->previous();
-                if ($prevToken && ! $prevToken->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
+                if ($prevToken !== null && ! $prevToken->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
                     $return = rtrim($return, ' ');
                 }
 
@@ -328,9 +328,9 @@ final class SqlFormatter
             } elseif ($token->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
                 // Multiple boundary characters in a row should not have spaces between them (not including parentheses)
                 $prevNotWhitespaceToken = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
-                if ($prevNotWhitespaceToken && $prevNotWhitespaceToken->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
+                if ($prevNotWhitespaceToken !== null && $prevNotWhitespaceToken->isOfType(Token::TOKEN_TYPE_BOUNDARY)) {
                     $prevToken = $cursor->subCursor()->previous();
-                    if ($prevToken && ! $prevToken->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
+                    if ($prevToken !== null && ! $prevToken->isOfType(Token::TOKEN_TYPE_WHITESPACE)) {
                         $return = rtrim($return, ' ');
                     }
                 }
@@ -358,12 +358,12 @@ final class SqlFormatter
             }
 
             $nextNotWhitespace = $cursor->subCursor()->next(Token::TOKEN_TYPE_WHITESPACE);
-            if (! $nextNotWhitespace || ! $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_NUMBER)) {
+            if ($nextNotWhitespace === null || ! $nextNotWhitespace->isOfType(Token::TOKEN_TYPE_NUMBER)) {
                 continue;
             }
 
             $prev = $cursor->subCursor()->previous(Token::TOKEN_TYPE_WHITESPACE);
-            if (! $prev) {
+            if ($prev === null) {
                 continue;
             }
 
