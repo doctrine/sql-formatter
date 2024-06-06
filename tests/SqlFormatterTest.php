@@ -25,37 +25,38 @@ use function sprintf;
 
 final class SqlFormatterTest extends TestCase
 {
-    private SqlFormatter $formatter;
-
-    protected function setUp(): void
-    {
-        // Force SqlFormatter to run in non-CLI mode for tests
-        $highlighter = new HtmlHighlighter();
-
-        $this->formatter = new SqlFormatter($highlighter);
-    }
-
     #[DataProvider('formatHighlightData')]
     public function testFormatHighlight(string $sql, string $html): void
     {
-        $this->assertSame($html, $this->formatter->format($sql));
+        $highlighter = new HtmlHighlighter();
+        $formatter   = new SqlFormatter($highlighter);
+
+        $this->assertSame($html, $formatter->format($sql));
     }
 
     #[DataProvider('formatData')]
     public function testFormat(string $sql, string $html): void
     {
-        $formatter = new SqlFormatter(new NullHighlighter());
+        $highlighter = new NullHighlighter();
+        $formatter   = new SqlFormatter($highlighter);
+
         $this->assertSame($html, $formatter->format($sql));
     }
 
     #[DataProvider('highlightData')]
     public function testHighlight(string $sql, string $html): void
     {
-        $this->assertSame($html, $this->formatter->highlight($sql));
+        $highlighter = new HtmlHighlighter();
+        $formatter   = new SqlFormatter($highlighter);
+
+        $this->assertSame($html, $formatter->highlight($sql));
     }
 
     public function testHighlightBinary(): void
     {
+        $highlighter = new HtmlHighlighter();
+        $formatter   = new SqlFormatter($highlighter);
+
         $sql = 'SELECT "' . pack('H*', 'ed180e98a47a45b3bdd304b798bc5797') . '" AS BINARY';
 
         if (defined('ENT_IGNORE')) {
@@ -70,20 +71,24 @@ final class SqlFormatterTest extends TestCase
             $binaryData .
             '</span> <span style="font-weight:bold;">AS</span> <span style="font-weight:bold;">BINARY</span></pre>';
 
-        $this->assertSame($html, $this->formatter->highlight($sql));
+        $this->assertSame($html, $formatter->highlight($sql));
     }
 
     #[DataProvider('highlightCliData')]
     public function testCliHighlight(string $sql, string $html): void
     {
-        $formatter = new SqlFormatter(new CliHighlighter());
+        $highlighter = new CliHighlighter();
+        $formatter   = new SqlFormatter($highlighter);
+
         $this->assertSame($html . "\n", $formatter->format($sql));
     }
 
     #[DataProvider('compressData')]
     public function testCompress(string $sql, string $html): void
     {
-        $this->assertSame($html, $this->formatter->compress($sql));
+        $formatter = new SqlFormatter();
+
+        $this->assertSame($html, $formatter->compress($sql));
     }
 
     public function testUsePre(): void
