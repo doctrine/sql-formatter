@@ -15,7 +15,6 @@ use UnexpectedValueException;
 
 use function assert;
 use function count;
-use function defined;
 use function explode;
 use function file_get_contents;
 use function implode;
@@ -59,16 +58,9 @@ final class SqlFormatterTest extends TestCase
 
         $sql = 'SELECT "' . pack('H*', 'ed180e98a47a45b3bdd304b798bc5797') . '" AS BINARY';
 
-        if (defined('ENT_IGNORE')) {
-            // this is what gets written as string
-            $binaryData = '&quot;' . pack('H*', '180e7a450457') . '&quot;';
-        } else {
-            $binaryData = '';
-        }
-
         $html = '<pre style="color: black; background-color: white;">' .
             '<span style="font-weight:bold;">SELECT</span> <span style="color: blue;">' .
-            $binaryData .
+            '&quot;' . pack('H*', '180e7a450457') . '&quot;' .
             '</span> <span style="font-weight:bold;">AS</span> <span style="font-weight:bold;">BINARY</span></pre>';
 
         $this->assertSame($html, $formatter->highlight($sql));
