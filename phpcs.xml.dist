@@ -24,7 +24,6 @@
 
     <rule ref="Generic.Files.InlineHTML">
         <exclude-pattern>examples/*.php</exclude-pattern>
-        <exclude-pattern>tests/performance.php</exclude-pattern>
     </rule>
     <!-- The sniff does not detect usages for some reason -->
     <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
