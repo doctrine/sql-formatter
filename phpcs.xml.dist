@@ -18,6 +18,7 @@
 
     <rule ref="Doctrine"/>
 
+    <file>bin/sql-formatter</file>
     <file>examples</file>
     <file>src</file>
     <file>tests</file>
