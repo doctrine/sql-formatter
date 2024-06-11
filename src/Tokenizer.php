@@ -868,7 +868,7 @@ final class Tokenizer
                 ($stringSlow[0] === '`' || $stringSlow[0] === '['
                     ? Token::TOKEN_TYPE_BACKTICK_QUOTE
                     : Token::TOKEN_TYPE_QUOTE),
-                $this->getNextQuotedString($stringSlow),
+                $this->getNextQuotedString($string, $offset),
             );
         }
 
@@ -879,7 +879,7 @@ final class Tokenizer
 
             // If the variable name is quoted
             if ($stringSlow[1] === '"' || $stringSlow[1] === '\'' || $stringSlow[1] === '`') {
-                $value = $stringSlow[0] . $this->getNextQuotedString(substr($stringSlow, 1));
+                $value = $stringSlow[0] . $this->getNextQuotedString($string, $offset + 1);
             } else {
                 // Non-quoted variable name
                 preg_match('/\G(' . $stringSlow[0] . '[\w.$]+)/', $stringSlow, $matches);
@@ -988,7 +988,7 @@ final class Tokenizer
         );
     }
 
-    private function getNextQuotedString(string $string): string
+    private function getNextQuotedString(string $string, int $offset): string
     {
         $ret = '';
 
@@ -1009,6 +1009,8 @@ final class Tokenizer
                     EOD,
                 $string,
                 $matches,
+                0,
+                $offset,
             )
         ) {
             $ret = $matches[0];
