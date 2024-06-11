@@ -829,26 +829,24 @@ final class Tokenizer
      */
     private function createNextToken(string $string, string $upper, int $offset, Token|null $previous = null): Token
     {
-        $stringSlow = substr($string, $offset);
-
         $matches = [];
         // Whitespace
-        if (preg_match('/\G\s+/', $stringSlow, $matches)) {
+        if (preg_match('/\G\s+/', $string, $matches, 0, $offset)) {
             return new Token(Token::TOKEN_TYPE_WHITESPACE, $matches[0]);
         }
 
         // Comment
         if (
-            $stringSlow[0] === '#' ||
-            (isset($stringSlow[1]) && ($stringSlow[0] === '-' && $stringSlow[1] === '-') ||
-            (isset($stringSlow[1]) && $stringSlow[0] === '/' && $stringSlow[1] === '*'))
+            $string[$offset] === '#' ||
+            (isset($string[$offset + 1]) && ($string[$offset] === '-' && $string[$offset + 1] === '-') ||
+            (isset($string[$offset + 1]) && $string[$offset] === '/' && $string[$offset + 1] === '*'))
         ) {
             // Comment until end of line
-            if ($stringSlow[0] === '-' || $stringSlow[0] === '#') {
-                $last = strpos($stringSlow, "\n");
+            if ($string[$offset] === '-' || $string[$offset] === '#') {
+                $last = strpos($string, "\n", $offset);
                 $type = Token::TOKEN_TYPE_COMMENT;
             } else { // Comment until closing comment tag
-                $pos  = strpos($stringSlow, '*/', 2);
+                $pos  = strpos($string, '*/', $offset + 2);
                 $last = $pos !== false
                     ? $pos + 2
                     : false;
@@ -856,16 +854,16 @@ final class Tokenizer
             }
 
             if ($last === false) {
-                $last = strlen($stringSlow);
+                $last = strlen($string);
             }
 
-            return new Token($type, substr($stringSlow, 0, $last));
+            return new Token($type, substr($string, $offset, $last - $offset));
         }
 
         // Quoted String
-        if ($stringSlow[0] === '"' || $stringSlow[0] === '\'' || $stringSlow[0] === '`' || $stringSlow[0] === '[') {
+        if ($string[$offset] === '"' || $string[$offset] === '\'' || $string[$offset] === '`' || $string[$offset] === '[') {
             return new Token(
-                ($stringSlow[0] === '`' || $stringSlow[0] === '['
+                ($string[$offset] === '`' || $string[$offset] === '['
                     ? Token::TOKEN_TYPE_BACKTICK_QUOTE
                     : Token::TOKEN_TYPE_QUOTE),
                 $this->getNextQuotedString($string, $offset),
@@ -873,16 +871,16 @@ final class Tokenizer
         }
 
         // User-defined Variable
-        if (($stringSlow[0] === '@' || $stringSlow[0] === ':') && isset($stringSlow[1])) {
+        if (($string[$offset] === '@' || $string[$offset] === ':') && isset($string[$offset + 1])) {
             $value = null;
             $type  = Token::TOKEN_TYPE_VARIABLE;
 
             // If the variable name is quoted
-            if ($stringSlow[1] === '"' || $stringSlow[1] === '\'' || $stringSlow[1] === '`') {
-                $value = $stringSlow[0] . $this->getNextQuotedString($string, $offset + 1);
+            if ($string[$offset + 1] === '"' || $string[$offset + 1] === '\'' || $string[$offset + 1] === '`') {
+                $value = $string[$offset] . $this->getNextQuotedString($string, $offset + 1);
             } else {
                 // Non-quoted variable name
-                preg_match('/\G(' . $stringSlow[0] . '[\w.$]+)/', $stringSlow, $matches);
+                preg_match('/\G(' . $string[$offset] . '[\w.$]+)/', $string, $matches, 0, $offset);
                 if ($matches) {
                     $value = $matches[1];
                 }
@@ -897,15 +895,17 @@ final class Tokenizer
         if (
             preg_match(
                 '/\G(\d+(\.\d+)?|0x[\da-fA-F]+|0b[01]+)($|\s|"\'`|' . $this->regexBoundaries . ')/',
-                $stringSlow,
+                $string,
                 $matches,
+                0,
+                $offset,
             )
         ) {
             return new Token(Token::TOKEN_TYPE_NUMBER, $matches[1]);
         }
 
         // Boundary Character (punctuation and symbols)
-        if (preg_match('/\G(' . $this->regexBoundaries . ')/', $stringSlow, $matches)) {
+        if (preg_match('/\G(' . $this->regexBoundaries . ')/', $string, $matches, 0, $offset)) {
             return new Token(Token::TOKEN_TYPE_BOUNDARY, $matches[1]);
         }
 
@@ -924,7 +924,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_TOPLEVEL,
-                    substr($stringSlow, 0, strlen($matches[1])),
+                    substr($string, $offset, strlen($matches[1])),
                 );
             }
 
@@ -940,7 +940,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED_NEWLINE,
-                    substr($stringSlow, 0, strlen($matches[1])),
+                    substr($string, $offset, strlen($matches[1])),
                 );
             }
 
@@ -956,7 +956,7 @@ final class Tokenizer
             ) {
                 return new Token(
                     Token::TOKEN_TYPE_RESERVED,
-                    substr($stringSlow, 0, strlen($matches[1])),
+                    substr($string, $offset, strlen($matches[1])),
                 );
             }
         }
@@ -967,12 +967,12 @@ final class Tokenizer
         if (preg_match('/\G(' . $this->regexFunction . '[(]|\s|[)])/', $upper, $matches, 0, $offset)) {
             return new Token(
                 Token::TOKEN_TYPE_RESERVED,
-                substr($stringSlow, 0, strlen($matches[1]) - 1),
+                substr($string, $offset, strlen($matches[1]) - 1),
             );
         }
 
         // Non reserved word
-        preg_match('/\G(.*?)($|\s|["\'`]|' . $this->regexBoundaries . ')/', $stringSlow, $matches);
+        preg_match('/\G(.*?)($|\s|["\'`]|' . $this->regexBoundaries . ')/', $string, $matches, 0, $offset);
 
         return new Token(Token::TOKEN_TYPE_WORD, $matches[1]);
     }
