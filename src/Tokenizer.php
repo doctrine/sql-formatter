@@ -833,7 +833,7 @@ final class Tokenizer
 
         $matches = [];
         // Whitespace
-        if (preg_match('/^\s+/', $stringSlow, $matches)) {
+        if (preg_match('/\G\s+/', $stringSlow, $matches)) {
             return new Token(Token::TOKEN_TYPE_WHITESPACE, $matches[0]);
         }
 
@@ -882,7 +882,7 @@ final class Tokenizer
                 $value = $stringSlow[0] . $this->getNextQuotedString(substr($stringSlow, 1));
             } else {
                 // Non-quoted variable name
-                preg_match('/^(' . $stringSlow[0] . '[\w.$]+)/', $stringSlow, $matches);
+                preg_match('/\G(' . $stringSlow[0] . '[\w.$]+)/', $stringSlow, $matches);
                 if ($matches) {
                     $value = $matches[1];
                 }
@@ -896,7 +896,7 @@ final class Tokenizer
         // Number (decimal, binary, or hex)
         if (
             preg_match(
-                '/^(\d+(\.\d+)?|0x[\da-fA-F]+|0b[01]+)($|\s|"\'`|' . $this->regexBoundaries . ')/',
+                '/\G(\d+(\.\d+)?|0x[\da-fA-F]+|0b[01]+)($|\s|"\'`|' . $this->regexBoundaries . ')/',
                 $stringSlow,
                 $matches,
             )
@@ -905,7 +905,7 @@ final class Tokenizer
         }
 
         // Boundary Character (punctuation and symbols)
-        if (preg_match('/^(' . $this->regexBoundaries . ')/', $stringSlow, $matches)) {
+        if (preg_match('/\G(' . $this->regexBoundaries . ')/', $stringSlow, $matches)) {
             return new Token(Token::TOKEN_TYPE_BOUNDARY, $matches[1]);
         }
 
@@ -916,7 +916,7 @@ final class Tokenizer
             // Top Level Reserved Word
             if (
                 preg_match(
-                    '/^(' . $this->regexReservedToplevel . ')($|\s|' . $this->regexBoundaries . ')/',
+                    '/\G(' . $this->regexReservedToplevel . ')($|\s|' . $this->regexBoundaries . ')/',
                     $upper,
                     $matches,
                 )
@@ -930,7 +930,7 @@ final class Tokenizer
             // Newline Reserved Word
             if (
                 preg_match(
-                    '/^(' . $this->regexReservedNewline . ')($|\s|' . $this->regexBoundaries . ')/',
+                    '/\G(' . $this->regexReservedNewline . ')($|\s|' . $this->regexBoundaries . ')/',
                     $upper,
                     $matches,
                 )
@@ -944,7 +944,7 @@ final class Tokenizer
             // Other Reserved Word
             if (
                 preg_match(
-                    '/^(' . $this->regexReserved . ')($|\s|' . $this->regexBoundaries . ')/',
+                    '/\G(' . $this->regexReserved . ')($|\s|' . $this->regexBoundaries . ')/',
                     $upper,
                     $matches,
                 )
@@ -960,7 +960,7 @@ final class Tokenizer
         // this makes it so "count(" is considered a function, but "count" alone is not
         $upper = strtoupper($stringSlow);
         // function
-        if (preg_match('/^(' . $this->regexFunction . '[(]|\s|[)])/', $upper, $matches)) {
+        if (preg_match('/\G(' . $this->regexFunction . '[(]|\s|[)])/', $upper, $matches)) {
             return new Token(
                 Token::TOKEN_TYPE_RESERVED,
                 substr($stringSlow, 0, strlen($matches[1]) - 1),
@@ -968,7 +968,7 @@ final class Tokenizer
         }
 
         // Non reserved word
-        preg_match('/^(.*?)($|\s|["\'`]|' . $this->regexBoundaries . ')/', $stringSlow, $matches);
+        preg_match('/\G(.*?)($|\s|["\'`]|' . $this->regexBoundaries . ')/', $stringSlow, $matches);
 
         return new Token(Token::TOKEN_TYPE_WORD, $matches[1]);
     }
@@ -1000,7 +1000,7 @@ final class Tokenizer
         if (
             preg_match(
                 <<<'EOD'
-                    ~^(?>(?sx)
+                    ~\G(?>(?sx)
                         (?:`[^`]*(?:$|`))+
                         |(?:\[[^\]]*($|\]))(?:\][^\]]*(?:$|\]))*
                         |(?:"[^"\\]*(?:\\.[^"\\]*)*(?:"|$))+
