@@ -835,14 +835,17 @@ final class Tokenizer
             return new Token(Token::TOKEN_TYPE_WHITESPACE, $matches[0]);
         }
 
+        $firstChar  = $string[$offset];
+        $secondChar = $string[$offset + 1] ?? '';
+
         // Comment
         if (
-            $string[$offset] === '#' ||
-            (isset($string[$offset + 1]) && ($string[$offset] === '-' && $string[$offset + 1] === '-') ||
-            (isset($string[$offset + 1]) && $string[$offset] === '/' && $string[$offset + 1] === '*'))
+            $firstChar === '#' ||
+            (($firstChar === '-' && $secondChar === '-') ||
+            ($firstChar === '/' && $secondChar === '*'))
         ) {
             // Comment until end of line
-            if ($string[$offset] === '-' || $string[$offset] === '#') {
+            if ($firstChar === '-' || $firstChar === '#') {
                 $last = strpos($string, "\n", $offset);
                 $type = Token::TOKEN_TYPE_COMMENT;
             } else { // Comment until closing comment tag
@@ -861,9 +864,9 @@ final class Tokenizer
         }
 
         // Quoted String
-        if ($string[$offset] === '"' || $string[$offset] === '\'' || $string[$offset] === '`' || $string[$offset] === '[') {
+        if ($firstChar === '"' || $firstChar === '\'' || $firstChar === '`' || $firstChar === '[') {
             return new Token(
-                ($string[$offset] === '`' || $string[$offset] === '['
+                ($firstChar === '`' || $firstChar === '['
                     ? Token::TOKEN_TYPE_BACKTICK_QUOTE
                     : Token::TOKEN_TYPE_QUOTE),
                 $this->getNextQuotedString($string, $offset),
@@ -871,16 +874,16 @@ final class Tokenizer
         }
 
         // User-defined Variable
-        if (($string[$offset] === '@' || $string[$offset] === ':') && isset($string[$offset + 1])) {
+        if (($firstChar === '@' || $firstChar === ':') && $secondChar !== '') {
             $value = null;
             $type  = Token::TOKEN_TYPE_VARIABLE;
 
             // If the variable name is quoted
-            if ($string[$offset + 1] === '"' || $string[$offset + 1] === '\'' || $string[$offset + 1] === '`') {
-                $value = $string[$offset] . $this->getNextQuotedString($string, $offset + 1);
+            if ($secondChar === '"' || $secondChar === '\'' || $secondChar === '`') {
+                $value = $firstChar . $this->getNextQuotedString($string, $offset + 1);
             } else {
                 // Non-quoted variable name
-                preg_match('/\G(' . $string[$offset] . '[\w.$]+)/', $string, $matches, 0, $offset);
+                preg_match('/\G(' . $firstChar . '[\w.$]+)/', $string, $matches, 0, $offset);
                 if ($matches) {
                     $value = $matches[1];
                 }
