@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Doctrine\SqlFormatter;
 
-use function array_combine;
-use function array_keys;
 use function array_map;
-use function arsort;
-use function assert;
-use function implode;
+use function count;
+use function is_int;
 use function preg_match;
 use function preg_quote;
+use function reset;
 use function str_replace;
+use function str_starts_with;
 use function strlen;
 use function strpos;
 use function strtoupper;
 use function substr;
+use function usort;
 
 /** @internal */
 final class Tokenizer
@@ -762,31 +762,12 @@ final class Tokenizer
      */
     public function __construct()
     {
-        // Sort list from longest word to shortest, 3x faster than usort
-        $sortByLengthFx = static function ($values) {
-            $valuesMap = array_combine($values, array_map(strlen(...), $values));
-            assert($valuesMap !== false);
-            arsort($valuesMap);
-
-            return array_keys($valuesMap);
-        };
-
-        $buildRegexFromListFx = static function ($values) use ($sortByLengthFx) {
-            return '(?>' . implode(
-                '|',
-                array_map(
-                    static fn ($v) => preg_quote($v, '/'),
-                    $sortByLengthFx($values),
-                ),
-            ) . ')';
-        };
-
         // Set up regular expressions
-        $regexBoundaries       = $buildRegexFromListFx($this->boundaries);
-        $regexReserved         = $buildRegexFromListFx($this->reserved);
-        $regexReservedToplevel = str_replace(' ', '\s+', $buildRegexFromListFx($this->reservedToplevel));
-        $regexReservedNewline  = str_replace(' ', '\s+', $buildRegexFromListFx($this->reservedNewline));
-        $regexFunction         = $buildRegexFromListFx($this->functions);
+        $regexBoundaries       = $this->makeRegexFromList($this->boundaries);
+        $regexReserved         = $this->makeRegexFromList($this->reserved);
+        $regexReservedToplevel = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedToplevel));
+        $regexReservedNewline  = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedNewline));
+        $regexFunction         = $this->makeRegexFromList($this->functions);
 
         $this->nextTokenRegexNumber            = '/\G(?:\d+(?:\.\d+)?|0x[\da-fA-F]+|0b[01]+)(?=$|\s|"\'`|' . $regexBoundaries . ')/';
         $this->nextTokenRegexBoundaryCharacter = '/\G' . $regexBoundaries . '/';
@@ -795,6 +776,75 @@ final class Tokenizer
         $this->nextTokenRegexReserved          = '/\G' . $regexReserved . '(?=$|\s|' . $regexBoundaries . ')/';
         $this->nextTokenRegexFunction          = '/\G' . $regexFunction . '(?=\s*\()/';
         $this->nextTokenRegexNonReserved       = '/\G.*?(?=$|\s|["\'`]|' . $regexBoundaries . ')/';
+    }
+
+    /**
+     * Make regex from a list of values matching longest value first.
+     *
+     * Optimized for speed by matching alternative branch only once
+     * https://github.com/PCRE2Project/pcre2/issues/411 .
+     *
+     * @param list<string> $values
+     */
+    private function makeRegexFromList(array $values, bool $sorted = false): string
+    {
+        // sort list alphabetically and from longest word to shortest
+        if (! $sorted) {
+            usort($values, static function (string $a, string $b) {
+                return str_starts_with($a, $b) || str_starts_with($b, $a)
+                    ? strlen($b) <=> strlen($a)
+                    : $a <=> $b;
+            });
+        }
+
+        /** @var array<int|string, list<string>> $valuesBySharedPrefix */
+        $valuesBySharedPrefix = [];
+        $items                = [];
+        $prefix               = null;
+
+        foreach ($values as $v) {
+            if ($prefix !== null && ! str_starts_with($v, substr($prefix, 0, 1))) {
+                $valuesBySharedPrefix[$prefix] = $items;
+                $items                         = [];
+                $prefix                        = null;
+            }
+
+            $items[] = $v;
+
+            if ($prefix === null) {
+                $prefix = $v;
+            } else {
+                while (! str_starts_with($v, $prefix)) {
+                    $prefix = substr($prefix, 0, -1);
+                }
+            }
+        }
+
+        if ($items !== []) {
+            $valuesBySharedPrefix[$prefix] = $items;
+            $items                         = [];
+            $prefix                        = null;
+        }
+
+        $regex = '(?>';
+
+        foreach ($valuesBySharedPrefix as $prefix => $items) {
+            if ($regex !== '(?>') {
+                $regex .= '|';
+            }
+
+            if (is_int($prefix)) {
+                $prefix = (string) $prefix;
+            }
+
+            $regex .= preg_quote($prefix, '/');
+
+            $regex .= count($items) === 1
+                ? preg_quote(substr(reset($items), strlen($prefix)), '/')
+                : $this->makeRegexFromList(array_map(static fn ($v) => substr($v, strlen($prefix)), $items), true);
+        }
+
+        return $regex . ')';
     }
 
     /**
