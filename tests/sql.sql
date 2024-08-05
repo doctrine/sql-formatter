@@ -407,3 +407,5 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE(i);
   END LOOP;
 END;
+---
+SELECT a FROM test STRAIGHT_JOIN test2 ON test.id = test2.id
