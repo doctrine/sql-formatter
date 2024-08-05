@@ -324,3 +324,5 @@ BEGIN
     (SELECT 1 as x);
   MY_NON_TOP_LEVEL_KEYWORD_FX_6();
 END;
+---
+SELECT a FROM test STRAIGHT_JOIN test2 ON test.id = test2.id

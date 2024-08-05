@@ -316,6 +316,7 @@ final class Tokenizer
         'STATUS',
         'STOP',
         'STORAGE',
+        'STRAIGHT_JOIN',
         'STRING',
         'STRIPED',
         'SUPER',
