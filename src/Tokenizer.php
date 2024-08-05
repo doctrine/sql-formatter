@@ -409,6 +409,7 @@ final class Tokenizer
         'OUTER JOIN',
         'RIGHT JOIN',
         'RIGHT OUTER JOIN',
+        'STRAIGHT_JOIN',
         'XOR',
     ];
 
