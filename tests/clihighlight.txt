@@ -1040,5 +1040,5 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_6[0m();[0m
 [37mSELECT[0m
   a[0m
 [37mFROM[0m
-  test[0m
-  [37mSTRAIGHT_JOIN[0m test2[0m [37mON[0m test[0m.[0mid[0m =[0m test2[0m.[0mid[0m
+  test[0m
+  [37mSTRAIGHT_JOIN[0m test2[0m [37mON[0m test[0m.[0mid[0m =[0m test2[0m.[0mid[0m

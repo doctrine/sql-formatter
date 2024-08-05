@@ -1036,7 +1036,7 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_6();
 END;
 ---
 SELECT
-  a 
+  a
 FROM
-  test 
+  test
   STRAIGHT_JOIN test2 ON test.id = test2.id
