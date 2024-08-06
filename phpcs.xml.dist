@@ -18,13 +18,13 @@
 
     <rule ref="Doctrine"/>
 
+    <file>bin/sql-formatter</file>
     <file>examples</file>
     <file>src</file>
     <file>tests</file>
 
     <rule ref="Generic.Files.InlineHTML">
         <exclude-pattern>examples/*.php</exclude-pattern>
-        <exclude-pattern>tests/performance.php</exclude-pattern>
     </rule>
     <!-- The sniff does not detect usages for some reason -->
     <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
 use Doctrine\SqlFormatter\NullHighlighter;
 use Doctrine\SqlFormatter\SqlFormatter;
 use Doctrine\SqlFormatter\Tokenizer;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $formatter = new SqlFormatter();
 

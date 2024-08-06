@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+use Doctrine\SqlFormatter\SqlFormatter;
+use Doctrine\SqlFormatter\Tokenizer;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
 if (PHP_SAPI !== 'cli') :?>
     <p>
         Run this php script from the command line to see CLI syntax highlighting and
@@ -22,11 +27,6 @@ if (isset($argv[1])) {
     assert($fp !== false);
     $sql = stream_get_contents($fp);
 }
-
-require_once __DIR__ . '/../vendor/autoload.php';
-
-use Doctrine\SqlFormatter\SqlFormatter;
-use Doctrine\SqlFormatter\Tokenizer;
 
 assert($sql !== false);
 

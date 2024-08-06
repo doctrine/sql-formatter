@@ -850,7 +850,6 @@ final class Tokenizer
 
     /**
      * Takes a SQL string and breaks it into tokens.
-     * Each token is an associative array with type and value.
      *
      * @param string $string The SQL string
      */
@@ -882,8 +881,6 @@ final class Tokenizer
      * @param string     $string   The SQL string
      * @param string     $upper    The SQL string in upper case
      * @param Token|null $previous The result of the previous createNextToken() call
-     *
-     * @return Token An associative array containing the type and value of the token.
      */
     private function createNextToken(string $string, string $upper, int $offset, Token|null $previous = null): Token
     {
