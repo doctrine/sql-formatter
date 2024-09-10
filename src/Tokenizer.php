@@ -899,14 +899,15 @@ final class Tokenizer
      */
     public function tokenize(string $string): Cursor
     {
-        $tokens = [];
+        $tokenizeRegex = $this->tokenizeRegex;
+        $upper         = strtoupper($string);
 
-        $upper  = strtoupper($string);
+        $tokens = [];
         $offset = 0;
 
         while ($offset < strlen($string)) {
             // Get the next token and the token type
-            preg_match($this->tokenizeRegex, $upper, $matches, 0, $offset);
+            preg_match($tokenizeRegex, $upper, $matches, 0, $offset);
             assert(($matches[0] ?? '') !== '');
 
             while (is_int($lastMatchesKey = array_key_last($matches))) {
