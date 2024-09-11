@@ -758,8 +758,7 @@ final class Tokenizer
      */
     public function __construct()
     {
-        $regexes             = $this->makeTokenizeRegexes();
-        $this->tokenizeRegex = $this->makeTokenizeRegex($regexes);
+        $this->tokenizeRegex = $this->makeTokenizeRegex($this->makeTokenizeRegexes());
     }
 
     /**
