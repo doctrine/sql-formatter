@@ -409,3 +409,17 @@ BEGIN
 END;
 ---
 SELECT a FROM test STRAIGHT_JOIN test2 ON test.id = test2.id
+---
+SELECT
+  t.id,
+  t.start,
+  t.end,
+  t.end AS e2,
+  t.limit,
+  t.begin,
+  t.case,
+  t.when,
+  t.then,
+  t.else
+FROM t
+WHERE t.start = t.end

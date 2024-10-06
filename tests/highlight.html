@@ -409,3 +409,17 @@ JOIN</span> <span style="color: #333;">c</span> <span style="font-weight:bold;">
 <span style="font-weight:bold;">END</span><span >;</span></pre>
 ---
 <pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span> <span style="color: #333;">a</span> <span style="font-weight:bold;">FROM</span> <span style="color: #333;">test</span> <span style="font-weight:bold;">STRAIGHT_JOIN</span> <span style="color: #333;">test2</span> <span style="font-weight:bold;">ON</span> <span style="color: #333;">test</span><span >.</span><span style="color: #333;">id</span> <span >=</span> <span style="color: #333;">test2</span><span >.</span><span style="color: #333;">id</span></pre>
+---
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">id</span><span >,</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">start</span><span >,</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">end</span><span >,</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">end</span> <span style="font-weight:bold;">AS</span> <span style="color: #333;">e2</span><span >,</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">limit</span><span >,</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">begin</span><span >,</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">case</span><span >,</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">when</span><span >,</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">then</span><span >,</span>
+  <span style="color: #333;">t</span><span >.</span><span style="color: #333;">else</span>
+<span style="font-weight:bold;">FROM</span> <span style="color: #333;">t</span>
+<span style="font-weight:bold;">WHERE</span> <span style="color: #333;">t</span><span >.</span><span style="color: #333;">start</span> <span >=</span> <span style="color: #333;">t</span><span >.</span><span style="color: #333;">end</span></pre>

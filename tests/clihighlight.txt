@@ -1185,3 +1185,19 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
 [37mFROM[0m
   test[0m
   [37mSTRAIGHT_JOIN[0m test2[0m [37mON[0m test[0m.[0mid[0m =[0m test2[0m.[0mid[0m
+---
+[37mSELECT[0m
+  t[0m.[0mid[0m,[0m
+  t[0m.[0mstart[0m,[0m
+  t[0m.[0mend[0m,[0m
+  t[0m.[0mend[0m [37mAS[0m e2[0m,[0m
+  t[0m.[0mlimit[0m,[0m
+  t[0m.[0mbegin[0m,[0m
+  t[0m.[0mcase[0m,[0m
+  t[0m.[0mwhen[0m,[0m
+  t[0m.[0mthen[0m,[0m
+  t[0m.[0melse[0m
+[37mFROM[0m
+  t[0m
+[37mWHERE[0m
+  t[0m.[0mstart[0m =[0m t[0m.[0mend[0m
