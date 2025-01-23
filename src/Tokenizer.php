@@ -868,7 +868,7 @@ final class Tokenizer
             Token::TOKEN_TYPE_BOUNDARY => $regexBoundaries,
             // A reserved word cannot be preceded by a '.'
             // this makes it so in "mytable.from", "from" is not considered a reserved word
-            Token::TOKEN_TYPE_RESERVED_TOPLEVEL => '(?<!\.)' . $regexReservedToplevel . '(?=$|\s|' . $regexBoundaries . ')',
+            Token::TOKEN_TYPE_RESERVED_TOPLEVEL => '(?<!\.|\sCHARACTER\s(?=SET\s))' . $regexReservedToplevel . '(?=$|\s|' . $regexBoundaries . ')',
             Token::TOKEN_TYPE_RESERVED_NEWLINE => '(?<!\.)' . $regexReservedNewline . '(?=$|\s|' . $regexBoundaries . ')',
             Token::TOKEN_TYPE_RESERVED => '(?<!\.)' . $regexReserved . '(?=$|\s|' . $regexBoundaries . ')'
                 // A function must be succeeded by '('

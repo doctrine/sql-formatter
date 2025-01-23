@@ -423,3 +423,5 @@ SELECT
   t.else
 FROM t
 WHERE t.start = t.end
+---
+CREATE TABLE t (c VARCHAR(20)) DEFAULT CHARACTER SET utf8mb4 ENGINE = InnoDB
