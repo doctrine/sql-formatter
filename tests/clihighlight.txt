@@ -1201,3 +1201,7 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
   t[0m
 [37mWHERE[0m
   t[0m.[0mstart[0m =[0m t[0m.[0mend[0m
+---
+[37mCREATE[0m [37mTABLE[0m t[0m (
+  c[0m [37mVARCHAR[0m([32;1m20[0m)
+) [37mDEFAULT[0m [37mCHARACTER[0m [37mSET[0m utf8mb4[0m [37mENGINE[0m =[0m InnoDB[0m
