@@ -104,6 +104,7 @@ final class Tokenizer
         'DUPLICATE',
         'DYNAMIC',
         'ELSE',
+        'ELSEIF',
         'ENCLOSED',
         'END',
         'ENGINE',

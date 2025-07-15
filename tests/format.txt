@@ -1203,3 +1203,15 @@ WHERE
 CREATE TABLE t (
   c VARCHAR(20)
 ) DEFAULT CHARACTER SET utf8mb4 ENGINE = InnoDB
+---
+BEGIN
+  IF first_name != '' AND last_name != '' THEN
+    RETURN CONCAT(first_name, ' ', last_name);
+  ELSEIF first_name != '' THEN
+    RETURN first_name;
+  ELSEIF last_name != '' THEN
+    RETURN last_name;
+  ELSE
+    RETURN id;
+  END IF;
+END;

@@ -175,4 +175,5 @@ final class SqlFormatterTest extends TestCase
     {
         return self::fileDataProvider('highlight.html');
     }
+
 }

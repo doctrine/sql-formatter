@@ -301,7 +301,7 @@ final class SqlFormatter
                     $newline             = true;
                     $increaseBlockIndent = true;
                 }
-            } elseif (in_array($tokenValueUpper, ['WHEN', 'THEN', 'ELSE', 'END'], true)) {
+            } elseif (in_array($tokenValueUpper, ['WHEN', 'THEN', 'ELSE', 'ELSEIF', 'END'], true)) {
                 if ($tokenValueUpper !== 'THEN') {
                     $decreaseIndentationLevelFx();
 
