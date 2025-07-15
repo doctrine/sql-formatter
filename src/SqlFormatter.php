@@ -66,6 +66,7 @@ final class SqlFormatter
         $inlineCount           = 0;
         $inlineIndented        = false;
         $clauseLimit           = false;
+        $inIfCondition         = false;
 
         $appendNewLineIfNotAddedFx  = static function () use (&$addedNewline, &$return, $tab, &$indentLevel): void {
             // Add a newline if not already added
@@ -301,8 +302,8 @@ final class SqlFormatter
                     $newline             = true;
                     $increaseBlockIndent = true;
                 }
-            } elseif (in_array($tokenValueUpper, ['WHEN', 'THEN', 'ELSE', 'ELSEIF', 'END'], true)) {
-                if ($tokenValueUpper !== 'THEN') {
+            } elseif (in_array($tokenValueUpper, ['IF', 'WHEN', 'THEN', 'ELSE', 'ELSEIF', 'END'], true)) {
+                if ($tokenValueUpper !== 'THEN' && $tokenValueUpper !== 'IF') {
                     $decreaseIndentationLevelFx();
 
                     if ($prevNotWhitespaceToken !== null && strtoupper($prevNotWhitespaceToken->value()) !== 'CASE') {
@@ -313,6 +314,20 @@ final class SqlFormatter
                 if ($tokenValueUpper === 'THEN' || $tokenValueUpper === 'ELSE') {
                     $newline             = true;
                     $increaseBlockIndent = true;
+                }
+
+                // Track IF condition context only for IF/ELSEIF that are part of conditional blocks
+                // (not for "IF()" function calls)
+                if ($tokenValueUpper === 'IF' || $tokenValueUpper === 'ELSEIF') {
+                    // Check if this IF is part of a conditional block by looking at the next token
+                    $nextToken = $cursor->subCursor()->next(Token::TOKEN_TYPE_WHITESPACE);
+                    if (
+                        $nextToken !== null && $nextToken->value() !== '('
+                    ) {
+                        $inIfCondition = true;
+                    }
+                } elseif ($tokenValueUpper === 'THEN' || $tokenValueUpper === 'ELSE' || $tokenValueUpper === 'END') {
+                    $inIfCondition = false;
                 }
             } elseif (
                 $clauseLimit &&
@@ -332,9 +347,12 @@ final class SqlFormatter
                     $newline = true;
                 }
             } elseif ($token->isOfType(Token::TOKEN_TYPE_RESERVED_NEWLINE)) {
-                // Newline reserved words start a new line
+                // Newline reserved words start a new line, except for AND/OR within IF conditions
 
-                $appendNewLineIfNotAddedFx();
+                // Skip newlines for AND/OR when inside IF condition
+                if (! $inIfCondition || ! in_array($tokenValueUpper, ['AND', 'OR'], true)) {
+                    $appendNewLineIfNotAddedFx();
+                }
 
                 if ($token->hasExtraWhitespace()) {
                     $highlighted = preg_replace('/\s+/', ' ', $highlighted);
