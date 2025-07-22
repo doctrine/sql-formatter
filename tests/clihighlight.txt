@@ -1211,7 +1211,7 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
     [37mRETURN[0m [37mCONCAT[0m(first_name[0m,[0m [34;1m' '[0m,[0m last_name[0m);[0m
   [37mELSEIF[0m first_name[0m ![0m=[0m [34;1m''[0m [37mTHEN[0m
     [37mRETURN[0m first_name[0m;[0m
-  [37mELSEIF[0m last_name[0m ![0m=[0m [34;1m''[0m [37mTHEN[0m
+  [37mELSIF[0m last_name[0m ![0m=[0m [34;1m''[0m [37mTHEN[0m
     [37mRETURN[0m last_name[0m;[0m
   [37mELSE[0m
     [37mRETURN[0m id[0m;[0m

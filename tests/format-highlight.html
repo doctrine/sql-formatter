@@ -1211,7 +1211,7 @@
     <span style="font-weight:bold;">RETURN</span> <span style="font-weight:bold;">CONCAT</span>(<span style="color: #333;">first_name</span><span >,</span> <span style="color: blue;">' '</span><span >,</span> <span style="color: #333;">last_name</span>)<span >;</span>
   <span style="font-weight:bold;">ELSEIF</span> <span style="color: #333;">first_name</span> <span >!</span><span >=</span> <span style="color: blue;">''</span> <span style="font-weight:bold;">THEN</span>
     <span style="font-weight:bold;">RETURN</span> <span style="color: #333;">first_name</span><span >;</span>
-  <span style="font-weight:bold;">ELSEIF</span> <span style="color: #333;">last_name</span> <span >!</span><span >=</span> <span style="color: blue;">''</span> <span style="font-weight:bold;">THEN</span>
+  <span style="font-weight:bold;">ELSIF</span> <span style="color: #333;">last_name</span> <span >!</span><span >=</span> <span style="color: blue;">''</span> <span style="font-weight:bold;">THEN</span>
     <span style="font-weight:bold;">RETURN</span> <span style="color: #333;">last_name</span><span >;</span>
   <span style="font-weight:bold;">ELSE</span>
     <span style="font-weight:bold;">RETURN</span> <span style="color: #333;">id</span><span >;</span>

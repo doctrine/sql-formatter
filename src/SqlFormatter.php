@@ -302,7 +302,7 @@ final class SqlFormatter
                     $newline             = true;
                     $increaseBlockIndent = true;
                 }
-            } elseif (in_array($tokenValueUpper, ['IF', 'WHEN', 'THEN', 'ELSE', 'ELSEIF', 'END'], true)) {
+            } elseif (in_array($tokenValueUpper, ['IF', 'WHEN', 'THEN', 'ELSE', 'ELSEIF', 'ELSIF', 'END'], true)) {
                 if ($tokenValueUpper !== 'THEN' && $tokenValueUpper !== 'IF') {
                     $decreaseIndentationLevelFx();
 
@@ -318,7 +318,7 @@ final class SqlFormatter
 
                 // Track IF condition context only for IF/ELSEIF that are part of conditional blocks
                 // (not for "IF()" function calls)
-                if ($tokenValueUpper === 'IF' || $tokenValueUpper === 'ELSEIF') {
+                if (in_array($tokenValueUpper, ['IF', 'ELSEIF', 'ELSIF'], true)) {
                     // Check if this IF is part of a conditional block by looking at the next token
                     $nextToken = $cursor->subCursor()->next(Token::TOKEN_TYPE_WHITESPACE);
                     if (

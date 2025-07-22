@@ -1209,7 +1209,7 @@ BEGIN
     RETURN CONCAT(first_name, ' ', last_name);
   ELSEIF first_name != '' THEN
     RETURN first_name;
-  ELSEIF last_name != '' THEN
+  ELSIF last_name != '' THEN
     RETURN last_name;
   ELSE
     RETURN id;
