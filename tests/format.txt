@@ -1215,3 +1215,14 @@ BEGIN
     RETURN id;
   END IF;
 END;
+---
+SELECT
+  CASE WHEN status = 'active' AND priority = 'high' THEN
+    'urgent'
+  WHEN status = 'active' OR status = 'pending' THEN
+    'normal'
+  ELSE
+    'low'
+  END AS task_priority
+FROM
+  tasks;

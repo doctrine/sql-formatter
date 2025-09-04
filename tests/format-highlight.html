@@ -1217,3 +1217,14 @@
     <span style="font-weight:bold;">RETURN</span> <span style="color: #333;">id</span><span >;</span>
   <span style="font-weight:bold;">END</span> <span style="font-weight:bold;">IF</span><span >;</span>
 <span style="font-weight:bold;">END</span><span >;</span></pre>
+---
+<pre style="color: black; background-color: white;"><span style="font-weight:bold;">SELECT</span>
+  <span style="font-weight:bold;">CASE</span> <span style="font-weight:bold;">WHEN</span> <span style="font-weight:bold;">status</span> <span >=</span> <span style="color: blue;">'active'</span> <span style="font-weight:bold;">AND</span> <span style="color: #333;">priority</span> <span >=</span> <span style="color: blue;">'high'</span> <span style="font-weight:bold;">THEN</span>
+    <span style="color: blue;">'urgent'</span>
+  <span style="font-weight:bold;">WHEN</span> <span style="font-weight:bold;">status</span> <span >=</span> <span style="color: blue;">'active'</span> <span style="font-weight:bold;">OR</span> <span style="font-weight:bold;">status</span> <span >=</span> <span style="color: blue;">'pending'</span> <span style="font-weight:bold;">THEN</span>
+    <span style="color: blue;">'normal'</span>
+  <span style="font-weight:bold;">ELSE</span>
+    <span style="color: blue;">'low'</span>
+  <span style="font-weight:bold;">END</span> <span style="font-weight:bold;">AS</span> <span style="color: #333;">task_priority</span>
+<span style="font-weight:bold;">FROM</span>
+  <span style="color: #333;">tasks</span><span >;</span></pre>

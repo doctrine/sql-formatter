@@ -66,7 +66,7 @@ final class SqlFormatter
         $inlineCount           = 0;
         $inlineIndented        = false;
         $clauseLimit           = false;
-        $inIfCondition         = false;
+        $inBooleanExpression   = false;
 
         $appendNewLineIfNotAddedFx  = static function () use (&$addedNewline, &$return, $tab, &$indentLevel): void {
             // Add a newline if not already added
@@ -316,7 +316,7 @@ final class SqlFormatter
                     $increaseBlockIndent = true;
                 }
 
-                // Track IF condition context only for IF/ELSEIF that are part of conditional blocks
+                // Track boolean expression context for IF/ELSEIF/CASE WHEN conditions
                 // (not for "IF()" function calls)
                 if (in_array($tokenValueUpper, ['IF', 'ELSEIF', 'ELSIF'], true)) {
                     // Check if this IF is part of a conditional block by looking at the next token
@@ -324,10 +324,12 @@ final class SqlFormatter
                     if (
                         $nextToken !== null && $nextToken->value() !== '('
                     ) {
-                        $inIfCondition = true;
+                        $inBooleanExpression = true;
                     }
+                } elseif ($tokenValueUpper === 'WHEN') {
+                    $inBooleanExpression = true;
                 } elseif ($tokenValueUpper === 'THEN' || $tokenValueUpper === 'ELSE' || $tokenValueUpper === 'END') {
-                    $inIfCondition = false;
+                    $inBooleanExpression = false;
                 }
             } elseif (
                 $clauseLimit &&
@@ -347,10 +349,10 @@ final class SqlFormatter
                     $newline = true;
                 }
             } elseif ($token->isOfType(Token::TOKEN_TYPE_RESERVED_NEWLINE)) {
-                // Newline reserved words start a new line, except for AND/OR within IF conditions
+                // Newline reserved words start a new line, except for AND/OR within boolean expressions
 
-                // Skip newlines for AND/OR when inside IF condition
-                if (! $inIfCondition || ! in_array($tokenValueUpper, ['AND', 'OR'], true)) {
+                // Skip newlines for AND/OR when inside boolean expressions (IF conditions, CASE WHEN)
+                if (! $inBooleanExpression || ! in_array($tokenValueUpper, ['AND', 'OR'], true)) {
                     $appendNewLineIfNotAddedFx();
                 }
 

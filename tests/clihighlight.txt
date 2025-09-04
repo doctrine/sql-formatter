@@ -1217,3 +1217,14 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
     [37mRETURN[0m id[0m;[0m
   [37mEND[0m [37mIF[0m;[0m
 [37mEND[0m;[0m
+---
+[37mSELECT[0m
+  [37mCASE[0m [37mWHEN[0m [37mstatus[0m =[0m [34;1m'active'[0m [37mAND[0m priority[0m =[0m [34;1m'high'[0m [37mTHEN[0m
+    [34;1m'urgent'[0m
+  [37mWHEN[0m [37mstatus[0m =[0m [34;1m'active'[0m [37mOR[0m [37mstatus[0m =[0m [34;1m'pending'[0m [37mTHEN[0m
+    [34;1m'normal'[0m
+  [37mELSE[0m
+    [34;1m'low'[0m
+  [37mEND[0m [37mAS[0m task_priority[0m
+[37mFROM[0m
+  tasks[0m;[0m
