@@ -111,3 +111,7 @@ SELECT a FROM test STRAIGHT_JOIN test2 ON test.id = test2.id
 SELECT t.id, t.start, t.end, t.end AS e2, t.limit, t.begin, t.case, t.when, t.then, t.else FROM t WHERE t.start = t.end
 ---
 CREATE TABLE t (c VARCHAR(20)) DEFAULT CHARACTER SET utf8mb4 ENGINE = InnoDB
+---
+BEGIN IF first_name != '' AND last_name != '' THEN RETURN CONCAT(first_name, ' ', last_name); ELSEIF first_name != '' THEN RETURN first_name; ELSIF last_name != '' THEN RETURN last_name; ELSE RETURN id; END IF; END;
+---
+SELECT CASE WHEN status = 'active' AND priority = 'high' THEN 'urgent' WHEN status = 'active' OR status = 'pending' THEN 'normal' ELSE 'low' END AS task_priority FROM tasks;
