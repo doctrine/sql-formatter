@@ -1670,7 +1670,7 @@ final class TokenizerTest extends TestCase
             ],
             'TIMESTAMP(0) WITH TIME ZONE',
         ];
-        
+
         yield 'WITHOUT TIME ZONE as single token' => [
             [
                 new Token(Token::TOKEN_TYPE_RESERVED, 'TIME'),
@@ -1679,7 +1679,7 @@ final class TokenizerTest extends TestCase
             ],
             'TIME WITHOUT TIME ZONE',
         ];
-        
+
         yield 'CTE WITH still works' => [
             [
                 new Token(Token::TOKEN_TYPE_RESERVED_TOPLEVEL, 'WITH'),
