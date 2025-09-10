@@ -1658,6 +1658,38 @@ final class TokenizerTest extends TestCase
             ],
             '/* foo...',
         ];
+
+        yield 'WITH TIME ZONE as single token' => [
+            [
+                new Token(Token::TOKEN_TYPE_RESERVED, 'TIMESTAMP'),
+                new Token(Token::TOKEN_TYPE_BOUNDARY, '('),
+                new Token(Token::TOKEN_TYPE_NUMBER, '0'),
+                new Token(Token::TOKEN_TYPE_BOUNDARY, ')'),
+                new Token(Token::TOKEN_TYPE_WHITESPACE, ' '),
+                new Token(Token::TOKEN_TYPE_RESERVED, 'WITH TIME ZONE'),
+            ],
+            'TIMESTAMP(0) WITH TIME ZONE',
+        ];
+
+        yield 'WITHOUT TIME ZONE as single token' => [
+            [
+                new Token(Token::TOKEN_TYPE_RESERVED, 'TIME'),
+                new Token(Token::TOKEN_TYPE_WHITESPACE, ' '),
+                new Token(Token::TOKEN_TYPE_RESERVED, 'WITHOUT TIME ZONE'),
+            ],
+            'TIME WITHOUT TIME ZONE',
+        ];
+
+        yield 'CTE WITH still works' => [
+            [
+                new Token(Token::TOKEN_TYPE_RESERVED_TOPLEVEL, 'WITH'),
+                new Token(Token::TOKEN_TYPE_WHITESPACE, ' '),
+                new Token(Token::TOKEN_TYPE_WORD, 'cte'),
+                new Token(Token::TOKEN_TYPE_WHITESPACE, ' '),
+                new Token(Token::TOKEN_TYPE_RESERVED, 'AS'),
+            ],
+            'WITH cte AS',
+        ];
     }
 
     public function testTokenizeLongConcat(): void

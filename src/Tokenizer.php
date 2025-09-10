@@ -722,6 +722,12 @@ final class Tokenizer
         'YEARWEEK',
     ];
 
+    /** @var list<string> */
+    private array $dataTypeModifiers = [
+        'WITH TIME ZONE',
+        'WITHOUT TIME ZONE',
+    ];
+
     /** Regular expression for tokenizing. */
     private readonly string $tokenizeRegex;
 
@@ -834,11 +840,13 @@ final class Tokenizer
     private function makeTokenizeRegexes(): array
     {
         // Set up regular expressions
-        $regexBoundaries       = $this->makeRegexFromList($this->boundaries);
-        $regexReserved         = $this->makeRegexFromList($this->reserved);
-        $regexReservedToplevel = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedToplevel));
-        $regexReservedNewline  = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedNewline));
-        $regexFunction         = $this->makeRegexFromList($this->functions);
+
+        $regexBoundaries        = $this->makeRegexFromList($this->boundaries);
+        $regexReserved          = $this->makeRegexFromList($this->reserved);
+        $regexReservedToplevel  = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedToplevel));
+        $regexReservedNewline   = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedNewline));
+        $regexFunction          = $this->makeRegexFromList($this->functions);
+        $regexDataTypeModifiers = str_replace(' ', '\s+', $this->makeRegexFromList($this->dataTypeModifiers));
 
         return [
             Token::TOKEN_TYPE_WHITESPACE => '\s+',
@@ -866,6 +874,10 @@ final class Tokenizer
             Token::TOKEN_TYPE_NUMBER => '(?:\d+(?:\.\d+)?|0x[\da-fA-F]+|0b[01]+)(?=$|\s|"\'`|' . $regexBoundaries . ')',
             // punctuation and symbols
             Token::TOKEN_TYPE_BOUNDARY => $regexBoundaries,
+            // data type modifiers, this make 'WITH TIMEZONE' to be different from the 'WITH" from CTE
+            Token::TOKEN_TYPE_RESERVED => '(?<!\.)' . $regexDataTypeModifiers . '(?=$|\s|' . $regexBoundaries . ')'
+                . '|(?<!\.)' . $regexReserved . '(?=$|\s|' . $regexBoundaries . ')'
+                . '|' . $regexFunction . '(?=\s*\()',
             // A reserved word cannot be preceded by a '.'
             // this makes it so in "mytable.from", "from" is not considered a reserved word
             Token::TOKEN_TYPE_RESERVED_TOPLEVEL => '(?<!\.|\sCHARACTER\s(?=SET\s))' . $regexReservedToplevel . '(?=$|\s|' . $regexBoundaries . ')',
