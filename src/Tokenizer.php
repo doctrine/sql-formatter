@@ -841,11 +841,11 @@ final class Tokenizer
     {
         // Set up regular expressions
 
-        $regexBoundaries       = $this->makeRegexFromList($this->boundaries);
-        $regexReserved         = $this->makeRegexFromList($this->reserved);
-        $regexReservedToplevel = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedToplevel));
-        $regexReservedNewline  = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedNewline));
-        $regexFunction         = $this->makeRegexFromList($this->functions);
+        $regexBoundaries        = $this->makeRegexFromList($this->boundaries);
+        $regexReserved          = $this->makeRegexFromList($this->reserved);
+        $regexReservedToplevel  = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedToplevel));
+        $regexReservedNewline   = str_replace(' ', '\s+', $this->makeRegexFromList($this->reservedNewline));
+        $regexFunction          = $this->makeRegexFromList($this->functions);
         $regexDataTypeModifiers = str_replace(' ', '\s+', $this->makeRegexFromList($this->dataTypeModifiers));
 
         return [
