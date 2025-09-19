@@ -1658,6 +1658,20 @@ final class TokenizerTest extends TestCase
             ],
             '/* foo...',
         ];
+
+        yield 'PostgreSQL operator' => [
+            [
+                new Token(Token::TOKEN_TYPE_RESERVED_TOPLEVEL, 'select'),
+                new Token(Token::TOKEN_TYPE_WHITESPACE, ' '),
+                new Token(Token::TOKEN_TYPE_WORD, 'json'),
+                new Token(Token::TOKEN_TYPE_WHITESPACE, ' '),
+                new Token(Token::TOKEN_TYPE_BOUNDARY, '#'),
+                new Token(Token::TOKEN_TYPE_BOUNDARY, '>'),
+                new Token(Token::TOKEN_TYPE_WHITESPACE, ' '),
+                new Token(Token::TOKEN_TYPE_RESERVED, 'null'),
+            ],
+            'select json #> null',
+        ];
     }
 
     public function testTokenizeLongConcat(): void

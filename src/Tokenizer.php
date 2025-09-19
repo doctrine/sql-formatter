@@ -842,7 +842,7 @@ final class Tokenizer
 
         return [
             Token::TOKEN_TYPE_WHITESPACE => '\s+',
-            Token::TOKEN_TYPE_COMMENT => '(?:--|#)[^\n]*+',
+            Token::TOKEN_TYPE_COMMENT => '(?:--|#(?!>))[^\n]*+', // #>, #>> and <#> are PostgreSQL operators
             Token::TOKEN_TYPE_BLOCK_COMMENT => '/\*(?:[^*]+|\*(?!/))*+(?:\*|$)(?:/|$)',
             // 1. backtick quoted string using `` to escape
             // 2. square bracket quoted string (SQL Server) using ]] to escape
