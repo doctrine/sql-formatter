@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+<?php
+
+use Doctrine\SqlFormatter\CliHighlighter;
+use Doctrine\SqlFormatter\HtmlHighlighter;
+use Doctrine\SqlFormatter\NullHighlighter;
+use Doctrine\SqlFormatter\SqlFormatter;
+use Doctrine\SqlFormatter\Tests\SqlFormatterTest;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$formatter = new SqlFormatter(new HtmlHighlighter());
+
+updateExpected('format-highlight.html', [$formatter, 'format']);
+updateExpected('format.txt', [new SqlFormatter(new NullHighlighter()), 'format']);
+updateExpected('highlight.html', [$formatter, 'highlight']);
+updateExpected('clihighlight.txt', [new SqlFormatter(new CliHighlighter()), 'format']);
+updateExpected('compress.txt', [$formatter, 'compress']);
+
+function updateExpected(string $filename, callable $highlight): void
+{
+	$data = [];
+
+	foreach (SqlFormatterTest::fileSqlData() as $sql) {
+		$data[] = rtrim($highlight($sql), "\n");
+	}
+
+	file_put_contents(__DIR__ . '/../tests/' . $filename, implode("\n---\n", $data) . "\n");
+}
