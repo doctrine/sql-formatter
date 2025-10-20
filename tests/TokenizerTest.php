@@ -1607,7 +1607,7 @@ final class TokenizerTest extends TestCase
         }
 
         if (serialize($tokens) === serialize($expectedTokens)) { // optimize self::assertEquals() for large inputs
-            self::assertTrue(true);
+            self::assertTrue(true); // @phpstan-ignore staticMethod.alreadyNarrowedType
         } else {
             self::assertEquals($expectedTokens, $tokens);
         }
