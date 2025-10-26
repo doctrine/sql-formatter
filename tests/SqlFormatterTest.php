@@ -101,7 +101,7 @@ final class SqlFormatterTest extends TestCase
     }
 
     /** @return string[] */
-    private static function fileSqlData(): array
+    public static function fileSqlData(): array
     {
         $contents = file_get_contents(__DIR__ . '/sql.sql');
         assert($contents !== false);

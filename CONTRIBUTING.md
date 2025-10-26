@@ -20,3 +20,7 @@ vendor/bin/phpunit --testdox
 echo '' | vendor/bin/phpcs
 vendor/bin/phpstan analyze
 ```
+
+## Regenerating expected output
+
+To regenerate expected tests output, run `bin/regenerate-expected-output`.
