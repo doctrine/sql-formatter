@@ -804,9 +804,9 @@ final class Tokenizer
         }
 
         if ($items !== []) {
-            $valuesBySharedPrefix[$prefix] = $items;
-            $items                         = [];
-            $prefix                        = null;
+            $valuesBySharedPrefix[(string) $prefix] = $items;
+            $items                                  = [];
+            $prefix                                 = null;
         }
 
         $regex = '(?>';
