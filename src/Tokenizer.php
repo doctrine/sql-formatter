@@ -743,6 +743,7 @@ final class Tokenizer
         '>',
         '+',
         '-',
+        '~*', // https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-REGEXP
         '*',
         '/',
         '!',

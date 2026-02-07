@@ -429,3 +429,5 @@ CREATE TABLE t (c VARCHAR(20)) DEFAULT CHARACTER SET utf8mb4 ENGINE = InnoDB
 SELECT '{}'::json #> '{}'
 ---
 SELECT vector1 <#> vector2
+---
+SELECT text ~* '\w+'
