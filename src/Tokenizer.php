@@ -820,10 +820,10 @@ final class Tokenizer
                 $prefix = (string) $prefix;
             }
 
-            $regex .= preg_quote($prefix, '/');
+            $regex .= preg_quote($prefix);
 
             $regex .= count($items) === 1
-                ? preg_quote(substr(reset($items), strlen($prefix)), '/')
+                ? preg_quote(substr(reset($items), strlen($prefix)))
                 : $this->makeRegexFromList(array_map(static fn ($v) => substr($v, strlen($prefix)), $items), true);
         }
 
@@ -887,7 +887,7 @@ final class Tokenizer
             $parts[] = '(?<t_' . $type . '>' . $regex . ')';
         }
 
-        return '~\G(?:' . implode('|', $parts) . ')~';
+        return '(\G(?:' . implode('|', $parts) . '))';
     }
 
     /**
