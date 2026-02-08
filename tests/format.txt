@@ -1209,3 +1209,6 @@ SELECT
 ---
 SELECT
   vector1 <#> vector2
+---
+SELECT
+  text ~* '\w+'

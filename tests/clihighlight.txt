@@ -1211,3 +1211,6 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
 ---
 [37mSELECT[0m
   vector1[0m <[0m#[0m>[0m vector2[0m
+---
+[37mSELECT[0m
+  text[0m ~*[0m [34;1m'\w+'[0m
