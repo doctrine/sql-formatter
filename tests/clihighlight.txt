@@ -1214,3 +1214,9 @@ MY_NON_TOP_LEVEL_KEYWORD_FX_3[0m();[0m
 ---
 [37mSELECT[0m
   text[0m ~*[0m [34;1m'\w+'[0m
+---
+[37mCREATE[0m [37mPROCEDURE[0m [35;1m`foo`[0m() [37mBEGIN[0m
+  bar[0m :[0m LOOP[0m
+    [30;1m-- Nothing[0m
+  [37mEND[0m LOOP[0m bar[0m;[0m
+[37mEND[0m
