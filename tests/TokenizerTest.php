@@ -1672,6 +1672,22 @@ final class TokenizerTest extends TestCase
             ],
             'select json #> null',
         ];
+
+        yield 'label directly followed by LOOP is not a bind variable' => [
+            [
+                new Token(Token::TOKEN_TYPE_WORD, 'bar'),
+                new Token(Token::TOKEN_TYPE_BOUNDARY, ':'),
+                new Token(Token::TOKEN_TYPE_WORD, 'loop'),
+            ],
+            'bar:loop',
+        ];
+
+        yield 'bind variable' => [
+            [
+                new Token(Token::TOKEN_TYPE_VARIABLE, ':param'),
+            ],
+            ':param',
+        ];
     }
 
     public function testTokenizeLongConcat(): void

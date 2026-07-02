@@ -117,3 +117,5 @@ SELECT '{}'::json #> '{}'
 SELECT vector1 <#> vector2
 ---
 SELECT text ~* '\w+'
+---
+CREATE PROCEDURE `foo`() BEGIN bar:LOOP END LOOP bar; END
