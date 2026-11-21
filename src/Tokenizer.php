@@ -862,7 +862,7 @@ final class Tokenizer
                 )
                 EOD,
             // User-defined variable, possibly with quoted name
-            Token::TOKEN_TYPE_VARIABLE => '[@:](?:[\w.$]++|(?&t_' . Token::TOKEN_TYPE_BACKTICK_QUOTE . ')|(?&t_' . Token::TOKEN_TYPE_QUOTE . '))',
+            Token::TOKEN_TYPE_VARIABLE => '(?:@|(?<!\w):)(?:[\w.$]++|(?&t_' . Token::TOKEN_TYPE_BACKTICK_QUOTE . ')|(?&t_' . Token::TOKEN_TYPE_QUOTE . '))',
             // decimal, binary, or hex
             Token::TOKEN_TYPE_NUMBER => '(?:\d+(?:\.\d+)?|0x[\da-fA-F]+|0b[01]+)(?=$|\s|"\'`|' . $regexBoundaries . ')',
             // punctuation and symbols
