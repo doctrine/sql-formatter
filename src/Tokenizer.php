@@ -863,8 +863,9 @@ final class Tokenizer
                 EOD,
             // User-defined variable, possibly with quoted name
             Token::TOKEN_TYPE_VARIABLE => '[@:](?:[\w.$]++|(?&t_' . Token::TOKEN_TYPE_BACKTICK_QUOTE . ')|(?&t_' . Token::TOKEN_TYPE_QUOTE . '))',
-            // decimal, binary, or hex
-            Token::TOKEN_TYPE_NUMBER => '(?:\d+(?:\.\d+)?|0x[\da-fA-F]+|0b[01]+)(?=$|\s|"\'`|' . $regexBoundaries . ')',
+            // decimal (including scientific notation), binary, or hex.
+            // Matching runs on the uppercased SQL, so the exponent marker is E.
+            Token::TOKEN_TYPE_NUMBER => '(?:\d+(?:\.\d+)?(?:E[+-]?\d+)?|0x[\da-fA-F]+|0b[01]+)(?=$|\s|"\'`|' . $regexBoundaries . ')',
             // punctuation and symbols
             Token::TOKEN_TYPE_BOUNDARY => $regexBoundaries,
             // A reserved word cannot be preceded by a '.'

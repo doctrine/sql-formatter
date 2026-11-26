@@ -148,6 +148,20 @@ final class SqlFormatterTest extends TestCase
         return self::fileDataProvider('format.txt');
     }
 
+    public function testScientificNotationIsNotSplit(): void
+    {
+        $formatter = new SqlFormatter(new NullHighlighter());
+        $formatted = $formatter->format('select 1.0E+300, 1e10, 2.5E-1, 0x1E2');
+
+        self::assertStringContainsString('1.0E+300', $formatted);
+        self::assertStringContainsString('1e10', $formatted);
+        self::assertStringContainsString('2.5E-1', $formatted);
+        self::assertStringContainsString('0x1E2', $formatted);
+        self::assertStringNotContainsString('E +', $formatted);
+        self::assertStringNotContainsString('E -', $formatted);
+        self::assertStringNotContainsString('e +', $formatted);
+    }
+
     public function testFormatLongConcat(): void
     {
         $sqlParts = [];
